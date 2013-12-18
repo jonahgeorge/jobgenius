@@ -1,0 +1,24 @@
+{>"layouts/default" /}
+
+{<content}
+	<div class="page-header">
+		{?entity}
+			<h1>{title}<small><a class="btn btn-success pull-right" href="/i/add">New Articles</a></small></h1>
+		{:else}
+			<h1>{title}</h1>
+		{/entity}
+	</div>
+
+	{#articles}	
+		<a href='/a/{aid}'>
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<span class="pull-left">{title}  <i>{subtitle}</i></span>
+					<span class="pull-right">{timestamp}</span>
+				</div>
+			</div>
+		</a>
+	{:else}
+		<p>No articles currently available.</p>
+	{/articles}
+{/content}

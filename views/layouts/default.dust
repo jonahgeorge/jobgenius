@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang='en'>
+	<head>
+		{>"shared/head" /}
+		{+head}{/head}
+	</head>
+
+	<body>
+		{>"shared/header" /}
+
+		<div class="container">
+			<div class="col-sm-10 col-sm-offset-1">
+				{+content}{/content}
+			
+				<div class="clearfix"></div>
+
+				{>"shared/footer" /}
+			</div>
+		</div>
+
+		<div class="foot">
+			{>"shared/foot" /}
+			{+foot}{/foot}
+		</div>
+	</body>
+</html>

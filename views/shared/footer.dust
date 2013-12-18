@@ -1,0 +1,14 @@
+<footer class="clearfix">
+    <hr>
+    <span class="pull-left">&copy; Job Genius 2013</span>
+    <div class="pull-right" style="padding: 0 10px;">
+        <a style="position: relative; display:block; padding:3px 0;" href='/about'>About</a>
+        <a style="position: relative; display:block; padding:3px 0;" href='/terms'>Terms</a>
+        <a style="position: relative; display:block; padding:3px 0;" href="/privacy">Privacy</a>
+    </div>
+    <div class="pull-right" style="padding: 0 10px;">
+        <a style="position: relative; display:block; padding:3px 0;" href='http://www.linkedin.com/company/3301112?trk=tyah' target="_blank">LinkedIn</a>
+        <a style="position: relative; display:block; padding:3px 0;" href='https://twitter.com/Job_Genius' target="_blank">Twitter</a>
+        <a style="position: relative; display:block; padding:3px 0;" href="https://www.facebook.com/pages/Job-Genius/379070315526947" target="_blank">Facebook</a>
+    </div>
+</footer>

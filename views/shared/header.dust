@@ -1,0 +1,27 @@
+<nav class="navbar navbar-default" role="navigation">
+	<div class="container">
+		<div class='col-sm-10 col-sm-offset-1'>
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/"><span class="glyphicon glyphicon-briefcase"></span></a>
+			</div>
+
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			    <ul class="nav navbar-nav navbar-right">
+					{?entity}
+						<li><p class="navbar-text"><img class="img-rounded" src="https://lh4.googleusercontent.com/-Z5DfDwSMIkA/AAAAAAAAAAI/AAAAAAAAAAA/A1MmkD-XmQ4/photo.jpg" width="20px" style="display:inline-block;">&nbsp;{entity.pseudo_username}</p></li>
+						<li><a id="settings" href="#"><span class="glyphicon glyphicon-cog"></span></a></li>
+						<li><a id="signout" href="/auth/signout"><span class="glyphicon glyphicon-log-out"></span></a></li>
+					{:else}
+						<li><a href="/auth/signin">Sign In</a></li>
+					{/entity}
+				</ul>
+			</div>
+		</div>
+	</div>
+</nav>

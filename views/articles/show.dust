@@ -1,0 +1,42 @@
+{>"layouts/default" /}
+
+{<content}
+	<div class="alert alert-warning" hidden></div>
+
+	{?article.subtitle}
+		<h2 style='display:inline;'>{article.title}:</h2>
+	{:else} 
+		<h2 style='display:inline;'>{article.title}</h2>
+	{/article.subtitle}
+
+	&nbsp;&nbsp;
+	<h3 style='display:inline;'><i>{article.subtitle}</i></h3>
+	<br>
+	<br>
+	<p>{article.body}</p>
+
+	{@if cond="{entity.uid} == {article.uid} || {entity.role} == 0"}
+		<hr>
+		<a id="edit" class="btn btn-default" href='/a/{article.aid}/edit'>Edit</a>
+		&nbsp;&nbsp;
+		<a id="delete" class="btn btn-danger" href='#'>Delete</a>
+	{/if}
+{/content}
+
+{<foot}
+	<script>
+		$("#delete").on("click", function () {
+			$.ajax({
+				url: "http://localhost:3000/a/#{article.aid}",
+				type: "delete",
+				success: function (data) {
+					location.href = "/a";
+				},
+				error: function (data) {
+					$(".alert.alert-warning").html("An error occured. If you see this again, please contact us at <a href='mailto:info@jobgenius.net'>info@jobgenius.net</a>");
+					$(".alert.alert-warning").show();
+				}
+			});
+		});
+	</script>
+{/foot}

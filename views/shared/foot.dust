@@ -1,0 +1,13 @@
+<script>
+	$("#settings").tooltip({
+		container : "body",
+		title : "Account settings",
+		placement : "bottom"
+	});
+
+	$("#signout").tooltip({
+		container : "body",
+		title : "Sign out",
+		placement : "bottom"
+	});
+</script>

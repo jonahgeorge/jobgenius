@@ -1,0 +1,185 @@
+{>"layouts/default" /}
+
+{<content}
+	<div class="alert alert-warning" hidden></div>
+
+	<div class="page-header">
+		<h1>{interview.name} 
+
+		<small>
+			{interview.position}
+			{@if cond="('{entity.uid}' == '{interview.uid}') || ('{entity.role}' == 0)"}
+				<div class="pull-right">
+					<a class="btn btn-default" href='/i/{interview.iid}/edit'>Edit</a>
+				</div>
+			{/if}
+		</small></h1>
+	</div>
+
+	<div class="col-sm-6 left-col">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title" style="display:inline;">Details</h3>
+				<span class="glyphicon glyphicon-search pull-right"></span>
+			</div>
+			<div class="panel-body">
+				{?interview.type}
+					<span class="pull-left"><b>Type:</b></span>
+					<span class="pull-right">{interview.type}</span><br>
+				{/interview.type}
+				{?interview.sector}
+					<span class="pull-left"><b>Sector:</b></span>
+					<span class="pull-right">{interview.sector}</span><br>
+				{/interview.sector}
+				{?interview.industry}
+					<span class="pull-left"><b>Industry:</b></span>
+					<span class="pull-right">{interview.industry}</span><br>
+				{/interview.industry}
+				{?interview.experience}
+					<span class="pull-left"><b>Experience:</b></span>
+					<span class="pull-right">{interview.experience}</span><br>
+				{/interview.experience}
+				{?interview.environment}
+					<span class="pull-left"><b>Environment:</b></span>
+					<span class="pull-right">{interview.environment}</span><br>
+				{/interview.environment}
+				{?interview.salary}
+					<span class="pull-left"><b>Salary:</b></span>
+					<span class="pull-right">{interview.salary}</span><br>
+				{/interview.salary}
+				{?interview.hours_per_week}
+					<span class="pull-left"><b>Hours per Week:</b></span>
+					<span class="pull-right">{interview.hours_per_week}</span><br>
+				{/interview.hours_per_week}
+				{?interview.weekends_worked}
+					<span class="pull-left"><b>Weekends Worked:</b></span>
+					<span class="pull-right">{interview.weekends_worked}</span><br>
+				{/interview.weekends_worked}
+				{?interview.overnight_travel}
+					<span class="pull-left"><b>Overnight Travel:</b></span>
+					<span class="pull-right">{interview.overnight_travel}</span><br>
+				{/interview.overnight_travel}
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title" style="display:inline;">Job Requirements</h3>
+				<span class="glyphicon glyphicon-list pull-right"></span>
+			</div>
+			<div class="panel-body">
+				{?interview.certs}
+					<span class="pull-left"><b>Certifications:</b></span>
+					<span class="pull-right">{interview.certs}</span><br>
+				{/interview.certs}
+				{?interview.soft_skills}
+					<span class="pull-left"><b>Soft Skills:</b></span>
+					<span class="pull-right">{interview.soft_skills}</span><br>
+				{/interview.soft_skills}
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title" style="display:inline;">Fulfillment</h3>
+				<span class="glyphicon glyphicon-time pull-right"></span>
+			</div>
+			<div class="panel-body">
+				Panel content
+			</div>
+		</div>
+	</div>
+
+	<div class="col-sm-6 right-col">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title" style="display:inline;">Educational Background</h3>
+				<span class="glyphicon glyphicon-book pull-right"></span>
+			</div>
+			<div class="panel-body">
+				Panel content
+			</div>
+			<div class="panel-footer clearfix" style="background-color: #428bca; color: #fff; border-color: #428bca;">
+				<span class="pull-left">Did you find this information helpful?</span>
+				<span class="pull-right">Yes&nbsp;&nbsp;|&nbsp;&nbsp;No</span>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title" style="display:inline;">Skills and Tools</h3>
+				<span class="glyphicon glyphicon-wrench pull-right"></span>
+			</div>
+			<div class="panel-body">
+				<div id="tools"></div>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title" style="display:inline;">Solo vs Group Work</h3>
+				<span class="glyphicon glyphicon-time pull-right"></span>
+			</div>
+			<div class="panel-body">
+				<div id="solovgroup"></div>
+			</div>
+		</div>
+	</div>
+{/content}
+
+{<foot}
+	<script type="text/javascript">
+		var dataset = [53245, 28479, 19697, 24037, 40245];
+
+		var width = $(".panel-body").width(),
+			height = 250,
+			radius = Math.min(width, height) / 2;
+
+		var color = d3.scale.category20();
+
+		var pie = d3.layout.pie().sort(null);
+
+		var arc = d3.svg.arc()
+			.innerRadius(radius - 75)
+			.outerRadius(radius - 25);
+
+		var svg = d3.select("#tools").append("svg")
+			.attr("width", width)
+			.attr("height", height)
+			.append("g")
+			.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+		var path = svg.selectAll("path")
+			.data(pie(dataset))
+			.enter().append("path")
+			.attr("fill", function(d, i) { return color(i); })
+			.attr("d", arc);
+	</script>
+	<script type="text/javascript">
+		var dataset = [53245, 28479];
+
+		var width = $(".panel-body").width(),
+			height = 250,
+			radius = Math.min(width, height) / 2;
+
+		var color = d3.scale.category20();
+
+		var pie = d3.layout.pie().sort(null);
+
+		var arc = d3.svg.arc()
+			.innerRadius(radius - 75)
+			.outerRadius(radius - 25);
+
+		var svg = d3.select("#solovgroup").append("svg")
+			.attr("width", width)
+			.attr("height", height)
+			.append("g")
+			.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+		var path = svg.selectAll("path")
+			.data(pie(dataset))
+			.enter().append("path")
+			.attr("fill", function(d, i) { return color(i); })
+			.attr("d", arc);
+	</script>
+{/foot}

@@ -1,0 +1,29 @@
+{>"layouts/default" /}
+
+{<content}
+	<h4>Interviews</h4>
+	{#interviews}	
+		<a href='/i/{iid}'>
+			<div class="clearfix" style="padding:10px 0; border-bottom: solid 1px #eee;">
+				<span class="pull-left">{name} - {position}</span>
+			</div>
+		</a>
+	{:else}
+		<p>No interviews currently available.</p>
+	{/interviews}
+
+	<br>
+
+	<h4>Articles</h4>
+	{#articles}	
+		<a href='/a/{aid}'>
+			<div class="clearfix" style="padding:10px 0; border-bottom: solid 1px #eee;">
+				<span class="pull-left">{title}  <i>{subtitle}</i></span>
+				<span class="pull-right">{timestamp}</span>
+			</div>
+		</a>
+	{:else}
+		<p>No articles currently available.</p>
+	{/articles}
+	
+{/content}

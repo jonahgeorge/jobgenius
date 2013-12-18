@@ -1,0 +1,35 @@
+{>"layouts/default" /}
+
+{<content}
+	<div class="page-header">
+		{?article}
+			<h1>Edit Article</h1>
+		{:else}
+			<h1>New Article</h1>
+		{/article}
+	</div>
+
+	{?article}
+		<form action="/a/#{article.aid}" method="post">
+			<input class="form-control" name='title' type='text' placeholder='Title' value="{article.title}"><br>
+			<input class="form-control" name='subtitle' type='text' placeholder='Subtitle' value="{article.subtitle}"><br>
+			<textarea class="form-control" name='body' style='height:300px'>{article.body}</textarea>
+			<br>
+			<input class="btn btn-default" type="submit" value="Save">
+			&nbsp;&nbsp;
+			<a href="/a">Cancel</a>
+			<br>
+		</form>
+	{:else}
+		<form action="/a" method="post">
+			<input class="form-control" name='title' type='text' placeholder='Title'><br>
+			<input class="form-control" name='subtitle' type='text' placeholder='Subtitle'><br>
+			<textarea class="form-control" name='body' style='height:300px'></textarea>
+			<br>
+			<input class="btn btn-default" type="submit" value="Save">
+			&nbsp;&nbsp;
+			<a href="/a">Cancel</a>
+			<br>
+		</form>
+	{/article}
+{/content}

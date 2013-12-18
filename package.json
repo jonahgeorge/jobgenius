@@ -1,0 +1,24 @@
+{
+	"name": "husker",
+	"description": "A database of informational interviews",
+	"private": "true",
+	"author": "Jonah George <jonah@jonahgeorge.com> (https://github.com/jonahgeorge)",
+	"scripts": {
+		"start": "NODE_ENV=development ./node_modules/.bin/nodemon app.js"
+	},
+	"dependencies": {
+		"express": "*",
+		"dustjs-linkedin" : "*",
+		"dustjs-helpers" : "*",
+		"consolidate" : "*",
+		"mysql": "*",
+		"request": "*",
+		"bower": "*",
+		"bcrypt": "*",
+		"connect-redis": "*",
+		"gzippo": "*"
+	},
+	"devDependencies": {
+		"nodemon": "*"
+	}
+}

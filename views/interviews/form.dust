@@ -1,0 +1,157 @@
+{>"layouts/default" /}
+
+{<content}	
+	<div class="page-header">
+		{?interview}
+			<h1>Edit Interview</h1>
+		{:else}
+			<h1>New Interview</h1>
+		{/interview}
+	</div>
+
+	{?interview}
+		<form action="/i/{interview.iid}" method="post">
+
+			<!-- Basic Details -->
+			<h3>Basic Details</h3>
+			<hr>
+				<!-- Name -->
+				<input class="form-control" name='name' type='text' placeholder='Name' value="{interview.name}"><br>
+				
+				<!-- Position -->
+				<input class="form-control" name='position' type='text' placeholder='Position' value="{interview.position}"><br>
+				
+				<!-- Company -->
+				<h5>Company</h5>
+					<input class="form-control" name='cname' type='text' placeholder='Name' value="{interview.cname}"><br>
+					<input class="form-control" name='curl' type='text' placeholder='Url' value="{interview.curl}"><br>
+			
+			<!-- Extended Details -->
+			<h3>Extended Details</h3>
+			<hr>
+				<!-- Job Type -->
+				<h5>Job Type</h5>
+				{#types}
+					<input type="radio" name="type" value="{fid}" {@if cond="{interview.type} == {fid}"} checked {/if}> {value}
+					<br>
+				{/types}
+				<br>
+
+				<!-- Sector -->
+				<h5>Sector</h5>
+				{#sectors}
+					<input type="radio" name="sector" value="{fid}" {@if cond="{interview.sector} == {fid}"} checked {/if}> {value}
+					<br>
+				{/sectors}
+				<br>					
+
+				<!-- Industry -->
+				<h5>Industry</h5>
+				{#industries}
+					<input type="checkbox" name="industry" value="{fid}" {@if cond="{interview.industry} == {fid}"} checked {/if}> {value}
+					<br>
+				{/industries}
+				<br>
+
+				<!-- Experience (years) -->
+				<h5>Experience</h5>
+				{#experience}
+					<input type="radio" name="experience" value="{fid}" {@if cond="{interview.experience} == {fid}"} checked {/if}> {value}
+					<br>
+				{/experience}
+				<br>
+
+				<!-- Environment -->
+				<h5>Environment</h5>
+				{#environments}
+					<input type="checkbox" name="environment" value="{fid}" {@if cond="{interview.environment} == {fid}"} checked {/if}> {value}
+					<br>
+				{/environments}
+				<br>
+
+				<!-- Salary -->
+				<h5>Salary</h5>
+				{#salary}
+					<input type="radio" name="salary" value="{fid}" {@if cond="{interview.salary} == {fid}"} checked {/if}> {value}
+					<br>
+				{/salary}
+				<br>
+
+				<!-- Hours Per Week -->
+				<h5>Hours Per Week</h5>
+				{#hours_per_week}
+					<input type="radio" name="hours_per_week" value="{fid}" {@if cond="{interview.hours_per_week} == {fid}"} checked {/if}> {value}
+					<br>
+				{/hours_per_week}
+				<br>
+
+				<!-- Weekends Worked -->
+				<h5>Weekends Worked</h5>
+				{#weekends_worked}
+					<input type="radio" name="weekends_worked" value="{fid}" {@if cond="{interview.weekends_worked} == {fid}"} checked {/if}> {value}
+					<br>
+				{/weekends_worked}
+				<br>
+
+				<!-- Overnight Travel -->
+				<h5>Overnight Travel</h5>
+				{#overnight_travel}
+					<input type="radio" name="overnight_travel" value="{fid}" {@if cond="{interview.overnight_travel} == {fid}"} checked {/if}> {value}
+					<br>
+				{/overnight_travel}
+				<br>
+
+			<!-- Job Requirements -->
+				<!-- Certifications -->
+				<h5>Required Certifications</h5>
+				{#certs}
+					<input type="checkbox" name="certs" value="{fid}" {@if cond="{interview.certs} == {fid}"} checked {/if}> {value}
+					<br>
+				{/certs}
+				<br>
+
+				<!-- Soft Skills -->
+				<h5>Recommended Soft Skills</h5>
+				{#soft_skills}
+					<input type="checkbox" name="soft_skills" value="{fid}" {@if cond="{interview.soft_skills} == {fid}"} checked {/if}> {value}
+					<br>
+				{/soft_skills}
+				<br>
+
+			<!-- Education Background -->
+
+			<!-- Skills and Tools -->
+
+			<!-- Fulfillment -->
+
+			<!-- Solo vs Group Work -->
+
+
+			<br>
+			<input class="btn btn-success" type="submit" value="Save">
+			&nbsp;&nbsp;
+			<a href="/i">Cancel</a>
+			<br>
+		</form>
+	{:else}
+		<form action="/i" method="post">
+			<input class="form-control" name='name' type='text' placeholder='Name'><br>
+			<input class="form-control" name='position' type='text' placeholder='Position'><br>
+			<h5>Company</h5>
+			<input class="form-control" name='cname' type='text' placeholder='Name'><br>
+			<input class="form-control" name='curl' type='text' placeholder='Url'><br>
+			<br>
+
+			<input class="btn btn-success" type="submit" value="Save">
+			&nbsp;&nbsp;
+			<a href="/i">Cancel</a>
+			<br>
+		</form>
+	{/interview}
+{/content}
+
+{<foot}
+	<script type="text/javascript">
+			
+	</script>
+{/foot}

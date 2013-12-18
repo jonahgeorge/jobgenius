@@ -1,0 +1,23 @@
+{>"layouts/default" /}
+
+{<content}	
+	<div class="page-header">
+		{?entity}
+			<h1>{title}<small><a class="btn btn-success pull-right" href="/i/add">New Interview</a></small></h1>
+		{:else}
+			<h1>{title}</h1>
+		{/entity}
+	</div>
+
+	{#interviews}	
+		<a href='/i/{iid}'>
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<span class="pull-left">{name} - {position}</span>
+				</div>
+			</div>
+		</a>
+	{:else}
+		<p>No interviews currently available.</p>
+	{/interviews}
+{/content}
