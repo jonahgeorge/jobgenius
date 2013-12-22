@@ -3,7 +3,7 @@
 {<content}
 	<h4>Interviews</h4>
 	{#interviews}	
-		<a href='/i/{iid}'>
+		<a href='/i/{id}'>
 			<div class="clearfix" style="padding:10px 0; border-bottom: solid 1px #eee;">
 				<span class="pull-left">{name} - {position}</span>
 			</div>

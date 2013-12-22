@@ -27,9 +27,9 @@ module.exports = function (app) {
 	app.get('/i', interviews.index);
 	app.get('/i/add', interviews.form);
 	app.post('/i', middleware.requiresLogin, interviews.create);
-	app.get('/i/:iid/edit', interviews.edit);
-	app.get('/i/:iid', interviews.show);
-	app.post('/i/:iid', interviews.update);
+	app.get('/i/:id/edit', interviews.edit);
+	app.get('/i/:id', interviews.show);
+	app.post('/i/:id', interviews.update);
 
 	/* Auth Routes */
 	app.get('/auth/signout', users.signout);

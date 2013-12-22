@@ -23,8 +23,8 @@ exports.terms = function (req, res) {
 
 exports.main = function (req, res) {
 
-	var aq = "select * from D_ARTICLES as A left join D_USERS as U ON A.uid = U.uid where A.published = 1";
-	var iq = "select * from D_INTERVIEWS as I left join D_USERS as U ON I.uid = U.uid where I.published = 1";
+	var aq = "select * from C_ARTICLE as A left join C_USER as U ON A.uid = U.uid where A.published = 1";
+	var iq = "select * from C_INTERVIEW as I left join C_USER as U ON I.uid = U.uid where I.published = 1";
 
 	pool.getConnection(function (err, conn) {
 		conn.query(aq + ";" + iq, function (err, results) {

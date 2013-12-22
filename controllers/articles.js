@@ -3,7 +3,7 @@ var pool = require('../database').pool;
 exports.index = function (req, res) {
 	pool.getConnection(function (err, conn) {
 
-		conn.query("select * from D_ARTICLES as A left join D_USERS as U ON A.uid = U.uid where A.published = 1", function (err, articles) {
+		conn.query("select * from C_ARTICLE as A left join C_USER as U ON A.uid = U.uid where A.published = 1", function (err, articles) {
 			if (err) console.log(err);
 			res.render('articles/index', {
 				title : "Articles",
@@ -18,7 +18,7 @@ exports.index = function (req, res) {
 
 exports.show = function (req, res) {
 	pool.getConnection(function (err, conn) {
-		conn.query("select * from D_ARTICLES where aid = ?", req.params.aid, function (err, article) {
+		conn.query("select * from C_ARTICLE where aid = ?", req.params.aid, function (err, article) {
 			
 			if (err) console.log(err);
 			res.render('articles/show', {
@@ -39,7 +39,7 @@ exports.form = function (req, res) {
 
 exports.edit = function (req, res) {
 	pool.getConnection(function (err, conn) {
-		conn.query("select * from D_ARTICLES where aid = ?", req.params.aid, function (err, article) {
+		conn.query("select * from C_ARTICLE where aid = ?", req.params.aid, function (err, article) {
 			res.render('articles/form', {
 				article : article[0],
 				entity : req.session.entity
@@ -60,7 +60,7 @@ exports.create = function (req, res) {
 			timestamp : new Date()
 		};
 
-		conn.query("insert into D_ARTICLES set ?", article, function (err) {
+		conn.query("insert into C_ARTICLE set ?", article, function (err) {
 			if (err) console.log(err);
 			res.redirect('/a');
 		});
@@ -79,7 +79,7 @@ exports.update = function (req, res) {
 			timestamp : new Date()
 		};
 
-		conn.query("update D_ARTICLES set ? where aid = " + req.params.aid, article, function (err) {
+		conn.query("update C_ARTICLE set ? where aid = " + req.params.aid, article, function (err) {
 			if (err) console.log(err);
 			res.redirect( "/a/" + req.params.aid );
 		});
@@ -88,9 +88,9 @@ exports.update = function (req, res) {
 
 exports.delete = function (req, res) {
    	pool.getConnection(function (err, conn) {
-	    conn.query("select * from D_ARTICLES where aid = ?", req.params.aid, function (err, article) {
+	    conn.query("select * from C_ARTICLE where aid = ?", req.params.aid, function (err, article) {
 	    	if (article.uid == req.session.entity.uid || req.session.entity.role == 0) {
-			    conn.query("update D_ARTICLES set published = 0 where aid = ? ", req.params.aid, function (err) {
+			    conn.query("update C_ARTICLE set published = 0 where aid = ? ", req.params.aid, function (err) {
 			        if (err) {
 			        	console.log(err);
 			        	res.json({ "status" : "Error" });

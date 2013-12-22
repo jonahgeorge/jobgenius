@@ -22,7 +22,7 @@ exports.signup = function (req,res) {
 	pool.getConnection(function(err, connection) {
 
 		// Check if user exists already exists
-		connection.query("SELECT * FROM D_USERS WHERE email = ?", req.body.email, function (err, rows) {
+		connection.query("SELECT * FROM C_USER WHERE email = ?", req.body.email, function (err, rows) {
 
 			// if so, throw error
 			if (rows.length > 0) { 
@@ -43,7 +43,7 @@ exports.signup = function (req,res) {
 							timestamp : new Date()
 						}
 
-						connection.query("INSERT INTO D_USERS SET ?", user, function (err) {
+						connection.query("INSERT INTO C_USER SET ?", user, function (err) {
 							if (err) throw err;
 							var entity = { email : req.body.email };
 							req.session.entity = entity;
@@ -67,7 +67,7 @@ exports.signout = function (req, res) {
 /* Process User Sign In */
 exports.signin = function (req, res) {
 	pool.getConnection(function(err, connection) {
-		connection.query("SELECT * FROM D_USERS WHERE email = ?", req.body.email, function (err, user) {
+		connection.query("SELECT * FROM C_USER WHERE email = ?", req.body.email, function (err, user) {
 			bcrypt.compare(req.body.password, user[0].password, function(err, response) {
 
 				if (err) throw err;

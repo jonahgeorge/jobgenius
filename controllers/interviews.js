@@ -3,7 +3,7 @@ var pool = require('../database').pool;
 exports.index = function (req, res) {
 	pool.getConnection(function (err, conn) {
 
-		conn.query("select * from D_INTERVIEWS as I left join D_USERS as U ON I.uid = U.uid where I.published = 1", function (err, interviews) {
+		conn.query("select * from C_INTERVIEW as I left join C_USER as U ON I.uid = U.uid where I.published = 1", function (err, interviews) {
 			if (err) console.log(err);
 			res.render('interviews/index', {
 				title : "Interviews",
@@ -19,29 +19,156 @@ exports.index = function (req, res) {
 exports.show = function (req, res) {
 	pool.getConnection(function (err, conn) {
 
-		var q = "select di.iid, di.name, di.position, ft.value as type, fs.value as sector, "
-		      + "fi.value as industry, fex.value as experience, fen.value as environment, "
-		      + "fsa.value as salary, fh.value as hours_per_week, fw.value as weekends_worked, "
-		      + "fo.value as overnight_travel, fc.value as certs, fss.value as soft_skills "
-			  + "from D_INTERVIEWS as di "
-			  + "left join F_TYPES as ft on ft.fid = di.type "
-			  + "left join F_SECTORS as fs on fs.fid = di.sector "
-			  + "left join F_INDUSTRIES as fi on fi.fid = di.industry "
-  			  + "left join F_EXPERIENCE as fex on fex.fid = di.experience "
-			  + "left join F_ENVIRONMENT as fen on fen.fid = di.environment "
-			  + "left join F_SALARY as fsa on fsa.fid = di.salary "
-			  + "left join F_HOURS_PER_WEEK as fh on fh.fid = di.hours_per_week "
-			  + "left join F_WEEKENDS_WORKED as fw on fw.fid = di.weekends_worked "
-			  + "left join F_OVERNIGHT_TRAVEL as fo on fo.fid = di.overnight_travel "
-			  + "left join F_CERTS as fc on fc.fid = di.certs "
-			  + "left join F_SOFT_SKILLS as fss on fss.fid = di.soft_skills "
-			  + "where iid = " + conn.escape(req.params.iid);
+        var q = "select C_INTERVIEW.*, "
+            + "L_TYPE.value as type, "
+            + "L_SECTOR.value as sector, "
+            + "industry.value as industry, "
+            + "L_EXPERIENCE.value as experience, "
+            + "environment.value as environment, "
+            + "L_SALARY.value as salary, "
+            + "L_HOURS_PER_WEEK.value as hours_per_week, "
+            + "L_WEEKENDS_WORKED.value as weekends_worked, "
+            + "L_OVERNIGHT_TRAVEL.value as overnight_travel, "
+            + "group_concat(L_CERTIFICATION.value separator ', ') as certs, "
+            + "soft_skills.value as soft_skills, "
+			+ "education.value as education "
+            
+            + "from C_INTERVIEW "
+            
+            // Types
+            + "left join F_TYPE on F_TYPE.iid = C_INTERVIEW.id "
+            + "left join L_TYPE on L_TYPE.id = F_TYPE.vid "
+            
+            // Sectors
+            + "left join F_SECTOR on F_SECTOR.iid = C_INTERVIEW.id "
+            + "left join L_SECTOR on L_SECTOR.id = F_SECTOR.vid "
+            
+            // Industries
+            + "left join ( "
+                + "select F_INDUSTRY.iid, group_concat(L_INDUSTRY.value separator ', ') as value "
+                + "from F_INDUSTRY "
+                + "left join L_INDUSTRY on L_INDUSTRY.id = F_INDUSTRY.vid "
+                + "group by F_INDUSTRY.iid "
+            + ") as industry on industry.iid = C_INTERVIEW.id "
+            
+            // Experience
+            + "left join F_EXPERIENCE on F_EXPERIENCE.iid = C_INTERVIEW.id "
+            + "left join L_EXPERIENCE on L_EXPERIENCE.id = F_EXPERIENCE.vid "
+            
+            // Environment
+            + "left join ( "
+                + "select F_ENVIRONMENT.iid, group_concat(L_ENVIRONMENT.value separator ', ') as value "
+                + "from F_ENVIRONMENT "
+                + "left join L_ENVIRONMENT on L_ENVIRONMENT.id = F_ENVIRONMENT.vid "
+                + "group by F_ENVIRONMENT.iid "
+            + ") as environment on environment.iid = C_INTERVIEW.id "
+            
+            // Salary
+            + "left join F_SALARY on F_SALARY.iid = C_INTERVIEW.id "
+            + "left join L_SALARY on L_SALARY.id = F_SALARY.vid "
+            
+            // Hours per Week
+            + "left join F_HOURS_PER_WEEK on F_HOURS_PER_WEEK.iid = C_INTERVIEW.id "
+            + "left join L_HOURS_PER_WEEK on L_HOURS_PER_WEEK.id = F_HOURS_PER_WEEK.vid "
+            
+            // Weekends Worked
+            + "left join F_WEEKENDS_WORKED on F_WEEKENDS_WORKED.iid = C_INTERVIEW.id "
+            + "left join L_WEEKENDS_WORKED on L_WEEKENDS_WORKED.id = F_WEEKENDS_WORKED.vid "
+            
+            // Overnight Travel
+            + "left join F_OVERNIGHT_TRAVEL on F_OVERNIGHT_TRAVEL.iid = C_INTERVIEW.id "
+            + "left join L_OVERNIGHT_TRAVEL on L_OVERNIGHT_TRAVEL.id = F_OVERNIGHT_TRAVEL.vid "
+            
+            // Certifications
+            + "left join F_CERTIFICATION on F_CERTIFICATION.iid = C_INTERVIEW.id "
+            + "left join L_CERTIFICATION on L_CERTIFICATION.id = F_CERTIFICATION.vid "
+            
+            // Soft Skills
+            + "left join ( "
+                + "select F_SOFT_SKILL.iid, group_concat(L_SOFT_SKILL.value separator ', ') as value "
+                + "from F_SOFT_SKILL "
+                + "left join L_SOFT_SKILL on L_SOFT_SKILL.id = F_SOFT_SKILL.vid "
+                + "group by F_SOFT_SKILL.iid "
+            + ") as soft_skills on soft_skills.iid = C_INTERVIEW.id "
+           
+			// Education
+			+ "left join ( "
+				+ "select tmp.iid, group_concat(tmp.value separator ';') as value "
+				+ "from ( "
+					+ "select F_EDUCATION.iid, concat_ws(',', L_DEGREE.value, L_MAJOR.value, L_UNIVERSITY.value, F_EDUCATION.year) as value "
+					+ "from F_EDUCATION "
+					+ "left join L_UNIVERSITY on L_UNIVERSITY.id = F_EDUCATION.university "
+					+ "left join L_DEGREE on F_EDUCATION.degree = L_DEGREE.id "
+					+ "left join L_MAJOR on F_EDUCATION.major = L_MAJOR.id "
+				+ ") as tmp"
+			+ ") as education on education.iid = C_INTERVIEW.id "
+
+            + "where C_INTERVIEW.id = " + conn.escape(req.params.id) + ";";
 
 		conn.query(q, function (err, interviews) {
-			
 			if (err) console.log(err);
+			var interview = interviews[0];
+
+			console.log(interview);
+
+			// Prepare Industry Data
+			if (interview.industry != null) {
+				var industries = interview.industry.split(",");
+				interview.industry = new Array();
+				industries.forEach( function (i) {
+					interview.industry.push({ value : i });
+				});
+			}	
+
+			// Prepare Environment Data
+			if (interview.environment != null) {
+				var environments = interview.environment.split(",");
+				interview.environment = new Array();
+				environments.forEach( function (i) {
+					interview.environment.push({ value : i });
+				});
+			}
+
+			// Prepare Certifications Data
+			if (interview.certs != null) {
+				var certifications = interview.certs.split(",");
+				interview.certs = new Array();
+				certifications.forEach( function (i) {
+					interview.certs.push({ value : i });
+				});
+			}	
+
+			// Prepare Soft Skills Data
+			if (interview.soft_skills) {
+				var soft_skill = interview.soft_skills.split(",");
+				interview.soft_skills = new Array();
+				soft_skill.forEach( function (i) {
+					interview.soft_skills.push({ value : i });
+				});
+			}
+
+			// Prepare Education Data
+			if (interview.education != null) {
+				var degrees = interview.education.split(";");
+				interview.education = new Array();
+				degrees.forEach(function (i) {
+					var arr = i.split(",");
+					
+					var degree = {
+						degree: 	arr[0],
+						major: 		arr[1],
+						university: arr[2],
+						year: 		arr[3]
+					};
+
+					interview.education.push(degree);
+				});
+			}
+
+			console.log(interview);
+			
 			res.render('interviews/show', {
-				interview : interviews[0],
+				interview : interview,
 				entity : req.session.entity
 			});
 
@@ -60,24 +187,24 @@ exports.form = function (req, res) {
 exports.edit = function (req, res) {
 	pool.getConnection(function (err, conn) {
 
-		var q0 = "select * from D_INTERVIEWS where iid = " + conn.escape(req.params.iid) + ";";
+		var iq = "select * from C_INTERVIEW where id = " + conn.escape(req.params.id) + ";";
 
-		// Field Queries
-		var f1 = "select * from F_TYPES;";
-		var f2 = "select * from F_SECTORS;";
-		var f3 = "select * from F_INDUSTRIES;";
-		var f4 = "select * from F_EXPERIENCE;";
-		var f5 = "select * from F_ENVIRONMENT;";
-		var f6 = "select * from F_SALARY;";
-		var f7 = "select * from F_HOURS_PER_WEEK;";
-		var f8 = "select * from F_WEEKENDS_WORKED;";
-		var f9 = "select * from F_OVERNIGHT_TRAVEL;";
-		var f10 = "select * from F_CERTS;";
-		var f11 = "select * from F_SOFT_SKILLS;";
+		var fq = "select * from L_TYPE;"
+			   + "select * from L_SECTOR;"
+			   + "select * from L_INDUSTRY;"
+			   + "select * from L_EXPERIENCE;"
+			   + "select * from L_ENVIRONMENT;"
+			   + "select * from L_SALARY;"
+			   + "select * from L_HOURS_PER_WEEK;"
+			   + "select * from L_WEEKENDS_WORKED;"
+			   + "select * from L_OVERNIGHT_TRAVEL;"
+			   + "select * from L_CERTIFICATION;"
+			   + "select * from L_SOFT_SKILL;"
+			   + "select * from L_DEGREE;"
+			   + "select * from L_MAJOR;"
+			   + "select * from L_UNIVERSITY;"
 
-		var q = q0 + f1 + f2 + f3 + f4 + f5 + f6 + f7 + f8 + f9 + f10 + f11;
-
-		conn.query(q, function (err, results) {
+		conn.query(fq + iq, function (err, results) {
 			res.render('interviews/form', {
 				interview 			: results[0][0],
 				types 				: results[1],
@@ -91,6 +218,9 @@ exports.edit = function (req, res) {
 				overnight_travel 	: results[9],
 				certs 				: results[10],
 				soft_skills 		: results[11],
+				degrees 			: results[12],
+				majors 				: results[13],
+				universities 		: results[14],
 				entity 				: req.session.entity
 			});
 		});
@@ -108,7 +238,7 @@ exports.create = function (req, res) {
 			timestamp : new Date()
 		};
 
-		conn.query("insert into D_INTERVIEWS set ?", interview, function (err) {
+		conn.query("insert into C_INTERVIEW set ?", interview, function (err) {
 			if (err) console.log(err);
 			res.redirect('/i');
 		});
@@ -137,9 +267,9 @@ exports.update = function (req, res) {
 			timestamp 			: new Date()
 		};
 
-		conn.query("update D_INTERVIEWS set ? where iid = " + req.params.iid, article, function (err) {
+		conn.query("update C_INTERVIEW set ? where id = " + req.params.id, article, function (err) {
 			if (err) console.log(err);
-			res.redirect( "/i/" + req.params.iid );
+			res.redirect( "/i/" + req.params.id );
 		});
 	});
 };

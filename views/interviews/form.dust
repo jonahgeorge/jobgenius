@@ -10,7 +10,14 @@
 	</div>
 
 	{?interview}
-		<form action="/i/{interview.iid}" method="post">
+		<form action="/i/{interview.id}" method="post">
+
+			<!-- Tools -->
+			<!-- <h3>Frequently Used Tools</h3>
+			<hr>
+			<input style='width:250px; display:inline-block;' class='form-control' type='text' placeholder='Email'>&nbsp;
+			<input class='form-control' style='width:100px; display:inline-block;' type='number' placeholder='3 hours' min='1' max='24'>
+			<br><a href='#'>Add another</a> -->
 
 			<!-- Basic Details -->
 			<h3>Basic Details</h3>
@@ -119,6 +126,32 @@
 				<br>
 
 			<!-- Education Background -->
+				<h5>Undergraduate</h5>
+					<!-- Degree -->
+					<h6>Degree</h6>
+					{#degrees}
+						<input type="radio" name="degree" value="{fid}" {@if cond="{interview.degrees} == {fid}"} checked {/if}> {value}
+						<br>
+					{/degrees}
+					<br>
+
+					<!-- Major -->
+					<h6>Major</h6>
+					<select name='major'>
+						{#majors}
+							<option value="{fid}">{name}</option>	
+						{/majors}
+					</select>
+					<br>
+
+					<!-- University -->
+					<h6>University</h6>
+					<select name="university">
+						{#universities}
+							<option value="{fid}">{name}</option>
+						{/universities}
+					</select>
+					<br>
 
 			<!-- Skills and Tools -->
 
