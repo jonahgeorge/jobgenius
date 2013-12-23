@@ -142,19 +142,19 @@
 				<span class="glyphicon glyphicon-wrench pull-right"></span>
 			</div>
 			<div class="panel-body">
-				{?interview.soft_skills}
+				{?interview.skills}
 					<span class="pull-left"><b>Skills:</b></span>
-					{#interview.soft_skills}
+					{#interview.skills}
 						<span class="pull-right">{value}</span><br>
-					{/interview.soft_skills}
-				{/interview.soft_skills}
+					{/interview.skills}
+				{/interview.skills}
 				<br>
-				{?interview.soft_skills}
+				{?interview.tools}
 					<span class="pull-left"><b>Tools:</b></span>
-					{#interview.soft_skills}
+					{#interview.tools}
 						<span class="pull-right">{value}</span><br>
-					{/interview.soft_skills}
-				{/interview.soft_skills}
+					{/interview.tools}
+				{/interview.tools}
 			</div>
 		</div>
 
@@ -230,18 +230,23 @@
 	<div class="panel panel-default">
 		<div class="panel-heading"><h4>Comments</h4></div>
 		<div class="panel-body">
-			<p>Thanks for the interview Jonah!</p>
-			<hr>
-			<p>Very informative, which programming language is your favorite?</p>
+			{#comments}
+				<div class="clearfix" style="border-bottom: 1px solid #eee; padding: 10px">
+					<span class="pull-left">{value}</span>
+					<span class="pull-right">{email}</span>
+				</div>	
+			{:else}
+				<span>No comments yet, get the conversation started!</span>
+			{/comments}
 		</div>
 		<div class="panel-footer clearfix" style="background-color: #dff0d8; color: #3c763d; border-color: #d6e9c6;">
 			{?entity}
 				<h5>Join the Dicussion</h5>
-				<textarea class="form-control" style="width:100%;resize:vertical;"></textarea>
+				<textarea id='comment' class="form-control" style="width:100%;resize:vertical;"></textarea>
 				<br>
-				<button class="btn btn-success">Submit</button>
+				<button id='submit' class="btn btn-success">Submit</button>
 				&nbsp;&nbsp;
-				<button class="btn btn-warning">Clear</button>
+				<button id='clear' class="btn btn-warning">Clear</button>
 			{:else}
 				<span><a href="/auth/signin">Login</a> to join the discussion</span>
 			{/entity}
@@ -250,6 +255,27 @@
 {/content}
 
 {<foot}
+	<!-- comment functions -->
+	<script type="text/javascript">
+		$("#submit").on("click", function () {
+			$.ajax({
+				url: "/api/comment/create",
+				type: "post",
+				data : {
+					id: {interview.id},
+					value: $("#comment").val()
+				}
+			}).done( function (data) {
+				location.reload();
+			});
+		});
+
+		$("#clear").on("click", function () {
+			$("#comment").val("");	
+		});
+
+	</script>
+	<!-- graph functions -->
 	<script type="text/javascript">
 		var dataset = [ ["Work", 8], ["Life", 7] ];
 		$.plot("#fulfillment", [ dataset ], {
@@ -295,6 +321,5 @@
 			},
 			legend: { show: true }
 		});
-
 	</script>
 {/foot}

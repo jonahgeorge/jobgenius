@@ -3,6 +3,7 @@ var users = require('../controllers/users');
 var articles = require('../controllers/articles');
 var interviews = require('../controllers/interviews');
 var statics = require('../controllers/statics');
+var comments = require('../controllers/comments');
 var middleware = require('./middleware');
 
 /* Expose routes */
@@ -36,6 +37,9 @@ module.exports = function (app) {
 	app.get('/auth/signin', users.lform);
 	app.get('/auth/signup', users.sform);
 
+	/* API */
 	app.post('/api/signin', users.signin);
 	app.post('/api/signup', users.signup);
+
+	app.post('/api/comment/create', comments.create); 
 }

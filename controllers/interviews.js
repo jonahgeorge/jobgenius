@@ -31,7 +31,9 @@ exports.show = function (req, res) {
             + "L_OVERNIGHT_TRAVEL.value as overnight_travel, "
             + "group_concat(L_CERTIFICATION.value separator ', ') as certs, "
             + "soft_skills.value as soft_skills, "
-			+ "education.value as education "
+			+ "education.value as education, "
+			+ "tools.value as tools, "
+			+ "skills.value as skills "
             
             + "from C_INTERVIEW "
             
@@ -103,77 +105,124 @@ exports.show = function (req, res) {
 				+ ") as tmp"
 			+ ") as education on education.iid = C_INTERVIEW.id "
 
+			// Tools
+            + "left join ( "
+                + "select F_TOOL.iid, group_concat(F_TOOL.value separator ',') as value "
+                + "from F_TOOL "
+                + "group by F_TOOL.iid "
+            + ") as tools on tools.iid = C_INTERVIEW.id "
+
+			// Skills
+            + "left join ( "
+                + "select F_SKILL.iid, group_concat(F_SKILL.value separator ',') as value "
+                + "from F_SKILL "
+                + "group by F_SKILL.iid "
+            + ") as skills on skills.iid = C_INTERVIEW.id "
+
             + "where C_INTERVIEW.id = " + conn.escape(req.params.id) + ";";
 
 		conn.query(q, function (err, interviews) {
-			if (err) console.log(err);
-			var interview = interviews[0];
 
-			console.log(interview);
+			var c = "select F_COMMENT.id, C_USER.email, F_COMMENT.value "
+				+ "from F_COMMENT "
+				+ "left join C_USER on C_USER.uid = F_COMMENT.uid "
+				+ "where F_COMMENT.iid = " + conn.escape(req.params.id) + " "
+				+ "and F_COMMENT.published = 1 ";
 
-			// Prepare Industry Data
-			if (interview.industry != null) {
-				var industries = interview.industry.split(",");
-				interview.industry = new Array();
-				industries.forEach( function (i) {
-					interview.industry.push({ value : i });
+			conn.query(c, function (err, comments) {
+
+				if (err) console.log(err);
+				var interview = interviews[0];
+
+				console.log(interview);
+				console.log(comments);
+				
+				comments.forEach( function (i) {
+					i.email = i.email.split("@")[0];
 				});
-			}	
+				
+				// Prepare Industry Data
+				if (interview.industry != null) {
+					var industries = interview.industry.split(",");
+					interview.industry = new Array();
+					industries.forEach( function (i) {
+						interview.industry.push({ value : i });
+					});
+				}	
 
-			// Prepare Environment Data
-			if (interview.environment != null) {
-				var environments = interview.environment.split(",");
-				interview.environment = new Array();
-				environments.forEach( function (i) {
-					interview.environment.push({ value : i });
+				// Prepare Environment Data
+				if (interview.environment != null) {
+					var environments = interview.environment.split(",");
+					interview.environment = new Array();
+					environments.forEach( function (i) {
+						interview.environment.push({ value : i });
+					});
+				}
+
+				// Prepare Certifications Data
+				if (interview.certs != null) {
+					var certifications = interview.certs.split(",");
+					interview.certs = new Array();
+					certifications.forEach( function (i) {
+						interview.certs.push({ value : i });
+					});
+				}	
+
+				// Prepare Soft Skills Data
+				if (interview.soft_skills) {
+					var soft_skill = interview.soft_skills.split(",");
+					interview.soft_skills = new Array();
+					soft_skill.forEach( function (i) {
+						interview.soft_skills.push({ value : i });
+					});
+				}
+				// Prepare Tools Data
+				if (interview.tools) {
+					var tools = interview.tools.split(",");
+					interview.tools = new Array();
+					tools.forEach( function (i) {
+						interview.tools.push({ value : i });
+					});
+				}
+
+				// Prepare Skills Data
+				if (interview.skills) {
+					var skill = interview.skills.split(",");
+					interview.skills = new Array();
+					skill.forEach( function (i) {
+						interview.skills.push({ value : i });
+					});
+				}
+
+				// Prepare Education Data
+				if (interview.education != null) {
+					var degrees = interview.education.split(";");
+					interview.education = new Array();
+					degrees.forEach(function (i) {
+						var arr = i.split(",");
+						
+						var degree = {
+							degree: 	arr[0],
+							major: 		arr[1],
+							university: arr[2],
+							year: 		arr[3]
+						};
+
+						interview.education.push(degree);
+					});
+				}
+
+				console.log(interview);
+				console.log(comments);	
+
+				res.render('interviews/show', {
+					interview : interview,
+					comments: comments,
+					entity : req.session.entity
 				});
-			}
 
-			// Prepare Certifications Data
-			if (interview.certs != null) {
-				var certifications = interview.certs.split(",");
-				interview.certs = new Array();
-				certifications.forEach( function (i) {
-					interview.certs.push({ value : i });
-				});
-			}	
-
-			// Prepare Soft Skills Data
-			if (interview.soft_skills) {
-				var soft_skill = interview.soft_skills.split(",");
-				interview.soft_skills = new Array();
-				soft_skill.forEach( function (i) {
-					interview.soft_skills.push({ value : i });
-				});
-			}
-
-			// Prepare Education Data
-			if (interview.education != null) {
-				var degrees = interview.education.split(";");
-				interview.education = new Array();
-				degrees.forEach(function (i) {
-					var arr = i.split(",");
-					
-					var degree = {
-						degree: 	arr[0],
-						major: 		arr[1],
-						university: arr[2],
-						year: 		arr[3]
-					};
-
-					interview.education.push(degree);
-				});
-			}
-
-			console.log(interview);
-			
-			res.render('interviews/show', {
-				interview : interview,
-				entity : req.session.entity
 			});
-
 		});
-
 		conn.release();
 	});
 };
