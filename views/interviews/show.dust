@@ -1,325 +1,331 @@
 {>"layouts/default" /}
 
 {<head}
-	<script src="/components/flot/jquery.flot.js"></script>
-	<script src="/components/flot/jquery.flot.pie.js"></script>
-	<script src="/components/flot/jquery.flot.categories.js"></script>
-	<script src="/components/flot/jquery.flot.resize.js"></script>
+    <script src="/components/flot/jquery.flot.js"></script>
+    <script src="/components/flot/jquery.flot.pie.js"></script>
+    <script src="/components/flot/jquery.flot.categories.js"></script>
+    <script src="/components/flot/jquery.flot.resize.js"></script>
 {/head}
 
 {<content}
-	<div class="alert alert-warning" hidden></div>
+    <div class="alert alert-warning" hidden></div>
 
-	<div class="page-header">
-		<h1>{interview.name} 
-		<small>
-			{interview.position}
-			{@if cond="('{entity.uid}' == '{interview.uid}') || ('{entity.role}' == 0)"}
-				<a class="btn btn-default pull-right" href='/i/{interview.id}/edit'>Edit</a>
-			{/if}
-		</small></h1>
-	</div>
+    <div class="page-header">
+        <h1>{interview.name} 
+        <small>
+            {interview.position}
+            {@if cond="('{entity.uid}' == '{interview.uid}') || ('{entity.role}' == 0)"}
+                <a class="btn btn-default pull-right" href='/i/{interview.id}/edit'>Edit</a>
+            {/if}
+        </small></h1>
+    </div>
 
-	<div class="col-sm-6 left-col">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title" style="display:inline;">Details</h3>
-				<span class="glyphicon glyphicon-search pull-right"></span>
-			</div>
-			<div class="panel-body">
-				{?interview.type}
-					<span class="pull-left"><b>Type:</b></span>
-					<span class="pull-right">{interview.type}</span><br>
-				{/interview.type}
-				{?interview.sector}
-					<span class="pull-left"><b>Sector:</b></span>
-					<span class="pull-right">{interview.sector}</span><br>
-				{/interview.sector}
-				{?interview.industry}
-					<span class="pull-left"><b>Industry:</b></span>
-					{#interview.industry}
-						<span class="pull-right">{value}</span><br>
-					{/interview.industry}
-				{/interview.industry}
-				{?interview.experience}
-					<span class="pull-left"><b>Experience:</b></span>
-					<span class="pull-right">{interview.experience}</span><br>
-				{/interview.experience}
-				{?interview.environment}
-					<span class="pull-left"><b>Environment:</b></span>
-					{#interview.environment}
-						<span class="pull-right">{value}</span><br>
-					{/interview.environment}
-				{/interview.environment}
-				{?interview.salary}
-					<span class="pull-left"><b>Salary:</b></span>
-					<span class="pull-right">{interview.salary}</span><br>
-				{/interview.salary}
-				{?interview.hours_per_week}
-					<span class="pull-left"><b>Hours per Week:</b></span>
-					<span class="pull-right">{interview.hours_per_week}</span><br>
-				{/interview.hours_per_week}
-				{?interview.weekends_worked}
-					<span class="pull-left"><b>Weekends Worked:</b></span>
-					<span class="pull-right">{interview.weekends_worked}</span><br>
-				{/interview.weekends_worked}
-				{?interview.overnight_travel}
-					<span class="pull-left"><b>Overnight Travel:</b></span>
-					<span class="pull-right">{interview.overnight_travel}</span><br>
-				{/interview.overnight_travel}
-			</div>
-		</div>
+    <div class="col-sm-6 left-col">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="display:inline;">Details</h3>
+                <span class="glyphicon glyphicon-search pull-right"></span>
+            </div>
+            <div class="panel-body">
+                {?interview.type}
+                    <span class="pull-left"><b>Type:</b></span>
+                    <span class="pull-right">{interview.type}</span><br>
+                {/interview.type}
+                {?interview.sector}
+                    <span class="pull-left"><b>Sector:</b></span>
+                    <span class="pull-right">{interview.sector}</span><br>
+                {/interview.sector}
+                {?interview.industry}
+                    <span class="pull-left"><b>Industry:</b></span>
+                    {#interview.industry}
+                        <span class="pull-right">{value}</span><br>
+                    {/interview.industry}
+                {/interview.industry}
+                {?interview.experience}
+                    <span class="pull-left"><b>Experience:</b></span>
+                    <span class="pull-right">{interview.experience}</span><br>
+                {/interview.experience}
+                {?interview.environment}
+                    <span class="pull-left"><b>Environment:</b></span>
+                    {#interview.environment}
+                        <span class="pull-right">{value}</span><br>
+                    {/interview.environment}
+                {/interview.environment}
+                {?interview.salary}
+                    <span class="pull-left"><b>Salary:</b></span>
+                    <span class="pull-right">{interview.salary}</span><br>
+                {/interview.salary}
+                {?interview.hours_per_week}
+                    <span class="pull-left"><b>Hours per Week:</b></span>
+                    <span class="pull-right">{interview.hours_per_week}</span><br>
+                {/interview.hours_per_week}
+                {?interview.weekends_worked}
+                    <span class="pull-left"><b>Weekends Worked:</b></span>
+                    <span class="pull-right">{interview.weekends_worked}</span><br>
+                {/interview.weekends_worked}
+                {?interview.overnight_travel}
+                    <span class="pull-left"><b>Overnight Travel:</b></span>
+                    <span class="pull-right">{interview.overnight_travel}</span><br>
+                {/interview.overnight_travel}
+            </div>
+        </div>
 
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title" style="display:inline;">Daily Breakdown</h3>
-				<span class="glyphicon glyphicon-time pull-right"></span>
-			</div>
-			<div class="panel-body">
-				<div id='dailybreakdown' style="width:100%; height:200px;"></div>	
-			</div>
-		</div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="display:inline;">Daily Breakdown</h3>
+                <span class="glyphicon glyphicon-time pull-right"></span>
+            </div>
+            <div class="panel-body">
+                <div id='dailybreakdown' style="width:100%; height:200px;"></div>   
+            </div>
+        </div>
 
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title" style="display:inline;">Job Requirements</h3>
-				<span class="glyphicon glyphicon-list pull-right"></span>
-			</div>
-			<div class="panel-body">
-				{?interview.certs}
-					<span class="pull-left"><b>Certifications:</b></span>
-					{#interview.certs}
-						<span class="pull-right">{value}</span><br>
-					{/interview.certs}
-					<br>
-				{/interview.certs}
-				{?interview.soft_skills}
-					<span class="pull-left"><b>Soft Skills:</b></span>
-					{#interview.soft_skills}
-						<span class="pull-right">{value}</span><br>
-					{/interview.soft_skills}
-				{/interview.soft_skills}
-			</div>
-		</div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="display:inline;">Job Requirements</h3>
+                <span class="glyphicon glyphicon-list pull-right"></span>
+            </div>
+            <div class="panel-body">
+                {?interview.certs}
+                    <span class="pull-left"><b>Certifications:</b></span>
+                    {#interview.certs}
+                        <span class="pull-right">{value}</span><br>
+                    {/interview.certs}
+                    <br>
+                {/interview.certs}
+                {?interview.soft_skills}
+                    <span class="pull-left"><b>Soft Skills:</b></span>
+                    {#interview.soft_skills}
+                        <span class="pull-right">{value}</span><br>
+                    {/interview.soft_skills}
+                {/interview.soft_skills}
+            </div>
+        </div>
 
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title" style="display:inline;">Fulfillment</h3>
-				<span class="glyphicon glyphicon-time pull-right"></span>
-			</div>
-			<div class="panel-body">
-				<div id='fulfillment' style="width:100%; height:200px;"></div>	
-			</div>
-		</div>
-	</div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="display:inline;">Fulfillment</h3>
+                <span class="glyphicon glyphicon-time pull-right"></span>
+            </div>
+            <div class="panel-body">
+                <div id='fulfillment' style="width:100%; height:200px;"></div>  
+            </div>
+        </div>
+    </div>
 
-	<div class="col-sm-6 right-col">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title" style="display:inline;">Educational Background</h3>
-				<span class="glyphicon glyphicon-book pull-right"></span>
-			</div>
-			<div class="panel-body">
-				{#interview.education}
-					<span class="pull-left"><b>{degree}</b></span>
-					<span class="pull-right">{year}</span>
-					<hr style="margin-bottom:5px;">
-					<span class="pull-left"><b>Concentration:</b></span>
-					<span class="pull-right">{major}</span><br>
-					<span class="pull-left"><b>University:</b></span>
-					<span class="pull-right">{university}</span><br><br>
-				{/interview.education}
-			</div>
-			<div class="panel-footer clearfix" style="background-color: #428bca; color: #fff; border-color: #428bca;">
-				<span class="pull-left">Did you find this information helpful?</span>
-				<span class="pull-right">Yes&nbsp;&nbsp;|&nbsp;&nbsp;No</span>
-			</div>
-		</div>
+    <div class="col-sm-6 right-col">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="display:inline;">Educational Background</h3>
+                <span class="glyphicon glyphicon-book pull-right"></span>
+            </div>
+            <div class="panel-body">
+                {#interview.education}
+                    <span class="pull-left"><b>{degree}</b></span>
+                    <span class="pull-right">{year}</span>
+                    <hr style="margin-bottom:5px;">
+                    <span class="pull-left"><b>Concentration:</b></span>
+                    <span class="pull-right">{major}</span><br>
+                    <span class="pull-left"><b>University:</b></span>
+                    <span class="pull-right">{university}</span><br><br>
+                {/interview.education}
+            </div>
+            <div class="panel-footer clearfix" style="background-color: #428bca; color: #fff; border-color: #428bca;">
+                <span class="pull-left">Did you find this information helpful?</span>
+                <span class="pull-right">Yes&nbsp;&nbsp;|&nbsp;&nbsp;No</span>
+            </div>
+        </div>
 
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title" style="display:inline;">Skills and Tools</h3>
-				<span class="glyphicon glyphicon-wrench pull-right"></span>
-			</div>
-			<div class="panel-body">
-				{?interview.skills}
-					<span class="pull-left"><b>Skills:</b></span>
-					{#interview.skills}
-						<span class="pull-right">{value}</span><br>
-					{/interview.skills}
-				{/interview.skills}
-				<br>
-				{?interview.tools}
-					<span class="pull-left"><b>Tools:</b></span>
-					{#interview.tools}
-						<span class="pull-right">{value}</span><br>
-					{/interview.tools}
-				{/interview.tools}
-			</div>
-		</div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="display:inline;">Skills and Tools</h3>
+                <span class="glyphicon glyphicon-wrench pull-right"></span>
+            </div>
+            <div class="panel-body">
+                {?interview.skills}
+                    <span class="pull-left"><b>Skills:</b></span>
+                    {#interview.skills}
+                        <span class="pull-right">{value}</span><br>
+                    {/interview.skills}
+                {/interview.skills}
+                <br>
+                {?interview.tools}
+                    <span class="pull-left"><b>Tools:</b></span>
+                    {#interview.tools}
+                        <span class="pull-right">{value}</span><br>
+                    {/interview.tools}
+                {/interview.tools}
+            </div>
+        </div>
 
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title" style="display:inline;">Solo vs Group Work</h3>
-				<span class="glyphicon glyphicon-time pull-right"></span>
-			</div>
-			<div class="panel-body">
-				<div id="solovgroup" style="width:100%;height:200px;"></div>
-			</div>
-		</div>
-	</div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title" style="display:inline;">Solo vs Group Work</h3>
+                <span class="glyphicon glyphicon-time pull-right"></span>
+            </div>
+            <div class="panel-body">
+                <div id="solovgroup" style="width:100%;height:200px;"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="clearfix"></div><br>
 <!--
 <div class="col-sm-4">
-	<div class="panel-group" id="accordion">
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h4 class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">The Basics</a></h4>
-			</div>
-			<div id="collapseOne" class="panel-collapse collapse in">
-				<div class="panel-body">
-					<a href="#">What I Do <span class="glyphicon glyphicon-film pull-right"></span></a><br>
-					<a href="#">Typical Day <span class="glyphicon glyphicon-film pull-right"></span></a><br>
-					<a href="#">Best Part <span class="glyphicon glyphicon-film pull-right"></span></a><br>
-					<a href="#">Worst Part <span class="glyphicon glyphicon-film pull-right"></span></a><br>
-					<a href="#">Most Surprising <span class="glyphicon glyphicon-film pull-right"></span></a><br>
-				</div>
-			</div>
-		</div>
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h4 class="panel-title">
-					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">The Details</a>
-				</h4>
-			</div>
-			<div id="collapseTwo" class="panel-collapse collapse">
-				<div class="panel-body">
-					<a href="#">Career Highlight <span class="glyphicon glyphicon-film pull-right"></span></a><br>
-					<a href="#">Greatest Memory <span class="glyphicon glyphicon-film pull-right"></span></a><br>
-					<a href="#">Biggest Mistake <span class="glyphicon glyphicon-film pull-right"></span></a><br>
-					<a href="#">Worst Day <span class="glyphicon glyphicon-film pull-right"></span></a><br>
-					<a href="#">Good Time vs Bad <span class="glyphicon glyphicon-film pull-right"></span></a><br>
-					<a href="#">How I Found This Career <span class="glyphicon glyphicon-film pull-right"></span></a><br>
-					<a href="#">Courses To Take <span class="glyphicon glyphicon-film pull-right"></span></a><br>
-					<a href="#">What School Didn't Teach <span class="glyphicon glyphicon-film pull-right"></span></a><br>
-				</div>
-			</div>
-		</div>
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h4 class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">Videos at Work</a></h4>
-			</div>
-			<div id="collapseThree" class="panel-collapse collapse">
-				<div class="panel-body"></div>
-			</div>
-		</div>
-	</div>
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">The Basics</a></h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <a href="#">What I Do <span class="glyphicon glyphicon-film pull-right"></span></a><br>
+                    <a href="#">Typical Day <span class="glyphicon glyphicon-film pull-right"></span></a><br>
+                    <a href="#">Best Part <span class="glyphicon glyphicon-film pull-right"></span></a><br>
+                    <a href="#">Worst Part <span class="glyphicon glyphicon-film pull-right"></span></a><br>
+                    <a href="#">Most Surprising <span class="glyphicon glyphicon-film pull-right"></span></a><br>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">The Details</a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <a href="#">Career Highlight <span class="glyphicon glyphicon-film pull-right"></span></a><br>
+                    <a href="#">Greatest Memory <span class="glyphicon glyphicon-film pull-right"></span></a><br>
+                    <a href="#">Biggest Mistake <span class="glyphicon glyphicon-film pull-right"></span></a><br>
+                    <a href="#">Worst Day <span class="glyphicon glyphicon-film pull-right"></span></a><br>
+                    <a href="#">Good Time vs Bad <span class="glyphicon glyphicon-film pull-right"></span></a><br>
+                    <a href="#">How I Found This Career <span class="glyphicon glyphicon-film pull-right"></span></a><br>
+                    <a href="#">Courses To Take <span class="glyphicon glyphicon-film pull-right"></span></a><br>
+                    <a href="#">What School Didn't Teach <span class="glyphicon glyphicon-film pull-right"></span></a><br>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">Videos at Work</a></h4>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse">
+                <div class="panel-body"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="col-sm-8">
-	<video id="video" controls width="730" height="410">
-		<source type="video/mp4" src="http://jobgeniusvideos.s3.amazonaws.com/videos/converted/5583/My_Mentor_mp4_1379962206.mp4">
-	</video>
+-->
+<div class="col-sm-10 col-sm-offset-1">
+    <video id="video" controls width="100%">
+        <source type="video/mp4" src="http://jobgeniusvideos.s3.amazonaws.com/videos/converted/5583/My_Mentor_mp4_1379962206.mp4">
+    </video>
+</div>
+<div class="clearfix"></div>
+<br><br>
+<!--
 </div>
 
 <div class="clearfix"></div><br><br>
 -->
 <div class="col-sm-10 col-sm-offset-1">
-	<div class="panel panel-default">
-		<div class="panel-heading"><h4>Comments</h4></div>
-		<div class="panel-body">
-			{#comments}
-				<div class="clearfix" style="border-bottom: 1px solid #eee; padding: 10px">
-					<span class="pull-left">{value}</span>
-					<span class="pull-right">{email}</span>
-				</div>	
-			{:else}
-				<span>No comments yet, get the conversation started!</span>
-			{/comments}
-		</div>
-		<div class="panel-footer clearfix" style="background-color: #dff0d8; color: #3c763d; border-color: #d6e9c6;">
-			{?entity}
-				<h5>Join the Dicussion</h5>
-				<textarea id='comment' class="form-control" style="width:100%;resize:vertical;"></textarea>
-				<br>
-				<button id='submit' class="btn btn-success">Submit</button>
-				&nbsp;&nbsp;
-				<button id='clear' class="btn btn-warning">Clear</button>
-			{:else}
-				<span><a href="/auth/signin">Login</a> to join the discussion</span>
-			{/entity}
-		</div>
-	</div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h4>Comments</h4></div>
+        <div class="panel-body">
+            {#comments}
+                <div class="clearfix" style="border-bottom: 1px solid #eee; padding: 10px">
+                    <span class="pull-left">{value}</span>
+                    <span class="pull-right">{email}</span>
+                </div>  
+            {:else}
+                <span>No comments yet, get the conversation started!</span>
+            {/comments}
+        </div>
+        <div class="panel-footer clearfix" style="background-color: #dff0d8; color: #3c763d; border-color: #d6e9c6;">
+            {?entity}
+                <h5>Join the Dicussion</h5>
+                <textarea id='comment' class="form-control" style="width:100%;resize:vertical;"></textarea>
+                <br>
+                <button id='submit' class="btn btn-success">Submit</button>
+                &nbsp;&nbsp;
+                <button id='clear' class="btn btn-warning">Clear</button>
+            {:else}
+                <span><a href="/auth/signin">Login</a> to join the discussion</span>
+            {/entity}
+        </div>
+    </div>
 {/content}
 
 {<foot}
-	<!-- comment functions -->
-	<script type="text/javascript">
-		$("#submit").on("click", function () {
-			$.ajax({
-				url: "/api/comment/create",
-				type: "post",
-				data : {
-					id: {interview.id},
-					value: $("#comment").val()
-				}
-			}).done( function (data) {
-				location.reload();
-			});
-		});
+    <!-- comment functions -->
+    <script type="text/javascript">
+        $("#submit").on("click", function () {
+            $.ajax({
+                url: "/api/comment/create",
+                type: "post",
+                data : {
+                    id: {interview.id},
+                    value: $("#comment").val()
+                }
+            }).done( function (data) {
+                location.reload();
+            });
+        });
 
-		$("#clear").on("click", function () {
-			$("#comment").val("");	
-		});
+        $("#clear").on("click", function () {
+            $("#comment").val("");  
+        });
 
-	</script>
-	<!-- graph functions -->
-	<script type="text/javascript">
-		var dataset = [ ["Work", 8], ["Life", 7] ];
-		$.plot("#fulfillment", [ dataset ], {
-			series: {
-				bars: {
-					show: true,
-					barWidth: 0.3,
-					align: "center"
-				}
-			},
-			xaxis: {
-				mode: "categories",
-				tickLength: 0,
-				autoscaleMargin: 0.5
-			}
-		});
-		
-		var dataset = [
-			{ label: "Email", data: 1 },
-			{ label: "Programming", data: 5 },
-			{ label: "Debugging", data: 2 }
-		];
-		$.plot('#dailybreakdown', dataset, {
-			series: {
-				pie: {
-					innerRadius: 0.5,
-					show: true
-				}
-			},
-			legend: { show: true }
-		});
-	
-		var dataset = [
-			{ label: "Solo", data: 99 },
-			{ label: "Group", data: 1 },
-		];
-		$.plot('#solovgroup', dataset, {
-			series: {
-				pie: {
-					innerRadius: 0.5,
-					show: true
-				}
-			},
-			legend: { show: true }
-		});
-	</script>
+    </script>
+    <!-- graph functions -->
+    <script type="text/javascript">
+        var dataset = [ ["Work", 8], ["Life", 7] ];
+        $.plot("#fulfillment", [ dataset ], {
+            series: {
+                bars: {
+                    show: true,
+                    barWidth: 0.3,
+                    align: "center"
+                }
+            },
+            xaxis: {
+                mode: "categories",
+                tickLength: 0,
+                autoscaleMargin: 0.5
+            }
+        });
+        
+        var dataset = [
+            { label: "Email", data: 1 },
+            { label: "Programming", data: 5 },
+            { label: "Debugging", data: 2 }
+        ];
+        $.plot('#dailybreakdown', dataset, {
+            series: {
+                pie: {
+                    innerRadius: 0.5,
+                    show: true
+                }
+            },
+            legend: { show: true }
+        });
+    
+        var dataset = [
+            { label: "Solo", data: 99 },
+            { label: "Group", data: 1 },
+        ];
+        $.plot('#solovgroup', dataset, {
+            series: {
+                pie: {
+                    innerRadius: 0.5,
+                    show: true
+                }
+            },
+            legend: { show: true }
+        });
+    </script>
 {/foot}

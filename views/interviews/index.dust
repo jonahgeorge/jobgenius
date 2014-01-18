@@ -10,7 +10,7 @@
 	</div>
 
 	{#interviews}	
-		<a href='/i/{id}'>
+		<a href="/i/{id}">
 			<div class="panel panel-default">
 				<div class="panel-body">
 					<span class="pull-left">{name} - {position}</span>

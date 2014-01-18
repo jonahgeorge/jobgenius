@@ -1,7 +1,7 @@
 {>"layouts/default" /}
 
 {<content}
-	<h4>Interviews</h4>
+	<a href="/i"><h4>Interviews</h4></a>
 	{#interviews}	
 		<a href='/i/{id}'>
 			<div class="clearfix" style="padding:10px 0; border-bottom: solid 1px #eee;">
@@ -14,7 +14,7 @@
 
 	<br>
 
-	<h4>Articles</h4>
+	<a href="/a"><h4>Articles</h4></a>
 	{#articles}	
 		<a href='/a/{aid}'>
 			<div class="clearfix" style="padding:10px 0; border-bottom: solid 1px #eee;">

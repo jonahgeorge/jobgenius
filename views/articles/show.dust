@@ -21,9 +21,58 @@
 		&nbsp;&nbsp;
 		<a id="delete" class="btn btn-danger" href='#'>Delete</a>
 	{/if}
+
+	<br><br>
+	<div class="panel panel-default">
+		<div class="panel-heading"><h4>Comments</h4></div>
+		<div class="panel-body">
+			{#comments}
+				<div class="clearfix" style="border-bottom: 1px solid #eee; padding: 10px">
+					<span class="pull-left">{value}</span>
+					<span class="pull-right">{email}</span>
+				</div>	
+			{:else}
+				<span>No comments yet, get the conversation started!</span>
+			{/comments}
+		</div>
+		<div class="panel-footer clearfix" style="background-color: #dff0d8; color: #3c763d; border-color: #d6e9c6;">
+			{?entity}
+				<h5>Join the Dicussion</h5>
+				<textarea id='comment' class="form-control" style="width:100%;resize:vertical;"></textarea>
+				<br>
+				<button id='submit' class="btn btn-success">Submit</button>
+				&nbsp;&nbsp;
+				<button id='clear' class="btn btn-warning">Clear</button>
+			{:else}
+				<span><a href="/auth/signin">Login</a> to join the discussion</span>
+			{/entity}
+		</div>
+	</div>
 {/content}
 
 {<foot}
+	<!-- comment functions -->
+	<script type="text/javascript">
+		$("#submit").on("click", function () {
+			$.ajax({
+				url: "/api/comment/create",
+				type: "post",
+				data : {
+					id: {article.id},
+					type: 'article',
+					value: $("#comment").val()
+				}
+			}).done( function (data) {
+				location.reload();
+			});
+		});
+
+		$("#clear").on("click", function () {
+			$("#comment").val("");	
+		});
+
+	</script>
+
 	<script>
 		$("#delete").on("click", function () {
 			$.ajax({

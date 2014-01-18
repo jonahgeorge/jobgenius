@@ -1,190 +1,186 @@
 {>"layouts/default" /}
 
-{<content}	
-	<div class="page-header">
-		{?interview}
-			<h1>Edit Interview</h1>
-		{:else}
-			<h1>New Interview</h1>
-		{/interview}
-	</div>
+{<content}  
+    <div class="page-header">
+        {?interview}
+            <h1>Edit Interview</h1>
+        {:else}
+            <h1>New Interview</h1>
+        {/interview}
+    </div>
 
-	{?interview}
-		<form action="/i/{interview.id}" method="post">
+    {?interview}
+        <form action="/i/{interview.id}" method="post">
+    {:else}
+        <form action="/i" method="post">
+    {/interview}
+    
+    <div class="col-sm-12">
+        <h3>Basic Details</h3>
 
-			<!-- Tools -->
-			<!-- <h3>Frequently Used Tools</h3>
-			<hr>
-			<input style='width:250px; display:inline-block;' class='form-control' type='text' placeholder='Email'>&nbsp;
-			<input class='form-control' style='width:100px; display:inline-block;' type='number' placeholder='3 hours' min='1' max='24'>
-			<br><a href='#'>Add another</a> -->
+        <div class="col-sm-6">
+            <div style="width:100%; height:235px; background-color:#eee;"></div>
+        </div>
 
-			<!-- Basic Details -->
-			<h3>Basic Details</h3>
-			<hr>
-				<!-- Name -->
-				<input class="form-control" name='name' type='text' placeholder='Name' value="{interview.name}"><br>
-				
-				<!-- Position -->
-				<input class="form-control" name='position' type='text' placeholder='Position' value="{interview.position}"><br>
-				
-				<!-- Company -->
-				<h5>Company</h5>
-					<input class="form-control" name='cname' type='text' placeholder='Name' value="{interview.cname}"><br>
-					<input class="form-control" name='curl' type='text' placeholder='Url' value="{interview.curl}"><br>
-			
-			<!-- Extended Details -->
-			<h3>Extended Details</h3>
-			<hr>
-				<!-- Job Type -->
-				<h5>Job Type</h5>
-				{#types}
-					<input type="radio" name="type" value="{fid}" {@if cond="{interview.type} == {fid}"} checked {/if}> {value}
-					<br>
-				{/types}
-				<br>
+        <div class="col-sm-6">
+            <input class="form-control" name='name' type='text' placeholder='Name' value="{interview.name}"><br>
+            <input class="form-control" name='position' type='text' placeholder='Position' value="{interview.position}"><br>
 
-				<!-- Sector -->
-				<h5>Sector</h5>
-				{#sectors}
-					<input type="radio" name="sector" value="{fid}" {@if cond="{interview.sector} == {fid}"} checked {/if}> {value}
-					<br>
-				{/sectors}
-				<br>					
+            <h4>Company <small>Not yet implemented</small></h4>
+            <input class="form-control" name='cname' type='text' placeholder='Name' value="{interview.cname}"><br>
+            <input class="form-control" name='curl' type='text' placeholder='Url' value="{interview.curl}"><br>
+        </div>
+    </div>
 
-				<!-- Industry -->
-				<h5>Industry</h5>
-				{#industries}
-					<input type="checkbox" name="industry" value="{fid}" {@if cond="{interview.industry} == {fid}"} checked {/if}> {value}
-					<br>
-				{/industries}
-				<br>
+    <div class="col-sm-12">
+        <h3>Extended Details</h3>
 
-				<!-- Experience (years) -->
-				<h5>Experience</h5>
-				{#experience}
-					<input type="radio" name="experience" value="{fid}" {@if cond="{interview.experience} == {fid}"} checked {/if}> {value}
-					<br>
-				{/experience}
-				<br>
+        <div class="col-sm-6"> <!-- Left Col -->
+            <h4>Job Type <small></small></h4>
+            {#types}
+                <label><input type="radio" name="type" value="{id}" {@if cond="{interview.type} == {id}"} checked {/if}> {value}</label><br>
+            {/types}
+            <br>
 
-				<!-- Environment -->
-				<h5>Environment</h5>
-				{#environments}
-					<input type="checkbox" name="environment" value="{fid}" {@if cond="{interview.environment} == {fid}"} checked {/if}> {value}
-					<br>
-				{/environments}
-				<br>
+            <h4>Sector <small></small></h4>
+            {#sectors}
+                <label><input type="radio" name="sector" value="{id}" {@if cond="{interview.sector} == {id}"} checked {/if}> {value}</label><br>
+            {/sectors}
+            <br>                    
 
-				<!-- Salary -->
-				<h5>Salary</h5>
-				{#salary}
-					<input type="radio" name="salary" value="{fid}" {@if cond="{interview.salary} == {fid}"} checked {/if}> {value}
-					<br>
-				{/salary}
-				<br>
+            <h4>Industry <small></small></h4>
+            {#industries}
+                <label><input type="checkbox" name="industry[]" value="{id}" {@if cond="{interview.industry} == {id}"} checked {/if}> {value}</label><br>
+            {/industries}
+            <br>
 
-				<!-- Hours Per Week -->
-				<h5>Hours Per Week</h5>
-				{#hours_per_week}
-					<input type="radio" name="hours_per_week" value="{fid}" {@if cond="{interview.hours_per_week} == {fid}"} checked {/if}> {value}
-					<br>
-				{/hours_per_week}
-				<br>
+            <h4>Experience <small></small></h4>
+            {#experience}
+                <label><input type="radio" name="experience" value="{id}" {@if cond="{interview.experience} == {id}"} checked {/if}> {value}</label><br>
+            {/experience}
+            <br>
+        </div>
 
-				<!-- Weekends Worked -->
-				<h5>Weekends Worked</h5>
-				{#weekends_worked}
-					<input type="radio" name="weekends_worked" value="{fid}" {@if cond="{interview.weekends_worked} == {fid}"} checked {/if}> {value}
-					<br>
-				{/weekends_worked}
-				<br>
+        <div class="col-sm-6"> <!-- Right Col -->
+            <h4>Environment <small></small></h4>
+            {#environments}
+                <label><input type="checkbox" name="environment[]" value="{id}" {@if cond="{interview.environment} == {id}"} checked {/if}> {value}</label><br>
+            {/environments}
+            <br>
 
-				<!-- Overnight Travel -->
-				<h5>Overnight Travel</h5>
-				{#overnight_travel}
-					<input type="radio" name="overnight_travel" value="{fid}" {@if cond="{interview.overnight_travel} == {fid}"} checked {/if}> {value}
-					<br>
-				{/overnight_travel}
-				<br>
+            <h4>Salary <small></small></h4>
+            {#salary}
+                <label><input type="radio" name="salary" value="{id}" {@if cond="{interview.salary} == {id}"} checked {/if}> {value}</label><br>
+            {/salary}
+            <label><input type="radio" name="salary" value="null" {@if cond="{interview.salary} == {id}"} checked {/if}> Prefer not to answer</label><br>
+            <br>
 
-			<!-- Job Requirements -->
-				<!-- Certifications -->
-				<h5>Required Certifications</h5>
-				{#certs}
-					<input type="checkbox" name="certs" value="{fid}" {@if cond="{interview.certs} == {fid}"} checked {/if}> {value}
-					<br>
-				{/certs}
-				<br>
+            <h4>Hours Per Week <small></small></h4>
+            {#hours_per_week}
+                <label><input type="radio" name="hours_per_week" value="{id}" {@if cond="{interview.hours_per_week} == {id}"} checked {/if}> {value}</label><br>
+            {/hours_per_week}
+            <br>
 
-				<!-- Soft Skills -->
-				<h5>Recommended Soft Skills</h5>
-				{#soft_skills}
-					<input type="checkbox" name="soft_skills" value="{fid}" {@if cond="{interview.soft_skills} == {fid}"} checked {/if}> {value}
-					<br>
-				{/soft_skills}
-				<br>
+            <h4>Weekends Worked <small></small></h4>
+            {#weekends_worked}
+                <label><input type="radio" name="weekends_worked" value="{id}" {@if cond="{interview.weekends_worked} == {id}"} checked {/if}> {value}</label><br>
+            {/weekends_worked}
+            <br>
 
-			<!-- Education Background -->
-				<h5>Undergraduate</h5>
-					<!-- Degree -->
-					<h6>Degree</h6>
-					{#degrees}
-						<input type="radio" name="degree" value="{fid}" {@if cond="{interview.degrees} == {fid}"} checked {/if}> {value}
-						<br>
-					{/degrees}
-					<br>
+            <h4>Overnight Travel <small></small></h4>
+            {#overnight_travel}
+                <label><input type="radio" name="overnight_travel" value="{id}" {@if cond="{interview.overnight_travel} == {id}"} checked {/if}> {value}</label><br>
+            {/overnight_travel}
+            <br>
+        </div>
+    </div>
 
-					<!-- Major -->
-					<h6>Major</h6>
-					<select name='major'>
-						{#majors}
-							<option value="{fid}">{name}</option>	
-						{/majors}
-					</select>
-					<br>
+    <div class="col-sm-12">
+        <h3>Job Requirements</h3>
 
-					<!-- University -->
-					<h6>University</h6>
-					<select name="university">
-						{#universities}
-							<option value="{fid}">{name}</option>
-						{/universities}
-					</select>
-					<br>
+        <div class="col-sm-6">
+            <h4>Required Certifications <small></small></h4>
+            {#certs}
+                <label><input type="checkbox" name="certs[]" value="{id}" {@if cond="{interview.certs} == {id}"} checked {/if}> {value}</label><br>
+            {/certs}
+        </div>
 
-			<!-- Skills and Tools -->
+        <div class="col-sm-6">
+            <h4>Recommended Soft Skills <small></small></h4>
+            {#soft_skills}
+                <label><input type="checkbox" name="soft_skills[]" value="{id}" {@if cond="{interview.soft_skills} == {id}"} checked {/if}> {value}</label><br>
+            {/soft_skills}
+        </div>
+    </div>
 
-			<!-- Fulfillment -->
+    <div class="col-sm-12" hidden>
+        <h3>Education Background</h3>
 
-			<!-- Solo vs Group Work -->
+        <h4>Undergraduate <small></small></h4>
 
+        <!-- Degree -->
+        <h6>Degree</h6>
+        {#degrees}
+            <label><input type="radio" name="degree" value="{id}" {@if cond="{interview.degrees} == {id}"} checked {/if}> {value}</label><br>
+        {/degrees}
+        <br>
+        <!-- Major -->
+        <h6>Major</h6>
+        <select name='major'>
+            {#majors}
+                <option value="{id}">{name}</option>   
+            {/majors}
+        </select>
+        <br>
 
-			<br>
-			<input class="btn btn-success" type="submit" value="Save">
-			&nbsp;&nbsp;
-			<a href="/i">Cancel</a>
-			<br>
-		</form>
-	{:else}
-		<form action="/i" method="post">
-			<input class="form-control" name='name' type='text' placeholder='Name'><br>
-			<input class="form-control" name='position' type='text' placeholder='Position'><br>
-			<h5>Company</h5>
-			<input class="form-control" name='cname' type='text' placeholder='Name'><br>
-			<input class="form-control" name='curl' type='text' placeholder='Url'><br>
-			<br>
+        <!-- University -->
+        <h6>University</h6>
+        <select name="university">
+            {#universities}
+                <option value="{id}">{name}</option>
+            {/universities}
+        </select>
+        <br>
+    </div>
 
-			<input class="btn btn-success" type="submit" value="Save">
-			&nbsp;&nbsp;
-			<a href="/i">Cancel</a>
-			<br>
-		</form>
-	{/interview}
+    <div class="col-sm-12">
+        <h3>Skills and Tools</h3>
+
+        <div class="col-sm-6">
+            <h4>Skills <small>List some of your most work-relevant skills</small></h4>
+            <input style='margin-bottom:5px;' class="form-control" name='skills[]' type='text' placeholder=''>
+            <a id="add_skill" href="javascript:void()">Add another field</a>
+        </div>
+
+        <div class="col-sm-6">
+            <h4>Tools <small>List some of the tools you use on a daily basis</small></h4>
+            <input style='margin-bottom:5px;' class="form-control" name='tools[]' type='text' placeholder=''>
+            <a id="add_tool" href="javascript:void()">Add another field</a>
+        </div>
+    </div>
+
+    <!-- Fulfillment -->
+
+    <!-- Solo vs Group Work -->
+
+    <div class="col-sm-12">
+        <hr>
+        <input class="btn btn-success" type="submit" value="Save">
+        &nbsp;&nbsp;
+        <a href="/i">Cancel</a>
+        <br>
+    </div>
+</form>
 {/content}
 
 {<foot}
-	<script type="text/javascript">
-			
-	</script>
+    <script type="text/javascript">
+        $(document).on('click', '#add_tool', function () {
+            $("<input style='margin-bottom:5px;' class='form-control' name='tools[]' type='text'>").insertAfter( $("input[name='tools[]']").last() ); 
+        });
+
+        $(document).on('click', '#add_skill', function () {
+            $("<input style='margin-bottom:5px;' class='form-control' name='skills[]' type='text'>").insertAfter( $("input[name='skills[]']").last() );
+        });   
+    </script>
 {/foot}
