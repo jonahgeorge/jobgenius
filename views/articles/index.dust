@@ -3,7 +3,7 @@
 {<content}
 	<div class="page-header">
 		{?entity}
-			<h1>{title}<small><a class="btn btn-success pull-right" href="/i/add">New Articles</a></small></h1>
+			<h1>{title}<small><a class="btn btn-success pull-right" href="/a/add">New Articles</a></small></h1>
 		{:else}
 			<h1>{title}</h1>
 		{/entity}
