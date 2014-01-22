@@ -1,5 +1,48 @@
 {>"layouts/default" /}
 
+{<head}
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <script type="text/javascript" src="/components/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/components/jquery-ui/ui/minified/jquery.ui.slider.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $( "#life" ).slider({
+                value:5,
+                min:0,
+                max:10,
+                step:1,
+                change: function( event, ui ) {
+                    $( "#life_val" ).text( $( "#life" ).slider( "value" ) + " / 10");
+                    $( "input[name='life']").val( $( "#life" ).slider( "value" ) );
+                }
+            });
+
+            $( "#work" ).slider({
+                value:5,
+                min:0,
+                max:10,
+                step:1,
+                change: function( event, ui ) {
+                    $( "#work_val" ).text( $( "#work" ).slider( "value" ) + " / 10");
+                    $( "input[name='work']").val( $( "#work" ).slider( "value" ) );
+                }
+            });
+
+            $( "#solo_group" ).slider({
+                value:50,
+                min:0,
+                max:100,
+                step:0.5,
+                change: function( event, ui ) {
+                    $( "#solo" ).text( $( "#solo_group" ).slider( "value" ) + "%"   );
+                    $( "#group" ).text ( (100 - $("#solo_group").slider("value")) + "%" );
+                    $( "input[name='solo_group']").val( $( "#solo_group" ).slider( "value" ) );
+                }
+            });
+        });
+    </script>
+{/head}
+
 {<content}  
     <div class="page-header">
         {?interview}
@@ -15,8 +58,8 @@
         <form action="/i" method="post">
     {/interview}
     
-    <div class="col-sm-12">
-        <h3>Basic Details</h3>
+    <div class="col-sm-12" style="margin-bottom:50px;">
+        <h3>Basic Details <small><a href="javascript:void()"><span class="glyphicon glyphicon-question-sign" data-content="Hey Edward!"></span></a></small></h3>
 
         <div class="col-sm-6">
             <div style="width:100%; height:235px; background-color:#eee;"></div>
@@ -32,8 +75,8 @@
         </div>
     </div>
 
-    <div class="col-sm-12">
-        <h3>Extended Details</h3>
+    <div class="col-sm-12" style="margin-bottom:50px;">
+        <h3>Extended Details <small><a href="javascript:void()"><span class="glyphicon glyphicon-question-sign"></span></a></small></h3>
 
         <div class="col-sm-6"> <!-- Left Col -->
             <h4>Job Type <small></small></h4>
@@ -95,8 +138,24 @@
         </div>
     </div>
 
-    <div class="col-sm-12">
-        <h3>Job Requirements</h3>
+     <div class="col-sm-12" style="margin-bottom:50px;">
+        <h3>Skills and Tools <small><a href="javascript:void()"><span class="glyphicon glyphicon-question-sign"></span></a></small></h3>
+
+        <div class="col-sm-6">
+            <h4>Skills <small>List some of your most work-relevant skills</small></h4>
+            <input style='margin-bottom:5px;' class="form-control" name='skills[]' type='text' placeholder=''>
+            <a id="add_skill" href="javascript:void()">Add another field</a>
+        </div>
+
+        <div class="col-sm-6">
+            <h4>Tools <small>List some of the tools you use on a daily basis</small></h4>
+            <input style='margin-bottom:5px;' class="form-control" name='tools[]' type='text' placeholder=''>
+            <a id="add_tool" href="javascript:void()">Add another field</a>
+        </div>
+    </div>
+
+    <div class="col-sm-12" style="margin-bottom:50px;">
+        <h3>Job Requirements <small><a href="javascript:void()"><span class="glyphicon glyphicon-question-sign"></span></a></small></h3>
 
         <div class="col-sm-6">
             <h4>Required Certifications <small></small></h4>
@@ -113,55 +172,79 @@
         </div>
     </div>
 
-    <div class="col-sm-12" hidden>
-        <h3>Education Background</h3>
+    <div class="col-sm-12" style="margin-bottom:50px;">
+        <h3>Education Background <small><a href="javascript:void()"><span class="glyphicon glyphicon-question-sign"></span></a></small></h3>
 
-        <h4>Undergraduate <small></small></h4>
-
-        <!-- Degree -->
-        <h6>Degree</h6>
-        {#degrees}
-            <label><input type="radio" name="degree" value="{id}" {@if cond="{interview.degrees} == {id}"} checked {/if}> {value}</label><br>
-        {/degrees}
-        <br>
-        <!-- Major -->
-        <h6>Major</h6>
-        <select name='major'>
-            {#majors}
-                <option value="{id}">{name}</option>   
-            {/majors}
-        </select>
-        <br>
-
-        <!-- University -->
-        <h6>University</h6>
-        <select name="university">
-            {#universities}
-                <option value="{id}">{name}</option>
-            {/universities}
-        </select>
-        <br>
-    </div>
-
-    <div class="col-sm-12">
-        <h3>Skills and Tools</h3>
+        <h4>Undergraduate</h4>
 
         <div class="col-sm-6">
-            <h4>Skills <small>List some of your most work-relevant skills</small></h4>
-            <input style='margin-bottom:5px;' class="form-control" name='skills[]' type='text' placeholder=''>
-            <a id="add_skill" href="javascript:void()">Add another field</a>
+            <h6>Degree</h6>
+            {#degrees}
+                <label><input type="radio" name="degree" value="{id}" {@if cond="{interview.degrees} == {id}"} checked {/if}> {value}</label><br>
+            {/degrees}
         </div>
 
         <div class="col-sm-6">
-            <h4>Tools <small>List some of the tools you use on a daily basis</small></h4>
-            <input style='margin-bottom:5px;' class="form-control" name='tools[]' type='text' placeholder=''>
-            <a id="add_tool" href="javascript:void()">Add another field</a>
+            <h6>Major</h6>
+            <select name='major'>
+                {#majors}
+                    <option value="{id}">{name}</option>   
+                {/majors}
+            </select>
+            <br>
+
+            <h6>University</h6>
+            <select name="university">
+                {#universities}
+                    <option value="{id}">{name}</option>
+                {/universities}
+            </select>
         </div>
     </div>
 
-    <!-- Fulfillment -->
+    <div class="col-sm-12" style="margin-bottom:50px;">
+        <h3>Daily Breakdown <small><a href="javascript:void()"><span class="glyphicon glyphicon-question-sign"></span></a></small></h3>
 
-    <!-- Solo vs Group Work -->
+        <div class="col-sm-8">
+            <h4>Task <small>List the name of some of your daily tasks</small></h4>
+            <input style='margin-bottom:5px;' class="form-control" name='tasks[]' type='text' placeholder='Meetings'>
+            <a id="add_activity" href="javascript:void()">Add another task</a>
+        </div>
+        <div class="col-sm-4">
+            <h4>Time <small>Hours Per Day</small></h4>
+            <input style='margin-bottom:5px;' class="form-control" name='hours[]' type='text' placeholder='2'>
+        </div>
+    </div>
+
+    <div class="col-sm-12" style="margin-bottom:50px;">
+        <h3>Fulfillment <small><a href="javascript:void()"><span class="glyphicon glyphicon-question-sign"></span></a></small></h3>
+
+        <div class="col-sm-12">
+            <label><b>Work:</b></label>&nbsp;<label id="work_val">5 / 10</label>
+            <span style="color: #999;" class="pull-right">On a scale of 1 to 10, how fulfilled are you with your work?</span>
+            <input type='hidden' name='work'>
+            <div id="work"></div>
+            
+            <br>
+            <br>
+            
+            <label><b>Life:</b></label>&nbsp;<label id="life_val">5 / 10</label>
+            <span style="color: #999;" class="pull-right">On a scale of 1 to 10, how fulfilled are you with your life?</span>
+            <input type='hidden' name='life'>
+            <div id="life"></div>
+        </div>
+    </div>
+
+    <div class="col-sm-12" style="margin-bottom:50px;">
+        <h3>Solo vs Group Work <small><a href="javascript:void()"><span class="glyphicon glyphicon-question-sign"></span></a></small></h3>
+
+        <div class="col-sm-12">
+            <label><b>Solo</b> (<span id="solo">50%</span>) / <b>Group</b> (<span id="group">50%</span>)</label>
+            <span style="color: #999;" class="pull-right">Move the slider to represent the amount of work done solo vs in a group</span>
+            <input type='hidden' name='solo_group'>
+            <div id="solo_group"></div>
+        </div>
+    </div>
 
     <div class="col-sm-12">
         <hr>
@@ -175,12 +258,22 @@
 
 {<foot}
     <script type="text/javascript">
+        $('.glyphicon.glyphicon-question-sign').popover({
+            animation: true,
+            placement: 'right'
+        });
+
         $(document).on('click', '#add_tool', function () {
             $("<input style='margin-bottom:5px;' class='form-control' name='tools[]' type='text'>").insertAfter( $("input[name='tools[]']").last() ); 
         });
 
+        $(document).on('click', '#add_activity', function () {
+            $("<input style='margin-bottom:5px;' class='form-control' name='tasks[]' type='text'>").insertAfter( $("input[name='tasks[]']").last() );
+            $("<input style='margin-bottom:5px;' class='form-control' name='hours[]' type='text'>").insertAfter( $("input[name='hours[]']").last() );
+        });
+
         $(document).on('click', '#add_skill', function () {
             $("<input style='margin-bottom:5px;' class='form-control' name='skills[]' type='text'>").insertAfter( $("input[name='skills[]']").last() );
-        });   
+        });
     </script>
 {/foot}

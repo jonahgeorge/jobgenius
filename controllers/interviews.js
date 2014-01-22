@@ -54,6 +54,26 @@ exports.show = function (req, res) {
         interview.tools       = splitAndPush(interview.tools, ",");
         interview.skills      = splitAndPush(interview.skills, ",");
 
+        if (interview.solo_group) {
+            var obj = {
+                solo : interview.solo_group,
+                group : (100 - interview.solo_group)
+            };
+            interview.solo_group = new Object();
+            interview.solo_group = obj;
+            delete obj;
+        }
+
+        if (interview.work && interview.life) {
+            var obj = {
+                work : interview.work,
+                life : interview.life
+            };
+            interview.fulfillment = new Object();
+            interview.fulfillment = obj;
+            delete obj;
+        }
+
         // Prepare Education Data
         if (interview.education != null) {
             var degrees = interview.education.split(";");
@@ -71,6 +91,20 @@ exports.show = function (req, res) {
                 interview.education.push(degree);
             });
         }
+
+        // Prepare Daily Tasks Data
+        // { label: "Programming", data: 5 },
+        if (interview.tasks != null) {
+            var activity = interview.tasks.split(";");
+            interview.tasks = new String();
+            activity.forEach(function (element, index, array) {
+                var arr = element.split(",");
+                interview.tasks += "{ label: '" + arr[0] + "', data: " + arr[1] + " }";
+                if (index < array.length - 1) interview.tasks += ", ";
+            });
+        }
+
+        console.log(interview.tasks);
 
         res.render('interviews/show', {
             interview: interview,
@@ -206,6 +240,20 @@ exports.edit = function (req, res) {
 
 exports.create = function (req, res) {
 
+    var fulfillment = {
+        life : req.body.life,
+        work : req.body.work
+    }
+
+    // Construct activities
+    var activities = [];
+    req.body.tasks.forEach(function (e, i) {
+        activities.push({
+            task : req.body.tasks[i],
+            time : req.body.hours[i]
+        });
+    });
+
     var payload = {
         name      : req.body.name,
         position  : req.body.position,
@@ -233,8 +281,15 @@ exports.create = function (req, res) {
         
         // Others
         skills           : req.body.skills,
-        tools            : req.body.tools
+        tools            : req.body.tools,
+
+        // Graphs
+        activities       : activities,
+        solo_group       : req.body.solo_group,
+        fulfillment      : fulfillment
     };
+
+    console.log(payload);
 
     interview.create(payload, function (err, results) {
         if (err) console.log(err);

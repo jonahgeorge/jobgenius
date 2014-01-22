@@ -42,8 +42,9 @@ exports.create = function (data, cb) {
 
   pool.getConnection(function (err, conn) {
     conn.query(sql, function (err, results, fields) {
+      
+      // Get iid of new interview
       var iid = results[1][0]['LAST_INSERT_ID()'];
-
       var arr = [];
 
       // Construct queries
@@ -84,6 +85,16 @@ exports.create = function (data, cb) {
           arr[arr.length] = 'INSERT INTO F_TOOL (iid, value) VALUES ("'+iid+'",'+pool.escape(i)+');';
         });
       }
+      if (data.solo_group) arr[arr.length] = 'INSERT INTO F_SOLO_GROUP (iid, vid) VALUES ("'+iid+'",'+pool.escape(data.solo_group)+');';
+      if (data.fulfillment) {
+        arr[arr.length] = 'INSERT INTO F_FULFILLMENT_WORK (iid, vid) VALUES ("'+iid+'",'+pool.escape(data.fulfillment.work)+');';
+        arr[arr.length] = 'INSERT INTO F_FULFILLMENT_LIFE (iid, vid) VALUES ("'+iid+'",'+pool.escape(data.fulfillment.life)+');';
+      }
+      if (data.activities) {
+        data.activities.forEach(function (i) {
+          arr[arr.length] = 'INSERT INTO F_DAILY_BREAKDOWN (iid, nid, tid) VALUES ("'+iid+'",'+pool.escape(i.task)+','+pool.escape(i.time)+');';
+        });
+      }
 
       arr.forEach(function (query) {
         conn.query(query, function (err) {
@@ -121,7 +132,11 @@ exports.retrieve = function (id, cb) {
             + "soft_skills.value as soft_skills, "
             + "education.value as education, "
             + "tools.value as tools, "
-            + "skills.value as skills "
+            + "skills.value as skills, "
+            + "svg.vid as solo_group, "
+            + "ffl.vid as life, "
+            + "ffw.vid as work, "
+            + "tasks.value as tasks "
             
             + "from C_INTERVIEW "
             
@@ -206,6 +221,22 @@ exports.retrieve = function (id, cb) {
               + "from F_SKILL "
               + "group by F_SKILL.iid "
             + ") as skills on skills.iid = C_INTERVIEW.id "
+
+            // Solo v Group
+            + "left join F_SOLO_GROUP as svg on svg.iid = C_INTERVIEW.id "
+
+            // Fulfillment
+            + "left join F_FULFILLMENT_LIFE as ffl on ffl.iid = C_INTERVIEW.id "
+            + "left join F_FULFILLMENT_WORK as ffw on ffw.iid = C_INTERVIEW.id "
+
+            // Daily Breakdown
+            + "left join ( "
+              + "select tmp.iid, group_concat(tmp.value separator ';') as value "
+              + "from ( "
+                + "select iid, concat_ws(',', nid, tid) as value "
+                + "from F_DAILY_BREAKDOWN "
+              + ") as tmp "
+            + ") as tasks on tasks.iid = C_INTERVIEW.id "
 
             + "where C_INTERVIEW.id = " + pool.escape(id) + ";";
 
