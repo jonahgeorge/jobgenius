@@ -14,3 +14,43 @@ footer {
 	margin-top: 50px;
 	margin-bottom: 50px;
 }
+
+.nav>li>a {
+    position: relative;
+    display: block;
+    padding: 8px 15px;
+}
+
+.nav>li>p {
+    position: relative;
+    display: block;
+    margin: 8px 15px;
+}
+
+div#header ul.nav {
+    color: white !important;
+}
+
+ul.nav a {
+    color: white;
+}
+
+div#header ul.nav a:hover {
+    color: inherit !important;
+    background-color: inherit !important;
+}
+
+#header {
+    background: #27709b;
+    background: -webkit-linear-gradient(top, #27709b 0, #24688f 100%);
+    background: linear-gradient(to bottom, #27709b 0, #24688f 100%);
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+    margin-bottom: 25px;
+    height: 40px;
+    min-height: 40px;
+    border-radius: 0;
+}

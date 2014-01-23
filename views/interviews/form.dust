@@ -173,32 +173,29 @@
     </div>
 
     <div class="col-sm-12" style="margin-bottom:50px;">
-        <h3>Education Background <small><a href="javascript:void()"><span class="glyphicon glyphicon-question-sign"></span></a></small></h3>
+        <h3>Education Background <small><a href="javascript:void();"><span data-content="Getting some background about your education can help students realize their potential." class="glyphicon glyphicon-question-sign"></span></a></small></h3>
 
-        <h4>Undergraduate</h4>
-
-        <div class="col-sm-6">
+        <div class="col-sm-4">
             <h6>Degree</h6>
-            {#degrees}
-                <label><input type="radio" name="degree" value="{id}" {@if cond="{interview.degrees} == {id}"} checked {/if}> {value}</label><br>
-            {/degrees}
-        </div>
-
-        <div class="col-sm-6">
-            <h6>Major</h6>
-            <select name='major'>
-                {#majors}
-                    <option value="{id}">{name}</option>   
-                {/majors}
+            <select name="degree" style="margin-bottom:15px">
+              {#degrees}
+                  <option value="{id}"> {value}</option>
+              {/degrees}
             </select>
+            
+            <h6>Year of Completion</h6>
+            <input type="number" name="year" class="form-control">
             <br>
 
+            <a href="#" id="add_degree">Add another degree</a>
+        </div>
+
+        <div class="col-sm-8">
+            <h6>Concentration</h6>
+            <input type="text" name="concentration" class="form-control">
+
             <h6>University</h6>
-            <select name="university">
-                {#universities}
-                    <option value="{id}">{name}</option>
-                {/universities}
-            </select>
+            <input type="text" name="university" class="form-control">
         </div>
     </div>
 

@@ -104,6 +104,8 @@ exports.show = function (req, res) {
             });
         }
 
+        console.log(interview);
+
         console.log(interview.tasks);
 
         res.render('interviews/show', {
@@ -243,7 +245,15 @@ exports.create = function (req, res) {
     var fulfillment = {
         life : req.body.life,
         work : req.body.work
-    }
+    };
+
+    // Construct educational background
+    var education = {
+      degree        : req.body.degree,
+      year          : req.body.year,
+      concentration : req.body.concentration,
+      university    : req.body.university 
+    };
 
     // Construct activities
     var activities = [];
@@ -277,7 +287,7 @@ exports.create = function (req, res) {
         soft_skills      : req.body.soft_skills,
 
         // Educational Background
-        //
+        education        : education,
         
         // Others
         skills           : req.body.skills,

@@ -1,29 +1,49 @@
 {>"layouts/default" /}
 
 {<content}
-	<a href="/i"><h4>Interviews</h4></a>
-	{#interviews}	
-		<a href='/i/{id}'>
-			<div class="clearfix" style="padding:10px 0; border-bottom: solid 1px #eee;">
-				<span class="pull-left">{name} - {position}</span>
-			</div>
-		</a>
-	{:else}
-		<p>No interviews currently available.</p>
-	{/interviews}
+    <div class="col-sm-6">
+        <a href="/i"><h3>Interviews</h3></a>
+        {#interviews}   
+            <a href='/i/{id}'>
 
-	<br>
+                <div class="panel panel-default">
+                    <!-- <div class="panel-heading">Panel heading without title</div> -->
+                    <div class="panel-body">
+                        <span class="pull-left">{name} - {position}</span>
+                    </div>
+                </div>
 
-	<a href="/a"><h4>Articles</h4></a>
-	{#articles}	
-		<a href='/a/{aid}'>
-			<div class="clearfix" style="padding:10px 0; border-bottom: solid 1px #eee;">
-				<span class="pull-left">{title}  <i>{subtitle}</i></span>
-				<span class="pull-right">{timestamp}</span>
-			</div>
-		</a>
-	{:else}
-		<p>No articles currently available.</p>
-	{/articles}
-	
+<!--
+                <div class="clearfix" style="padding:10px 0; border-bottom: solid 1px #eee;">
+                    <span class="pull-left">{name} - {position}</span>
+                </div>
+-->
+            </a>
+        {:else}
+            <p>No interviews currently available.</p>
+        {/interviews}
+    </div>
+    
+    <div class="col-sm-6">
+        <a href="/a"><h3>Articles</h3></a>
+        {#articles}
+            <a href='/a/{aid}'>
+                <div class="panel panel-default">
+                    <!-- <div class="panel-heading">Panel heading without title</div> -->
+                    <div class="panel-body">
+                        <span class="pull-left">{title}  <i>{subtitle}</i></span>
+                    </div>
+                </div>
+
+<!--
+                <div class="clearfix" style="padding:10px 0; border-bottom: solid 1px #eee;">
+                    <span class="pull-left">{title}  <i>{subtitle}</i></span>
+                    <span class="pull-right">{timestamp}</span>
+                </div>
+-->
+            </a>
+        {:else}
+            <p>No articles currently available.</p>
+        {/articles}
+    </div>
 {/content}

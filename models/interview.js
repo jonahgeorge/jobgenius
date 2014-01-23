@@ -95,6 +95,9 @@ exports.create = function (data, cb) {
           arr[arr.length] = 'INSERT INTO F_DAILY_BREAKDOWN (iid, nid, tid) VALUES ("'+iid+'",'+pool.escape(i.task)+','+pool.escape(i.time)+');';
         });
       }
+      if (data.education) {
+        arr[arr.length] = 'INSERT INTO F_EDUCATION (iid, university, degree, concentration, year) VALUES ("'+iid+'",'+pool.escape(data.education.university)+','+pool.escape(data.education.degree)+','+pool.escape(data.education.concentration)+','+pool.escape(data.education.year)+');';
+      }
 
       arr.forEach(function (query) {
         conn.query(query, function (err) {
@@ -200,12 +203,12 @@ exports.retrieve = function (id, cb) {
             + "left join ( "
               + "select tmp.iid, group_concat(tmp.value separator ';') as value "
               + "from ( "
-                + "select F_EDUCATION.iid, concat_ws(',', L_DEGREE.value, L_MAJOR.value, L_UNIVERSITY.value, F_EDUCATION.year) as value "
+                + "select F_EDUCATION.iid, concat_ws(',', L_DEGREE.value, F_EDUCATION.concentration, L_UNIVERSITY.value, F_EDUCATION.year) as value "
                 + "from F_EDUCATION "
                 + "left join L_UNIVERSITY on L_UNIVERSITY.id = F_EDUCATION.university "
                 + "left join L_DEGREE on F_EDUCATION.degree = L_DEGREE.id "
-                + "left join L_MAJOR on F_EDUCATION.major = L_MAJOR.id "
-              + ") as tmp"
+              + ") as tmp "
+              + "where tmp.iid = " + pool.escape(id)
             + ") as education on education.iid = C_INTERVIEW.id "
 
             // Tools
@@ -236,10 +239,11 @@ exports.retrieve = function (id, cb) {
                 + "select iid, concat_ws(',', nid, tid) as value "
                 + "from F_DAILY_BREAKDOWN "
               + ") as tmp "
+              + "where tmp.iid = " + pool.escape(id)
             + ") as tasks on tasks.iid = C_INTERVIEW.id "
 
             + "where C_INTERVIEW.id = " + pool.escape(id) + ";";
-
+  
   var comment_query = "select F_COMMENT.id, C_USER.email, F_COMMENT.value "
                     + "from F_COMMENT "
                       + "left join C_USER on C_USER.uid = F_COMMENT.uid "

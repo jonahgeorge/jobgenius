@@ -14,7 +14,7 @@
         <h1>{interview.name} 
         <small>
             {interview.position}
-            {@if cond="('{entity.uid}' == '{interview.uid}') || ('{entity.role}' == 0)"}
+            {@if cond="('{entity.uid}' == '{interview.uid}')"}
                 <a class="btn btn-default pull-right" href='/i/{interview.id}/edit'>Edit</a>
             {/if}
         </small></h1>
@@ -228,7 +228,7 @@
 -->
 <div class="col-sm-10 col-sm-offset-1">
     <video id="video" controls width="100%">
-        <source type="video/mp4" src="http://jobgeniusvideos.s3.amazonaws.com/videos/converted/5583/My_Mentor_mp4_1379962206.mp4">
+        <source type="video/mp4" src="http://placehold.it/">
     </video>
 </div>
 <div class="clearfix"></div>

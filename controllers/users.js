@@ -68,9 +68,14 @@ exports.signout = function (req, res) {
 exports.signin = function (req, res) {
 	pool.getConnection(function(err, connection) {
 		connection.query("SELECT * FROM C_USER WHERE email = ?", req.body.email, function (err, user) {
+
+			// Error checking
+			if (err) console.log(err);
+			if (user.length < 1) return res.send(401);
+
 			bcrypt.compare(req.body.password, user[0].password, function(err, response) {
 
-				if (err) throw err;
+				if (err) console.log(err);
 
 				if (response) {	
 
