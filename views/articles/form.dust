@@ -10,7 +10,7 @@
 	</div>
 
 	{?article}
-		<form action="/a/#{article.aid}" method="post">
+		<form action="/a/{article.aid}" method="post">
 			<input class="form-control" name='title' type='text' placeholder='Title' value="{article.title}"><br>
 			<input class="form-control" name='subtitle' type='text' placeholder='Subtitle' value="{article.subtitle}"><br>
 			<textarea class="form-control" name='body' style='height:300px'>{article.body}</textarea>

@@ -9,9 +9,8 @@
 		<h2 style='display:inline;'>{article.title}</h2>
 	{/article.subtitle}
 
-	&nbsp;&nbsp;
-	<h3 style='display:inline;'><i>{article.subtitle}</i></h3>
-	<br>
+	&nbsp;&nbsp;&nbsp;
+	<h3 style='display:inline;'><i>{article.subtitle}</i></h3><br>
 	<br>
 	<p>{article.body}</p>
 
