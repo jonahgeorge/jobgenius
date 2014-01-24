@@ -16,7 +16,8 @@
 		"bower": "*",
 		"bcrypt": "*",
 		"connect-redis": "*",
-		"gzippo": "*"
+		"gzippo": "*",
+		"markdown": "*"
 	},
 	"devDependencies": {
 		"nodemon": "*"

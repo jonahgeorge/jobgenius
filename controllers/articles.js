@@ -1,4 +1,5 @@
 var pool = require('../database').pool;
+var markdown = require( "markdown" ).markdown;
 
 exports.index = function (req, res) {
     pool.getConnection(function (err, conn) {
@@ -17,12 +18,16 @@ exports.index = function (req, res) {
 };
 
 exports.show = function (req, res) {
+
     pool.getConnection(function (err, conn) {
-        conn.query("select * from C_ARTICLE where aid = ?", req.params.aid, function (err, article) {
+        conn.query("select * from C_ARTICLE where aid = ?", req.params.aid, function (err, articles) {
             
+            var article = articles[0];
+            article.body = markdown.toHTML(article.body);
+
             if (err) console.log(err);
             res.render('articles/show', {
-                article : article[0],
+                article : article,
                 entity : req.session.entity
             });
 
@@ -92,6 +97,9 @@ exports.delete = function (req, res) {
   pool.getConnection(function (err, conn) {
     
     conn.query("select * from C_ARTICLE where aid = ?", req.params.aid, function (err, article) {
+
+        console.log(err);
+        console.log(article);
       
       if (article.uid == req.session.entity.uid || req.session.entity.role == 0) {
 

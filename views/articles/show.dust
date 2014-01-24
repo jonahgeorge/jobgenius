@@ -12,7 +12,7 @@
 	&nbsp;&nbsp;&nbsp;
 	<h3 style='display:inline;'><i>{article.subtitle}</i></h3><br>
 	<br>
-	<p>{article.body}</p>
+	<p>{article.body|s}</p>
 
 	{@if cond="{entity.uid} == {article.uid} || {entity.role} == 0"}
 		<hr>
