@@ -11,9 +11,9 @@
 
 	{?article}
 		<form action="/a/{article.aid}" method="post">
-			<input class="form-control" name='title' type='text' placeholder='Title' value="{article.title}"><br>
+			<input class="form-control" name='title' type='text' placeholder='Title' value="{article.title}" required="required"><br>
 			<input class="form-control" name='subtitle' type='text' placeholder='Subtitle' value="{article.subtitle}"><br>
-			<textarea class="form-control" name='body' style='height:300px'>{article.body}</textarea>
+			<textarea class="form-control" name='body' style='height:300px' required="required">{article.body}</textarea>
 			<br>
 			<input class="btn btn-default" type="submit" value="Save">
 			&nbsp;&nbsp;
@@ -22,9 +22,9 @@
 		</form>
 	{:else}
 		<form action="/a" method="post">
-			<input class="form-control" name='title' type='text' placeholder='Title'><br>
+			<input class="form-control" name='title' type='text' placeholder='Title' required="required"><br>
 			<input class="form-control" name='subtitle' type='text' placeholder='Subtitle'><br>
-			<textarea class="form-control" name='body' style='height:300px'></textarea>
+			<textarea class="form-control" name='body' style='height:300px' required="required"></textarea>
 			<br>
 			<input class="btn btn-default" type="submit" value="Save">
 			&nbsp;&nbsp;
