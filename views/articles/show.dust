@@ -75,7 +75,7 @@
 	<script>
 		$("#delete").on("click", function () {
 			$.ajax({
-				url: "http://localhost:3000/a/#{article.aid}",
+				url: "http://localhost:3000/a/{article.aid}",
 				type: "delete",
 				success: function (data) {
 					location.href = "/a";
