@@ -1,0 +1,4 @@
+database:
+  user: username
+  pass: password
+  name: database
