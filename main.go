@@ -3,14 +3,12 @@ package main
 import (
   "log"
   "database/sql"
-
   _ "github.com/Go-SQL-Driver/MySQL"
   "github.com/codegangsta/martini"
   "github.com/codegangsta/martini-contrib/gzip"
   "github.com/gosexy/yaml"
   "github.com/gosexy/to"
-
-  "github.com/jonahgeorge/husker/controllers"
+  . "github.com/jonahgeorge/husker/controllers"
 )
 
 func main() {
@@ -35,7 +33,8 @@ func main() {
   m.Map(db)
 
   // routes
-  m.Get("/articles", controllers.ArticleController{}.Index)
+  m.Get("/articles", ArticleController{}.Index)
+  m.Get("/article", ArticleController{}.Retrieve)
 
   m.Run()
 }

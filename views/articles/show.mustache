@@ -1,0 +1,29 @@
+<!DOCTYPE html> 
+<html>
+  <head>
+     <!-- meta -->
+    <title>{{Title}} | Job Genius</title>
+    <!-- stylehsheets -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- javascript -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class='container'>
+      {{#Article}}
+        <div class="page-header">
+          <h1>{{Title}}</h1>
+        </div>
+        <div class="well well-small">
+          <span>{{Content}}</span>
+        </div>
+      {{/Article}}
+      <div class="panel panel-default" style="background-color:#dff0d8; color:#3c763d; border-color:#d6e9c6;">
+        <div class="panel-body">
+          <span><a href="/auth/signin">Login</a> to join the discussion</span>
+        </div>
+      </div>
+	</div>
+  </body>
+</html>
