@@ -4,14 +4,15 @@ import (
   "log"
   "net/http"
   "database/sql"
-  _ "github.com/Go-SQL-Driver/MySQL"
-  "github.com/hoisie/mustache"
+  // "github.com/hoisie/mustache"
+  "github.com/martini-contrib/render"
   . "github.com/jonahgeorge/husker/models"
-)
+  _ "github.com/Go-SQL-Driver/MySQL"
+  )
 
 type ArticleController struct {}
 
-func (a ArticleController) Index(db *sql.DB) string {
+func (a ArticleController) Index(ren render.Render, db *sql.DB) {
   articles, err := ArticleModel{}.RetrieveAll(db) 
   if err != nil {
     log.Fatal(err)
@@ -25,10 +26,10 @@ func (a ArticleController) Index(db *sql.DB) string {
     articles,
   }
 
-  return mustache.RenderFile("views/articles/index.mustache", data)
+  ren.HTML(200, "articles/index", data)
 }
 
-func (a ArticleController) Retrieve(db *sql.DB, req *http.Request) string {
+func (a ArticleController) Retrieve(ren render.Render, db *sql.DB, req *http.Request) {
   article, err := ArticleModel{}.RetrieveOne(db, req.FormValue("q")) 
   if err != nil {
     log.Fatal(err)
@@ -42,7 +43,8 @@ func (a ArticleController) Retrieve(db *sql.DB, req *http.Request) string {
     article,
   }
 
-  return mustache.RenderFile("views/articles/show.mustache", data)
+  //return mustache.RenderFile("views/articles/show.mustache", data)
+  ren.HTML(200, "articles/show", data)
 }
 
 func (a ArticleController) Form(db *sql.DB) string {

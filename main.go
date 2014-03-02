@@ -3,11 +3,12 @@ package main
 import (
   "log"
   "database/sql"
-  _ "github.com/Go-SQL-Driver/MySQL"
   "github.com/codegangsta/martini"
-  "github.com/codegangsta/martini-contrib/gzip"
+  "github.com/martini-contrib/render"
+  "github.com/martini-contrib/gzip"
   "github.com/gosexy/yaml"
   "github.com/gosexy/to"
+  _ "github.com/Go-SQL-Driver/MySQL"
   . "github.com/jonahgeorge/husker/controllers"
 )
 
@@ -29,6 +30,8 @@ func main() {
 
   // gzip all responses
   m.Use(gzip.All())
+  // render template files
+  m.Use(render.Renderer(render.Options{ Layout: "layout" }))
   // inject db into all handlers
   m.Map(db)
 
