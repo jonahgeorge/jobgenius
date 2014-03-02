@@ -1,0 +1,28 @@
+<div class="col-sm-3">
+  <div class="panel panel-default" style="margin-top: 95px;">
+      <div class="panel-heading">Filter<span class="glyphicon glyphicon-search pull-right"></span></div>
+      <div class="panel-body">
+          <label><input type="checkbox" disabled>&nbsp;&nbsp;Career Advice</label><br>
+          <label><input type="checkbox" disabled>&nbsp;&nbsp;Education</label><br>
+          <label><input type="checkbox" disabled>&nbsp;&nbsp;Career Research</label><br>
+          <label><input type="checkbox" disabled>&nbsp;&nbsp;Interview Advice</label>
+      </div>
+  </div>
+</div>
+
+<div class="col-sm-9">
+  <div class="page-header">
+      <h1>{{ .Title }}</h1>
+  </div>
+
+  {{ range .Articles }}
+      <a href='/article?q={{ .Id }}'>
+          <div class="panel panel-default">
+              <div class="panel-body">
+                  <span class="pull-left">{{ .Title }}</span>
+                  <span class="pull-right">{{ .Date }}</span>
+              </div>
+          </div>
+      </a>
+  {{ end }}
+</div>
