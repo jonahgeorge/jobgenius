@@ -1,11 +1,10 @@
 package main
 
 import (
+  "os"
   "log"
+  "net/http"
   "database/sql"
-  "github.com/codegangsta/martini"
-  "github.com/martini-contrib/render"
-  "github.com/martini-contrib/gzip"
   "github.com/gosexy/yaml"
   "github.com/gosexy/to"
   _ "github.com/Go-SQL-Driver/MySQL"
@@ -13,7 +12,6 @@ import (
 )
 
 func main() {
-
   conf, _ := yaml.Open("settings.yaml")
   user := to.String(conf.Get("database", "user"))
   pass := to.String(conf.Get("database", "pass"))
@@ -26,18 +24,11 @@ func main() {
   defer db.Close()
   db.SetMaxIdleConns(100)
 
-  m := martini.Classic()
-
-  // gzip all responses
-  m.Use(gzip.All())
-  // render template files
-  m.Use(render.Renderer(render.Options{ Layout: "layout" }))
-  // inject db into all handlers
-  m.Map(db)
-
   // routes
-  m.Get("/articles", ArticleController{}.Index)
-  m.Get("/article", ArticleController{}.Retrieve)
+  http.HandleFunc("/articles", ArticleController{}.Index(db))
+  http.HandleFunc("/article", ArticleController{}.Retrieve(db))
 
-  m.Run()
+  // listen on environmetn port
+  http.ListenAndServe(":" + os.Getenv("PORT"), nil)
+  // http.ListenAndServe(":3000", nil)
 }
