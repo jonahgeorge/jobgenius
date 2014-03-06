@@ -4,10 +4,10 @@ Job Genius's main website, currently located at [http://jobgenius.net](http://ww
 
 ## Getting Started
 Install dependencies
-  - Mysql
-  - Gin
-  - Redis (pending)
-  - Bower (pending)
+  - [Mysql](http://www.mysql.com/)
+  - [Gin](http://github.com/codegangsta/gin)
+  - ~~Redis~~
+  - ~~Bower~~
 
 ## Contributing
 Please remember to run `go fmt` before committing any files
