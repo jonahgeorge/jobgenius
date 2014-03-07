@@ -19,7 +19,7 @@ func (i InterviewController) Index(db *sql.DB) http.HandlerFunc {
 
 		data := struct {
 			Title      string
-			Interviews []InterviewTeaserModel
+			Interviews []InterviewModel
 		}{
 			"Interviews",
 			interviews,

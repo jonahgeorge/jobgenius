@@ -39,3 +39,22 @@ func (u UserModel) RetrieveAll(db *sql.DB) ([]UserModel, error) {
 	}
 	return users, err
 }
+
+func (u UserModel) RetrieveById(db *sql.DB, id string) (UserModel, error) {
+
+	sql := `SELECT uid, display_name, email, role FROM C_USER WHERE uid = ` + id
+
+	rows, err := db.Query(sql)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	var user UserModel
+	err = db.QueryRow(sql).Scan(&user.Id, &user.Name, &user.Email, &user.Role)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return user, err
+}

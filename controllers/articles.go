@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	_ "github.com/Go-SQL-Driver/MySQL"
 	. "github.com/jonahgeorge/husker/models"
+	//	"html/template"
 	"log"
 	"net/http"
 )
@@ -47,7 +48,10 @@ func (a ArticleController) Retrieve(db *sql.DB) http.HandlerFunc {
 			article,
 		}
 
-		t.ExecuteTemplate(w, "articleShow", data)
+		err = t.ExecuteTemplate(w, "articleShow", data)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
 

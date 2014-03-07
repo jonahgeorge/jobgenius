@@ -8,11 +8,11 @@ import (
 	. "github.com/jonahgeorge/husker/controllers"
 	"log"
 	"net/http"
-	"os"
+	// 	"os"
 )
 
 func main() {
-	conf, _ := yaml.Open("settings.yaml")
+	conf, _ := yaml.Open("settings.yml")
 	user := to.String(conf.Get("database", "user"))
 	pass := to.String(conf.Get("database", "pass"))
 	name := to.String(conf.Get("database", "name"))
@@ -31,16 +31,23 @@ func main() {
 	http.HandleFunc("/interviews", InterviewController{}.Index(db))
 	http.HandleFunc("/interview", InterviewController{}.Retrieve(db))
 
-    http.HandleFunc("/users", UserController{}.Index(db))
+	http.HandleFunc("/users", UserController{}.Index(db))
+	http.HandleFunc("/user", UserController{}.Retrieve(db))
 
+	http.HandleFunc("/", StaticController{}.Landing(db))
 	http.HandleFunc("/about", StaticController{}.About())
 	http.HandleFunc("/terms", StaticController{}.Terms())
 	http.HandleFunc("/privacy", StaticController{}.Privacy())
 
-    // serve static content
-    http.Handle("/resources/", http.StripPrefix("/resources/", http.FileServer(http.Dir("resources")))) 
+	// auth routes
+	//     http.HandleFunc("/auth/form", UserController{}.AuthForm())
+	//     http.HandleFunc("/auth/email", UserController{}.AuthForm())
+	//     http.HandleFunc("/auth/linkedin", UserController{}.AuthForm())
+
+	// serve static content
+	http.Handle("/resources/", http.StripPrefix("/resources/", http.FileServer(http.Dir("resources"))))
 
 	// listen on env port
-	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
-	// http.ListenAndServe(":3000", nil)
+	//http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+	http.ListenAndServe(":3000", nil)
 }
