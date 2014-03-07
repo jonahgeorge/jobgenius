@@ -2,10 +2,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    {{ template "head" }}
+    {{ template "head" . }}
   </head>
   <body>
-    {{ template "header" }}
+    {{ template "header" . }}
     
       <div class="container">
       <div class="col-sm-3">
@@ -36,10 +36,10 @@
         {{ end }}
       </div>
       
-      {{ template "footer" }}
+      {{ template "footer" . }}
 
     </div>
-    {{ template "foot" }}
+    {{ template "foot" . }}
   </body>
 </html>
 {{ end }}

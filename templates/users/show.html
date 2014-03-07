@@ -1,0 +1,34 @@
+{{ define "userShow" }}
+<!DOCTYPE html>
+<html>
+  <head>
+    {{ template "head" . }}
+  </head>
+  <body>
+    {{ template "header" . }}
+    <div class="container">
+
+      <div class="page-header">
+        <h1>
+          <a href="/users">&#10094;</a>  
+          {{ .User.Name }}
+        </h1>
+      </div>
+      
+      <h4>Interviews</h4>
+      <ul>
+      </ul>
+
+      <h4>Articles</h4>
+      <ul>
+      {{ range .Articles }}
+        <li><a href="/article?q={{ .Id }}">{{ .Title }}</a></li> 
+      {{ end }}
+      </ul>
+      
+      {{ template "footer" . }}
+    </div>
+    {{ template "foot" . }}
+  </body>
+</html>
+{{ end }}

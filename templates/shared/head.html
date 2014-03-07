@@ -1,5 +1,10 @@
 {{ define "head" }}
-  <title>Job Genius</title>
+
+  {{ if .Title }} 
+    <title>{{ .Title }} | Job Genius</title>
+  {{ else }}
+    <title>Job Genius</title>
+  {{ end }}
 
   <!-- meta -->
   <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
@@ -8,21 +13,12 @@
   <meta name="description" content="Learn about jobs directly from the professionals." >
   <!-- <link rel="shortcut icon" href="/images/favicon.ico"> -->
 
-  <!-- stylesheets
-  <link href="/components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-  <link href="/components/bootflat/css/bootflat.css" rel="stylesheet" media="screen">
-  <link href="/components/bootflat/css/bootflat-extensions.css" rel="stylesheet" media="screen">
-  <link href="/components/bootflat/css/bootflat-square.css" rel="stylesheet" media="screen">
-  <link href="/stylesheets/style.css" rel="stylesheet">
-  -->
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+  <!-- stylesheets -->
+  <link href="/resources/components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/resources/components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="/resources/stylesheets/default.css" rel="stylesheet">
 
-  <!-- javascript
-  <script src="/components/jquery/jquery.min.js"></script>
-  <script src="/components/bootstrap/dist/js/bootstrap.min.js"></script>
-  -->
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-
+  <!-- javascript -->
+  <script src="/resources/components/jquery/dist/jquery.min.js"></script>
+  <script src="/resources/components/bootstrap/dist/js/bootstrap.min.js"></script>
 {{ end }}

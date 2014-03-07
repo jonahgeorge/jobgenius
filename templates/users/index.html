@@ -2,10 +2,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    {{ template "head" }}
+    {{ template "head" . }}
   </head>
   <body>
-    {{ template "header" }}
+    {{ template "header" . }}
     <div class="container">
       <div class="page-header">
           <h1>{{ .Title }}</h1>
@@ -20,15 +20,15 @@
         {{ range .Users }}
           <tr>
             <td>{{ .Id }}</td>
-            <td>{{ .Name }}</td>
+            <td><a href="user?q={{ .Id }}">{{ .Name }}</a></td>
             <td>{{ .Email }}</td>
             <td>{{ .Role }}</td>
           </tr>
         {{ end }}
       </table>
-      {{ template "footer" }}
+      {{ template "footer" . }}
     </div>
-    {{ template "foot" }}
+    {{ template "foot" . }}
   </body>
 </html>
 {{ end }}
