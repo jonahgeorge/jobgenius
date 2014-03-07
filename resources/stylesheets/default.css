@@ -1,0 +1,26 @@
+footer {
+  margin-top:50px;
+  margin-bottom:100px;
+  display:table;
+  border-top:solid 1px #eee;
+  width:100%;
+  padding-top:25px;
+}
+
+footer > .footer-column {
+  display:table-cell;
+  margin: 0 auto;
+  width: 185px;
+}
+
+footer > .footer-column > h5 {
+  text-transform: uppercase;
+}
+
+footer > .footer-column > a,
+footer > .footer-column > p {
+  color:#747474;
+  position:relative;
+  display:block;
+  padding:3px 0;
+}
