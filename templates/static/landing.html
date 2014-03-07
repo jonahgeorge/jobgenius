@@ -14,22 +14,28 @@
         </div>
 
         <div class="col-sm-6">
+          <h3>Recent Articles</h3>
           {{ range .Articles }}
-          <div class="panel panel-default">
-            <div class="panel-body">
-              {{ .Title }} 
-            </div>
-          </div>
+            <a href="/article?q={{ .Id }}">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  {{ .Title }} 
+                </div>
+              </div>
+            </a>
           {{ end }}
         </div>
 
         <div class="col-sm-6">
+          <h3>Recent Interviews</h3>
           {{ range .Interviews }}
-          <div class="panel panel-default">
-            <div class="panel-body">
-              {{ .Title }} 
-            </div>
-          </div>
+            <a href="/interview?q={{ .Id }}">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  {{ .Title }} 
+                </div>
+              </div>
+            </a>
           {{ end }}
         </div>
         
