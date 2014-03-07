@@ -1,0 +1,40 @@
+{{ define "signupForm" }}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {{ template "head" . }}
+  </head>
+  <body>
+    {{ template "header" . }}
+    <div class="container">
+      <div class="alert alert-warning" hidden></div>
+      <div class="col-sm-6 col-sm-offset-3">
+        <div class="page-header">
+          <h1>{{ .Title }}</h1>
+        </div>
+ 
+        <form>
+          <input class="form-control" type='email' name="email" placeholder='Email' required><br>
+          <input class="form-control" type='password' name="password" placeholder='Password' required><br>
+          <input class="form-control" type='password' name='password_check' placeholder="Repeat Password" required><br>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="age_check"> I am at least 13 years old and agree to the <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>.
+            </label>
+          </div>
+          <br>
+          <button class="btn btn-success">Sign Up</button>
+          &nbsp;&nbsp;
+          <a href="/">Cancel</a>
+          <a class="pull-right" href="/signin">Sign In</a> 
+        </form>
+      </div> 
+      {{ template "footer" . }}
+    </div>
+    {{ template "foot" . }}
+    <foot>
+      <script src="/resources/javascript/verify_signup.js"></script>
+    </foot>
+  </body>
+</html>
+{{ end }} 
