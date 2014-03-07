@@ -1,0 +1,41 @@
+{{ define "landingTemplate" }}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {{ template "head" . }}
+  </head>
+  <body>
+    {{ template "header" . }}
+      <div class="container">
+        <div class="jumbotron">
+          <h1>Job Genius, Inc.</h1>
+          <p>Learn about jobs directly from the professionals doing them.</p>
+          <p><a class="btn btn-primary btn-lg" role="button">Learn more</a></p>
+        </div>
+
+        <div class="col-sm-6">
+          {{ range .Articles }}
+          <div class="panel panel-default">
+            <div class="panel-body">
+              {{ .Title }} 
+            </div>
+          </div>
+          {{ end }}
+        </div>
+
+        <div class="col-sm-6">
+          {{ range .Interviews }}
+          <div class="panel panel-default">
+            <div class="panel-body">
+              {{ .Title }} 
+            </div>
+          </div>
+          {{ end }}
+        </div>
+        
+      {{ template "footer" . }}
+    </div>
+    {{ template "foot" . }}
+  </body>
+</html>
+{{ end }}
