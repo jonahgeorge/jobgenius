@@ -40,7 +40,8 @@ func main() {
 	http.HandleFunc("/privacy", StaticController{}.Privacy())
 
 	// auth routes
-	//     http.HandleFunc("/auth/form", UserController{}.AuthForm())
+	http.HandleFunc("/signin", AuthController{}.SignIn())
+	http.HandleFunc("/signup", AuthController{}.SignUp())
 	//     http.HandleFunc("/auth/email", UserController{}.AuthForm())
 	//     http.HandleFunc("/auth/linkedin", UserController{}.AuthForm())
 
