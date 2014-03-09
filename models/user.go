@@ -2,28 +2,38 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
 	_ "github.com/Go-SQL-Driver/MySQL"
 	"log"
 )
 
 type UserModel struct {
 	Id       int
-	Name     string
-	Email    string
-	Password string
+	Name     []byte
+	Email    []byte
+	Password []byte
 	Role     int
 }
 
-func (u UserModel) Create(db *sql.DB) error {
-	return nil
+func (u UserModel) Create(db *sql.DB, email string, password []byte) (UserModel, error) {
+
+	_, err := db.Exec("INSERT INTO C_USER (email, password, role) VALUES (?, ?, 1)", email, password)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	user, err := u.RetrieveByEmail(db, email)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return user, err
 }
 
 func (u UserModel) RetrieveAll(db *sql.DB) ([]UserModel, error) {
 	var users []UserModel
 
-	sql := `SELECT uid, display_name, email, role FROM C_USER`
-
-	rows, err := db.Query(sql)
+	rows, err := db.Query("SELECT uid, display_name, email, role FROM C_USER")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -42,18 +52,32 @@ func (u UserModel) RetrieveAll(db *sql.DB) ([]UserModel, error) {
 
 func (u UserModel) RetrieveById(db *sql.DB, id string) (UserModel, error) {
 
-	sql := `SELECT uid, display_name, email, role FROM C_USER WHERE uid = ` + id
+	var user UserModel
+	err := db.QueryRow("SELECT uid, display_name, email, password, role FROM C_USER WHERE uid = ?", id).Scan(&user.Id, &user.Name, &user.Email, &user.Password, &user.Role)
 
-	rows, err := db.Query(sql)
-	if err != nil {
+	switch {
+	case err == sql.ErrNoRows:
+		log.Printf("No user with that ID.")
+	case err != nil:
 		log.Fatal(err)
+	default:
+		fmt.Printf("Email is %s\n", user.Email)
 	}
-	defer rows.Close()
+
+	return user, err
+}
+
+func (u UserModel) RetrieveByEmail(db *sql.DB, email string) (UserModel, error) {
 
 	var user UserModel
-	err = db.QueryRow(sql).Scan(&user.Id, &user.Name, &user.Email, &user.Role)
-	if err != nil {
+	err := db.QueryRow("SELECT uid, display_name, email, password, role FROM C_USER WHERE email = ?", email).Scan(&user.Id, &user.Name, &user.Email, &user.Password, &user.Role)
+	switch {
+	case err == sql.ErrNoRows:
+		log.Printf("No user with that ID.")
+	case err != nil:
 		log.Fatal(err)
+	default:
+		fmt.Printf("Username is %s\n", user.Email)
 	}
 
 	return user, err

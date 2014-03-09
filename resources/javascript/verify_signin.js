@@ -1,21 +1,14 @@
-$("form").submit(function(event) {
-event.preventDefault();
+$("form").submit(function (event) {
+  var email = $("input[name='email']").val();
+  var password = $("input[name='password']").val();
 
-$.ajax({
-type: 'POST',
-url: '/api/signin',
-data: { 
-email    : $("input[name='email']").val(),
-password : $("input[name='password']").val()
-}
-})
-.done(function(data) {
-location.href = '/';
-})
-.fail(function (data) {
-if (data.responseText == "Unauthorized") {  
-$(".alert").show().html("Invalid email or password.");
-}
-})
+  if (!email) {
+    event.PreventDefault();
+    alert("Please enter your email");
+  }
+
+  if (!password) {
+    event.PreventDefault();
+    alert("Please enter your password");
+  }
 });
-
