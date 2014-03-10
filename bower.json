@@ -8,6 +8,5 @@
         "flot"         : "latest",
 		"d3"           : "latest",
         "font-awesome" : "latest",
-        "instantclick" : "latest"
 	}
 }
