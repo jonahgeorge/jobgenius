@@ -3,6 +3,7 @@ package controllers
 import (
 	"database/sql"
 	_ "github.com/Go-SQL-Driver/MySQL"
+	"github.com/gorilla/sessions"
 	. "github.com/jonahgeorge/husker/models"
 	"log"
 	"net/http"
@@ -10,60 +11,86 @@ import (
 
 type StaticController struct{}
 
-func (s StaticController) Landing(db *sql.DB) http.HandlerFunc {
+func (s StaticController) Landing(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		users, err := UserModel{}.RetrieveAll(db)
-		articles, err := ArticleModel{}.RetrieveAll(db)
-		interviews, err := InterviewModel{}.RetrieveAll(db)
-		if err != nil {
-			log.Fatal(err)
-		}
-		signedIn := false
+		accounts, _ := AccountModel{}.RetrieveAll(db)
+		articles, _ := ArticleModel{}.RetrieveAll(db)
+		interviews, _ := InterviewModel{}.RetrieveAll(db)
+		session, _ := store.Get(r, "user")
 
 		data := struct {
 			Title      string
-			Users      []UserModel
+			Accounts   []AccountModel
 			Articles   []ArticleModel
 			Interviews []InterviewModel
+			Session    *sessions.Session
 		}{
 			"Welcome",
-			users,
+			accounts,
 			articles,
 			interviews,
+			session,
 		}
 
-		if signedIn == false {
-			err := t.ExecuteTemplate(w, "landingTemplate", data)
-			if err != nil {
-				log.Fatal(err)
-			}
-		}
-	}
-}
-
-func (s StaticController) About() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		err := t.ExecuteTemplate(w, "aboutTemplate", nil)
-		if err != nil {
+		if err := t.ExecuteTemplate(w, "landingTemplate", data); err != nil {
 			log.Fatal(err)
 		}
 	}
 }
 
-func (s StaticController) Terms() http.HandlerFunc {
+func (s StaticController) About(store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		err := t.ExecuteTemplate(w, "termsTemplate", nil)
-		if err != nil {
+
+		session, _ := store.Get(r, "user")
+
+		data := struct {
+			Title   string
+			Session *sessions.Session
+		}{
+			"Terms and Conditions",
+			session,
+		}
+
+		if err := t.ExecuteTemplate(w, "aboutTemplate", data); err != nil {
 			log.Fatal(err)
 		}
 	}
 }
 
-func (s StaticController) Privacy() http.HandlerFunc {
+func (s StaticController) Terms(store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		err := t.ExecuteTemplate(w, "privacyTemplate", nil)
-		if err != nil {
+
+		session, _ := store.Get(r, "user")
+
+		data := struct {
+			Title   string
+			Session *sessions.Session
+		}{
+			"Terms and Conditions",
+			session,
+		}
+
+		if err := t.ExecuteTemplate(w, "termsTemplate", data); err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
+func (s StaticController) Privacy(store *sessions.CookieStore) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		session, _ := store.Get(r, "user")
+
+		data := struct {
+			Title   string
+			Session *sessions.Session
+		}{
+			"Terms and Conditions",
+			session,
+		}
+
+		if err := t.ExecuteTemplate(w, "privacyTemplate", data); err != nil {
 			log.Fatal(err)
 		}
 	}

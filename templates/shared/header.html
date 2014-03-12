@@ -1,4 +1,5 @@
 {{ define "header" }}
+<header>
   <nav class="navbar navbar-square navbar-default" role="navigation">
     <div class="container">
       <div class="navbar-header">
@@ -17,21 +18,37 @@
           <li><a href="/articles">Articles</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <!--  
-            <li><p class="navbar-text" style="color:#eee;">{user.displayName}</p></li>
-            <li><a id="create" href="#"><i class="fa fa-plus"></i></a></li>
-            <li><a id="settings" href="#"><span class="glyphicon glyphicon-cog"></span></a></li>
-            <li><a id="signout" href="/logout"><span class="glyphicon glyphicon-log-out"></span></a></li>
-          --> 
+          {{ if index .Session.Values "user" }}
+          <li>
+          <p class="navbar-text">{{ with $x := index .Session.Values "user" }}{{ printf "%s" $x.Email }}{{ end }}</p>
+          </li>
+          <li>
+            <a id="create" href="#"><i class="fa fa-plus"></i></a>
+          </li>
+          <li>
+            <a id="settings" href="/settings">
+              <span class="glyphicon glyphicon-cog"></span>
+            </a>
+          </li>
+          <li>
+            <a id="signout" href="/signout">
+              <span class="glyphicon glyphicon-log-out"></span>
+            </a>
+          </li>
+          {{ else }}
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sign In <b class="caret"></b></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Sign In <b class="caret"></b>
+            </a>
             <ul class="dropdown-menu">
               <li><a href="/auth/linkedin">LinkedIn</a></li>
               <li><a href="/signin">Email</a></li>
             </ul>
           </li>
+          {{ end }}
         </ul>
       </div>
     </div>
   </nav>
+</header>
 {{ end }}

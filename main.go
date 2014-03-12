@@ -13,12 +13,16 @@ import (
 	"net/http"
 )
 
+var db *sql.DB
+var store *sessions.CookieStore
+var user, pass, name, secret string
+
 func main() {
 	conf, _ := yaml.Open("settings.yml")
-	user := to.String(conf.Get("database", "user"))
-	pass := to.String(conf.Get("database", "pass"))
-	name := to.String(conf.Get("database", "name"))
-	secret := to.String(conf.Get("session", "secret"))
+	user = to.String(conf.Get("database", "user"))
+	pass = to.String(conf.Get("database", "pass"))
+	name = to.String(conf.Get("database", "name"))
+	secret = to.String(conf.Get("session", "secret"))
 
 	db, err := sql.Open("mysql", user+":"+pass+"@/"+name)
 	if err != nil {
@@ -27,35 +31,29 @@ func main() {
 	defer db.Close()
 	db.SetMaxIdleConns(100)
 
-	store := sessions.NewCookieStore([]byte(secret))
+	store = sessions.NewCookieStore([]byte(secret))
 
-	http.HandleFunc("/articles", ArticleController{}.Index(db))
-	http.HandleFunc("/article", ArticleController{}.Retrieve(db))
-
-	http.HandleFunc("/interviews", InterviewController{}.Index(db))
-	http.HandleFunc("/interview", InterviewController{}.Retrieve(db))
-
-	http.HandleFunc("/users", UserController{}.Index(db))
-	http.HandleFunc("/user", UserController{}.Retrieve(db))
-
-	http.HandleFunc("/", StaticController{}.Landing(db))
-	http.HandleFunc("/about", StaticController{}.About())
-	http.HandleFunc("/terms", StaticController{}.Terms())
-	http.HandleFunc("/privacy", StaticController{}.Privacy())
-
-	http.HandleFunc("/signin", AuthController{}.SignInForm())
-	http.HandleFunc("/api/signin", AuthController{}.SignInApi(db, store))
-	http.HandleFunc("/signup", AuthController{}.SignUpForm())
-	http.HandleFunc("/api/signup", AuthController{}.SignUpApi(db, store))
-	//     http.HandleFunc("/auth/email", UserController{}.AuthForm())
-	//     http.HandleFunc("/auth/linkedin", UserController{}.AuthForm())
+	http.HandleFunc("/articles", ArticleController{}.Index(db, store))
+	http.HandleFunc("/article", ArticleController{}.Retrieve(db, store))
+	http.HandleFunc("/interviews", InterviewController{}.Index(db, store))
+	http.HandleFunc("/interview", InterviewController{}.Retrieve(db, store))
+	http.HandleFunc("/accounts", AccountController{}.Index(db, store))
+	http.HandleFunc("/account", AccountController{}.Retrieve(db, store))
+	http.HandleFunc("/", StaticController{}.Landing(db, store))
+	http.HandleFunc("/about", StaticController{}.About(store))
+	http.HandleFunc("/terms", StaticController{}.Terms(store))
+	http.HandleFunc("/privacy", StaticController{}.Privacy(store))
+	http.HandleFunc("/signin", UserController{}.SignInForm(store))
+	http.HandleFunc("/signout", UserController{}.SignOut(store))
+	http.HandleFunc("/signup", UserController{}.SignUpForm(store))
+	http.HandleFunc("/api/signin", UserController{}.SignInApi(db, store))
+	http.HandleFunc("/api/signup", UserController{}.SignUpApi(db, store))
 
 	http.Handle("/resources/", http.StripPrefix("/resources/", http.FileServer(http.Dir("resources"))))
 
 	http.HandleFunc("/debug", func(w http.ResponseWriter, r *http.Request) {
 		session, _ := store.Get(r, "user")
 		//email := fmt.Sprintf("%s", session.Values["email"])
-
 		for _, value := range session.Values {
 			fmt.Fprintf(w, "%s", value)
 		}

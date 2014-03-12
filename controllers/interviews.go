@@ -3,6 +3,7 @@ package controllers
 import (
 	"database/sql"
 	_ "github.com/Go-SQL-Driver/MySQL"
+	"github.com/gorilla/sessions"
 	. "github.com/jonahgeorge/husker/models"
 	"log"
 	"net/http"
@@ -10,38 +11,37 @@ import (
 
 type InterviewController struct{}
 
-func (i InterviewController) Index(db *sql.DB) http.HandlerFunc {
+func (i InterviewController) Index(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		interviews, err := InterviewModel{}.RetrieveAll(db)
-		if err != nil {
-			log.Fatal(err)
-		}
+
+		interviews, _ := InterviewModel{}.RetrieveAll(db)
+		session, _ := store.Get(r, "user")
 
 		data := struct {
 			Title      string
 			Interviews []InterviewModel
+			Session    *sessions.Session
 		}{
 			"Interviews",
 			interviews,
+			session,
 		}
 
-		err = t.ExecuteTemplate(w, "interviewIndex", data)
-		if err != nil {
+		if err := t.ExecuteTemplate(w, "interviewIndex", data); err != nil {
 			log.Fatal(err)
 		}
 	}
 }
 
-func (i InterviewController) Retrieve(db *sql.DB) http.HandlerFunc {
+func (i InterviewController) Retrieve(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		err := t.ExecuteTemplate(w, "interviewShow", nil)
-		if err != nil {
+		if err := t.ExecuteTemplate(w, "interviewShow", nil); err != nil {
 			log.Fatal(err)
 		}
 	}
 }
 
-func (i InterviewController) Form(db *sql.DB) http.HandlerFunc {
+func (i InterviewController) Form(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 	}
 }

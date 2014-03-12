@@ -2,11 +2,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    {{ template "head" }}
+    {{ template "head" . }}
   </head>
   <body>
 
-    {{ template "header" }}
+    {{ template "header" . }}
  
     <div class="container">
 
@@ -102,13 +102,9 @@
     <p>Privacy policy created by Generate Privacy Policy</p>
     <br>
       </div>
-
-      {{ template "footer" }}
-
+      {{ template "footer" . }}
     </div>
-
-    {{ template "foot" }}
-
+    {{ template "foot" . }}
   </body>
 </html>
 {{ end }}

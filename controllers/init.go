@@ -8,7 +8,7 @@ func init() {
 	t = template.Must(t.ParseGlob("templates/shared/*.html"))
 	t = template.Must(t.ParseGlob("templates/articles/*.html"))
 	t = template.Must(t.ParseGlob("templates/interviews/*.html"))
+	t = template.Must(t.ParseGlob("templates/accounts/*.html"))
 	t = template.Must(t.ParseGlob("templates/users/*.html"))
-	t = template.Must(t.ParseGlob("templates/auth/*.html"))
 	t = template.Must(t.ParseGlob("templates/static/*.html"))
 }

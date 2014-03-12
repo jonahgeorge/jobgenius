@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    {{ template "head" }}
+    {{ template "head" . }}
     <style>
       img {
         border-radius:2px;
@@ -10,7 +10,7 @@
     </style>
   </head>
   <body>
-    {{ template "header" }}
+    {{ template "header" . }}
     <div class="container">
 
       <div class="page-header">
@@ -72,9 +72,9 @@
         </div>
       </div>
 
-      {{ template "footer" }}
+      {{ template "footer" . }}
     </div>
-    {{ template "foot" }}
+    {{ template "foot" . }}
   </body>
 </html>
 {{ end }}
