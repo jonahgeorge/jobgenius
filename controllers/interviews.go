@@ -13,7 +13,6 @@ type InterviewController struct{}
 
 func (i InterviewController) Index(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
 		interviews, _ := InterviewModel{}.RetrieveAll(db)
 		session, _ := store.Get(r, "user")
 

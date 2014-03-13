@@ -16,10 +16,13 @@
         <div class="col-sm-6">
           <h3>Recent Articles</h3>
           {{ range .Articles }}
-            <a href="/article?q={{ .Id }}">
+            <a href="/article/{{ .Id.Int64 }}">
               <div class="panel panel-default">
                 <div class="panel-body">
-                  {{ .Title }} 
+                  <div style="display:inline-block;vertical-align:middle;">
+                    <img class="img-responsive img-rounded" src="http://placehold.it/50">
+                  </div>
+                  <span style="display:inline-block;vertical-align:middle;margin-left:15px;">{{ .Title.String }}</span>
                 </div>
               </div>
             </a>
@@ -29,10 +32,13 @@
         <div class="col-sm-6">
           <h3>Recent Interviews</h3>
           {{ range .Interviews }}
-            <a href="/interview?q={{ .Id }}">
+            <a href="/interview/{{ .Id }}">
               <div class="panel panel-default">
                 <div class="panel-body">
-                  {{ .Title }} 
+                  <div style="display:inline-block;vertical-align:middle;">
+                    <img class="img-responsive img-rounded" src="http://placehold.it/50">
+                  </div>
+                  <span style="display:inline-block;vertical-align:middle;margin-left:15px;">{{ .Title }}</span>
                 </div>
               </div>
             </a>

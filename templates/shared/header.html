@@ -20,10 +20,19 @@
         <ul class="nav navbar-nav navbar-right">
           {{ if index .Session.Values "user" }}
           <li>
-          <p class="navbar-text">{{ with $x := index .Session.Values "user" }}{{ printf "%s" $x.Email }}{{ end }}</p>
+            <a href="#">
+              <div style="display:inline-block;vertical-align:middle;">
+                <img class="img-responsive img-rounded" src="http://placehold.it/25">
+              </div>
+              {{ with $x := index .Session.Values "user" }}{{ printf "%s" $x.Email }}{{ end }}
+            </a>
           </li>
-          <li>
-            <a id="create" href="#"><i class="fa fa-plus"></i></a>
+          <li class="dropdown">
+            <a id="create" href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="/interview"><i class="fa fa-fw fa-user"></i> New Interview</a></li>
+              <li><a href="/article"><i class="fa fa-fw fa-pencil-square-o"></i> New Article</a></li>
+            </ul>
           </li>
           <li>
             <a id="settings" href="/settings">
@@ -37,9 +46,7 @@
           </li>
           {{ else }}
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              Sign In <b class="caret"></b>
-            </a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sign In <b class="caret"></b></a>
             <ul class="dropdown-menu">
               <li><a href="/auth/linkedin">LinkedIn</a></li>
               <li><a href="/signin">Email</a></li>

@@ -3,6 +3,7 @@ package controllers
 import (
 	"database/sql"
 	_ "github.com/Go-SQL-Driver/MySQL"
+	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	. "github.com/jonahgeorge/husker/models"
 	"log"
@@ -35,7 +36,8 @@ func (a AccountController) Index(db *sql.DB, store *sessions.CookieStore) http.H
 
 func (a AccountController) Retrieve(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		account, _ := AccountModel{}.RetrieveById(db, r.FormValue("q"))
+		params := mux.Vars(r)
+		account, _ := AccountModel{}.RetrieveById(db, params["id"])
 		articles, _ := ArticleModel{}.RetrieveByAuthor(db, account.Id)
 		interviews, _ := InterviewModel{}.RetrieveByAuthor(db, account.Id)
 

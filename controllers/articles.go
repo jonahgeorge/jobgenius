@@ -3,6 +3,7 @@ package controllers
 import (
 	"database/sql"
 	_ "github.com/Go-SQL-Driver/MySQL"
+	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	. "github.com/jonahgeorge/husker/models"
 	"log"
@@ -36,7 +37,9 @@ func (a ArticleController) Index(db *sql.DB, store *sessions.CookieStore) http.H
 func (a ArticleController) Retrieve(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		article, _ := ArticleModel{}.RetrieveOne(db, r.FormValue("q"))
+		params := mux.Vars(r)
+
+		article, _ := ArticleModel{}.RetrieveOne(db, params["id"])
 		session, _ := store.Get(r, "user")
 
 		data := struct {
@@ -44,7 +47,7 @@ func (a ArticleController) Retrieve(db *sql.DB, store *sessions.CookieStore) htt
 			Article ArticleModel
 			Session *sessions.Session
 		}{
-			article.Title,
+			article.Title.String,
 			article,
 			session,
 		}

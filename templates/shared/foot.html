@@ -12,22 +12,21 @@
   <!-- bootstrap popovers -->
   <script>
     $("#settings").tooltip({
-    container : "body",
-    title : "Account settings",
-    placement : "bottom"
+      container: "body",
+      title: "Account settings",
+      placement: "bottom"
     });
 
     $("#signout").tooltip({
-    container : "body",
-    title : "Sign out",
-    placement : "bottom"
+      container: "body",
+      title: "Sign out",
+      placement: "bottom"
     });
 
-    $("#create").popover({
-    container : "body",
-    content : "<a href='/' style='color:#fff!important;'>Create new interview</a><br style='margin:5px;'><a style='color:#fff!important;' href='/''>Create new article</a>",
-    placement : "bottom",
-    html : true
+    $("#create").tooltip({
+      container: "body",
+      title: "Create new...",
+      placement: "bottom"
     });
   </script>
 

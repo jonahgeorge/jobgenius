@@ -10,10 +10,10 @@ import (
 )
 
 type ArticleModel struct {
-	Id      int
-	Author  string
-	Date    string
-	Title   string
+	Id      sql.NullInt64
+	Author  sql.NullString
+	Date    sql.NullString
+	Title   sql.NullString
 	Content template.HTML
 }
 
@@ -24,10 +24,10 @@ func (a ArticleModel) Create(db *sql.DB) error {
 func (a ArticleModel) RetrieveAll(db *sql.DB) ([]ArticleModel, error) {
 	var articles []ArticleModel
 
-	sql := `SELECT U.display_name, A.aid, A.title, A.body, A.timestamp
-          FROM C_ARTICLE AS A
-            LEFT JOIN C_USER AS U ON A.uid = U.uid
-          WHERE A.published = 1`
+	sql := `SELECT U.display_name, A.aid, A.title, A.body
+            FROM C_ARTICLE AS A
+              LEFT JOIN C_USER AS U ON A.uid = U.uid
+            WHERE A.published = 1`
 
 	rows, err := db.Query(sql)
 	if err != nil {
@@ -39,7 +39,7 @@ func (a ArticleModel) RetrieveAll(db *sql.DB) ([]ArticleModel, error) {
 		var a ArticleModel
 		var b []byte
 
-		err = rows.Scan(&a.Author, &a.Id, &a.Title, &b, &a.Date)
+		err = rows.Scan(&a.Author, &a.Id, &a.Title, &b)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -53,9 +53,9 @@ func (a ArticleModel) RetrieveAll(db *sql.DB) ([]ArticleModel, error) {
 func (a ArticleModel) RetrieveOne(db *sql.DB, id string) (ArticleModel, error) {
 
 	sql := `SELECT U.display_name, A.aid, A.title, A.body, A.timestamp
-          FROM C_ARTICLE AS A
-            LEFT JOIN C_USER AS U ON A.uid = U.uid
-          WHERE A.published = 1 AND A.aid = ` + id
+               FROM C_ARTICLE AS A
+                 LEFT JOIN C_USER AS U ON A.uid = U.uid
+               WHERE A.published = 1 AND A.aid = ` + id
 
 	var article ArticleModel
 	var b []byte

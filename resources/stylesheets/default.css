@@ -1,17 +1,37 @@
+.inline {
+  display:inline;
+}
+
+.left-arrow {
+  font-size: 36px;
+  margin-right: 25px;
+}
+
+.filter > label {
+  display:block;
+}
+
+label > input[type="checkbox"],
+label > input[type="radio"] {
+  margin-right:5px;
+}
+
 footer {
   margin-top:50px;
   margin-bottom:100px;
+}
+
+footer > .container {
   border-top:solid 1px #eee;
-  width:100%;
   padding-top:25px;
 }
 
-footer > .footer-column > h5 {
+.footer-column > h5 {
   text-transform: uppercase;
 }
 
-footer > .footer-column > a,
-footer > .footer-column > p {
+.footer-column > a,
+.footer-column > p {
   color:#747474;
   position:relative;
   display:block;
