@@ -17,8 +17,10 @@ type ArticleModel struct {
 	Content template.HTML
 }
 
-func (a ArticleModel) Create(db *sql.DB) error {
-	return nil
+func (a ArticleModel) Create(db *sql.DB, data map[string]interface{}) error {
+	sql := `INSERT INTO C_ARTICLE (title, author) VALUES (?, ?)`
+	_, err := db.Query(sql, data["Title"], data["Author"])
+	return err
 }
 
 func (a ArticleModel) RetrieveAll(db *sql.DB) ([]ArticleModel, error) {
@@ -55,15 +57,12 @@ func (a ArticleModel) RetrieveOne(db *sql.DB, id string) (ArticleModel, error) {
 	sql := `SELECT U.display_name, A.aid, A.title, A.body, A.timestamp
                FROM C_ARTICLE AS A
                  LEFT JOIN C_USER AS U ON A.uid = U.uid
-               WHERE A.published = 1 AND A.aid = ` + id
+               WHERE A.published = 1 AND A.aid = ?`
 
 	var article ArticleModel
 	var b []byte
 
-	err := db.QueryRow(sql).Scan(&article.Author, &article.Id, &article.Title, &b, &article.Date)
-	if err != nil {
-		log.Fatal(err)
-	}
+	err := db.QueryRow(sql, id).Scan(&article.Author, &article.Id, &article.Title, &b, &article.Date)
 	b = blackfriday.MarkdownCommon(b)
 	article.Content = template.HTML(string(b))
 

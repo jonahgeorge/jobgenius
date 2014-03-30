@@ -1,20 +1,20 @@
 {{ define "articleIndex" }}
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     {{ template "head" . }}
   </head>
   <body>
     {{ template "header" . }}
     <div class="container">
-      <div class="col-sm-12">
+      <div class="col col-sm-12">
         <div class="page-header">
           <a href="/" class="left-arrow"><i class="fa fa-angle-left"></i></a>
           <h1 class="inline">{{ .Title }}</h1>
         </div>
       </div>
 
-      <div class="col-sm-3">
+      <div class="col-left col-sm-3">
         <div class="panel panel-default">
             <div class="panel-heading">Filter<span class="glyphicon glyphicon-search pull-right"></span></div>
             <div class="panel-body">
@@ -36,16 +36,18 @@
         </div>
       </div>
 
-      <div class="col-sm-9">
-             {{ range .Articles }}
-            <a href='/article/{{ .Id.Int64 }}'>
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <span class="pull-left">{{ .Title.String }}</span>
-                        <span class="pull-right">{{ .Date.String }}</span>
-                    </div>
-                </div>
-            </a>
+      <div class="col-right col-sm-9">
+        {{ range .Articles }}
+        <a href='/article/{{ .Id.Int64 }}'>
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <div style="display:inline-block;vertical-align:middle;">
+                <img class="img-responsive img-rounded" src="http://placehold.it/50">
+              </div>
+              <span style="display:inline-block;vertical-align:middle;margin-left:15px;">{{ .Title.String }}</span>
+            </div>
+          </div>
+        </a>
         {{ end }}
       </div>
     </div>

@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	_ "github.com/Go-SQL-Driver/MySQL"
 	"github.com/gorilla/sessions"
-	. "github.com/jonahgeorge/husker/models"
+	. "github.com/jonahgeorge/jobgenius.net/models"
 	"log"
 	"net/http"
 )

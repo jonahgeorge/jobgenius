@@ -8,10 +8,20 @@ import (
 )
 
 type InterviewModel struct {
-	Id      int
-	Author  string
-	Date    string
-	Title   string
+
+	// Info InfoModel
+
+	// Basic BasicModel
+	// Education EducationModel
+	// Requirements RequirementModel
+	// Skills SkillsModel
+	// Solo SoloModel
+	// Tasks TasksModel
+
+	Id      sql.NullInt64
+	Author  sql.NullString
+	Date    sql.NullString
+	Title   sql.NullString
 	Content string
 }
 

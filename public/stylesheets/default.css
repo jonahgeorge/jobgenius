@@ -37,3 +37,32 @@ footer > .container {
   display:block;
   padding:3px 0;
 }
+
+.col,
+.col-left,
+.col-right {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .col {
+    padding-left:0;
+    padding-right:0;
+  }
+  .col-left { 
+    padding-left:0; 
+    padding-right:15px;
+  }
+  .col-right { 
+    padding-left:15px;
+    padding-right:0; 
+  }
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) { }
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) { }
