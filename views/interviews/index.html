@@ -1,4 +1,4 @@
-{{ define "interviewIndex" }}
+{{ define "interviews/index" }}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,7 +9,7 @@
     <div class="container">
       <div class="col col-sm-12">
         <div class="page-header">
-          <a href="/" class="left-arrow"><i class="fa fa-angle-left"></i></a>
+          <a href="/" class="left-arrow"><i class="fa fa-chevron-left"></i></a>
           <h1 class="inline">{{ .Title }}</h1>
         </div>
       </div>
@@ -29,7 +29,7 @@
               <div style="display:inline-block;vertical-align:middle;">
                 <img class="img-responsive img-rounded" src="http://placehold.it/50">
               </div>
-              <span style="display:inline-block;vertical-align:middle;margin-left:15px;">{{ .Title.String }}</span>
+              <span style="display:inline-block;vertical-align:middle;margin-left:15px;">{{ .Name.String }} - {{ .Position.String }}</span>
             </div>
           </div>
         </a>

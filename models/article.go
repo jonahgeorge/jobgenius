@@ -2,10 +2,7 @@ package models
 
 import (
 	"database/sql"
-	"fmt"
 	_ "github.com/Go-SQL-Driver/MySQL"
-	"github.com/russross/blackfriday"
-	"html/template"
 	"log"
 )
 
@@ -14,15 +11,23 @@ type ArticleModel struct {
 	Author  sql.NullString
 	Date    sql.NullString
 	Title   sql.NullString
-	Content template.HTML
+	Content sql.NullString
 }
 
-func (a ArticleModel) Create(db *sql.DB, data map[string]interface{}) error {
-	sql := `INSERT INTO C_ARTICLE (title, author) VALUES (?, ?)`
-	_, err := db.Query(sql, data["Title"], data["Author"])
-	return err
+// Create an article
+func (a ArticleModel) Create(db *sql.DB, data map[string]interface{}) (int64, error) {
+	sql := `INSERT INTO C_ARTICLE (title, uid, body, published) VALUES (?, ?, ?, 1)`
+	result, err := db.Exec(sql, data["Title"], data["AuthorId"], data["Content"])
+	if err != nil {
+		log.Printf("%s", err)
+	}
+
+	id, err := result.LastInsertId()
+
+	return id, err
 }
 
+// Retrieve all articles
 func (a ArticleModel) RetrieveAll(db *sql.DB) ([]ArticleModel, error) {
 	var articles []ArticleModel
 
@@ -38,60 +43,62 @@ func (a ArticleModel) RetrieveAll(db *sql.DB) ([]ArticleModel, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var a ArticleModel
-		var b []byte
+		var article ArticleModel
 
-		err = rows.Scan(&a.Author, &a.Id, &a.Title, &b)
+		err = rows.Scan(&article.Author, &article.Id, &article.Title, &article.Content)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		a.Content = template.HTML(blackfriday.MarkdownCommon(b))
-		articles = append(articles, a)
+		articles = append(articles, article)
 	}
 	return articles, err
 }
 
-func (a ArticleModel) RetrieveOne(db *sql.DB, id string) (ArticleModel, error) {
+// Retrieve one article by article id (primary key)
+func (a ArticleModel) RetrieveById(db *sql.DB, id string) (ArticleModel, error) {
 
-	sql := `SELECT U.display_name, A.aid, A.title, A.body, A.timestamp
-               FROM C_ARTICLE AS A
-                 LEFT JOIN C_USER AS U ON A.uid = U.uid
-               WHERE A.published = 1 AND A.aid = ?`
+	sql := `SELECT 
+              U.display_name, A.aid, A.title, A.body, A.timestamp
+            FROM 
+              C_ARTICLE AS A
+            LEFT JOIN 
+              C_USER AS U ON A.uid = U.uid
+            WHERE 
+              A.published = 1 AND A.aid = ?`
 
 	var article ArticleModel
-	var b []byte
-
-	err := db.QueryRow(sql, id).Scan(&article.Author, &article.Id, &article.Title, &b, &article.Date)
-	b = blackfriday.MarkdownCommon(b)
-	article.Content = template.HTML(string(b))
-
+	row := db.QueryRow(sql, id)
+	err := row.Scan(&article.Author, &article.Id, &article.Title, &article.Content, &article.Date)
 	return article, err
 }
 
+// Retrieve a slice of articles authored by the user id parameter
 func (a ArticleModel) RetrieveByAuthor(db *sql.DB, id int) ([]ArticleModel, error) {
 	var articles []ArticleModel
 
-	sql := fmt.Sprintf("SELECT U.display_name, A.aid, A.title, A.body, A.timestamp FROM C_ARTICLE AS A LEFT JOIN C_USER AS U ON A.uid = U.uid WHERE A.uid = %d", id)
+	sql := `SELECT 
+              U.display_name, A.aid, A.title, A.body, A.timestamp 
+            FROM 
+              C_ARTICLE AS A 
+            LEFT JOIN 
+              C_USER AS U ON A.uid = U.uid 
+            WHERE 
+              A.uid = ?`
 
-	rows, err := db.Query(sql)
+	rows, err := db.Query(sql, id)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var a ArticleModel
-		var b []byte
-
-		err = rows.Scan(&a.Author, &a.Id, &a.Title, &b, &a.Date)
+		var article ArticleModel
+		err = rows.Scan(&article.Author, &article.Id, &article.Title, &article.Content, &article.Date)
 		if err != nil {
 			log.Fatal(err)
 		}
-		b = blackfriday.MarkdownCommon(b)
-		a.Content = template.HTML(b)
-
-		articles = append(articles, a)
+		articles = append(articles, article)
 	}
 
 	return articles, err

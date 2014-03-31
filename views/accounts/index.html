@@ -1,4 +1,4 @@
-{{ define "accountIndex" }}
+{{ define "accounts/index" }}
 <!DOCTYPE html>
 <html>
   <head>
@@ -8,7 +8,8 @@
     {{ template "header" . }}
     <div class="container">
       <div class="page-header">
-          <h1>{{ .Title }}</h1>
+        <a href="/" class="left-arrow"><i class="fa fa-chevron-left"></i></a>
+        <h1 class="inline">{{ .Title }}</h1>
       </div>
       <table class="table table-striped">
         <tr>
@@ -17,12 +18,12 @@
           <th>Email</th>
           <th>Role</th>
         </tr>
-        {{ range .Users }}
+        {{ range .Accounts }}
           <tr>
-            <td>{{ .Id }}</td>
-            <td><a href="user?q={{ .Id }}">{{ .Name }}</a></td>
-            <td>{{ .Email }}</td>
-            <td>{{ .Role }}</td>
+            <td>{{ .Id.Int64 }}</td>
+            <td><a href="account/{{ .Id.Int64 }}">{{ .Name.String }}</a></td>
+            <td>{{ .Email.String }}</td>
+            <td>{{ .Role.Int64 }}</td>
           </tr>
         {{ end }}
       </table>

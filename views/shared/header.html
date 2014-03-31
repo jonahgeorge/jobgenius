@@ -18,13 +18,13 @@
           <li><a href="/articles">Articles</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          {{ if index .Session.Values "user" }}
+          {{ if index .Session.Values "Id" }}
           <li>
             <a href="#">
               <div style="display:inline-block;vertical-align:middle;">
                 <img class="img-responsive img-rounded" src="http://placehold.it/25">
               </div>
-              {{ with $x := index .Session.Values "user" }}{{ printf "%s" $x.Email }}{{ end }}
+              {{ index .Session.Values "Name" }}
             </a>
           </li>
           <li class="dropdown">
