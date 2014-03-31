@@ -2,83 +2,124 @@ package models
 
 import (
 	"database/sql"
-	"fmt"
 	_ "github.com/Go-SQL-Driver/MySQL"
+	. "github.com/jonahgeorge/jobgenius.net/models/blocks"
 	"log"
 )
 
 type InterviewModel struct {
-
-	// Info InfoModel
-
-	// Basic BasicModel
-	// Education EducationModel
-	// Requirements RequirementModel
-	// Skills SkillsModel
-	// Solo SoloModel
-	// Tasks TasksModel
-
-	Id      sql.NullInt64
-	Author  sql.NullString
-	Date    sql.NullString
-	Title   sql.NullString
-	Content string
+	Id       sql.NullInt64
+	Name     sql.NullString
+	Position sql.NullString
+	AuthorId sql.NullInt64
+	Author   sql.NullString
+	Basic    BasicBlock
 }
 
 func (i InterviewModel) Create(db *sql.DB) error {
 	return nil
 }
 
-func (i InterviewModel) RetrieveAll(db *sql.DB) ([]InterviewModel, error) {
-	var teasers []InterviewModel
+func (i InterviewModel) RetrieveAll(db *sql.DB) []InterviewModel {
 
-	sql := `SELECT U.display_name, A.aid, A.title, A.body, A.timestamp
-          FROM C_ARTICLE AS A
-            LEFT JOIN C_USER AS U ON A.uid = U.uid
-          WHERE A.published = 1`
-
-	rows, err := db.Query(sql)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var i InterviewModel
-		err = rows.Scan(&i.Author, &i.Id, &i.Title, &i.Content, &i.Date)
-		if err != nil {
-			log.Fatal(err)
-		}
-		teasers = append(teasers, i)
-	}
-	return teasers, err
-}
-
-func (i InterviewModel) RetrieveByAuthor(db *sql.DB, id int) ([]InterviewModel, error) {
 	var interviews []InterviewModel
 
-	sql := fmt.Sprintf("SELECT U.display_name, A.aid, A.title, A.body, A.timestamp FROM C_ARTICLE AS A LEFT JOIN C_USER AS U ON A.uid = U.uid WHERE A.uid = %d", id)
+	sql := `SELECT
+				C_INTERVIEW.id, 
+				C_INTERVIEW.name, 
+				C_INTERVIEW.position, 
+				C_USER.uid,
+				C_USER.display_name
+          	FROM 
+          		C_INTERVIEW
+            LEFT JOIN 
+            	C_USER ON C_INTERVIEW.uid = C_USER.uid
+          	WHERE 
+          		C_INTERVIEW.published = 1`
 
 	rows, err := db.Query(sql)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("%s", err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		var i InterviewModel
-		err = rows.Scan(&i.Author, &i.Id, &i.Title, &i.Content, &i.Date)
-		if err != nil {
-			log.Fatal(err)
-		}
-		interviews = append(interviews, i)
-	}
+		var interview InterviewModel
 
-	return interviews, err
+		err = rows.Scan(&interview.Id, &interview.Name, &interview.Position, &interview.AuthorId, &interview.Author)
+		if err != nil {
+			log.Printf("%s", err)
+		}
+
+		interviews = append(interviews, interview)
+	}
+	return interviews
 }
 
-func (i InterviewModel) RetrieveOne(db *sql.DB, id string) (InterviewModel, error) {
-	return InterviewModel{}, nil
+func (i InterviewModel) RetrieveByAuthor(db *sql.DB, id int) []InterviewModel {
+	var interviews []InterviewModel
+
+	sql := `SELECT
+				C_INTERVIEW.id, 
+				C_INTERVIEW.name, 
+				C_INTERVIEW.position, 
+				C_USER.uid,
+				C_USER.display_name
+          	FROM 
+          		C_INTERVIEW
+            LEFT JOIN 
+            	C_USER ON C_INTERVIEW.uid = C_USER.uid
+          	WHERE 
+          		C_INTERVIEW.published = 1
+          	AND
+          		C_USER.uid = ?`
+
+	rows, err := db.Query(sql, id)
+	if err != nil {
+		log.Printf("%s", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var interview InterviewModel
+		err = rows.Scan(&interview.Id, &interview.Name, &interview.Position, &interview.AuthorId, &interview.Author)
+		if err != nil {
+			log.Printf("%s", err)
+		}
+		interviews = append(interviews, interview)
+	}
+
+	return interviews
+}
+
+func (i InterviewModel) RetrieveById(db *sql.DB, id string) InterviewModel {
+
+	sql := `SELECT
+				C_INTERVIEW.id, 
+				C_INTERVIEW.name, 
+				C_INTERVIEW.position, 
+				C_USER.uid,
+				C_USER.display_name
+          	FROM 
+          		C_INTERVIEW
+            LEFT JOIN 
+            	C_USER ON C_INTERVIEW.uid = C_USER.uid
+          	WHERE 
+          		C_INTERVIEW.published = 1
+          	AND
+          		C_INTERVIEW.id = ?`
+
+	var interview InterviewModel
+
+	row := db.QueryRow(sql, id)
+	err := row.Scan(&interview.Id, &interview.Name, &interview.Position, &interview.AuthorId, &interview.Author)
+	if err != nil {
+		log.Printf("%s", err)
+	}
+
+	interview.Basic = BasicBlock{}.RetrieveById(db, id)
+
+	return interview
 }
 
 func (i InterviewModel) Update(db *sql.DB) error {
