@@ -6,59 +6,48 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	. "github.com/jonahgeorge/jobgenius.net/models"
-	"log"
 	"net/http"
 )
 
-type AccountController struct{}
+type Account struct{}
 
-func (a AccountController) Index(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (a Account) Index(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		accounts, _ := AccountModel{}.RetrieveAll(db)
 
+		accounts := AccountModel{}.RetrieveAll(db)
 		session, _ := store.Get(r, "user")
 
-		data := struct {
-			Title    string
-			Accounts []AccountModel
-			Session  *sessions.Session
-		}{
-			"Accounts",
-			accounts,
-			session,
-		}
+		err := t.ExecuteTemplate(w, "accounts/index", map[string]interface{}{
+			"Title":    "Accounts",
+			"Accounts": accounts,
+			"Session":  session,
+		})
 
-		if err := t.ExecuteTemplate(w, "accountIndex", data); err != nil {
-			log.Fatal(err)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
 }
 
-func (a AccountController) Retrieve(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (a Account) Retrieve(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		params := mux.Vars(r)
-		account, _ := AccountModel{}.RetrieveById(db, params["id"])
-		articles, _ := ArticleModel{}.RetrieveByAuthor(db, account.Id)
-		interviews, _ := InterviewModel{}.RetrieveByAuthor(db, account.Id)
 
+		params := mux.Vars(r)
+		account := AccountModel{}.RetrieveById(db, params["id"])
+		articles, _ := ArticleModel{}.RetrieveByAuthor(db, int(account.Id.Int64))
+		interviews := InterviewModel{}.RetrieveByAuthor(db, int(account.Id.Int64))
 		session, _ := store.Get(r, "user")
 
-		data := struct {
-			Title      string
-			Account    AccountModel
-			Articles   []ArticleModel
-			Interviews []InterviewModel
-			Session    *sessions.Session
-		}{
-			"Account",
-			account,
-			articles,
-			interviews,
-			session,
-		}
+		err := t.ExecuteTemplate(w, "accounts/show", map[string]interface{}{
+			"Title":      "Account",
+			"Account":    account,
+			"Articles":   articles,
+			"Interviews": interviews,
+			"Session":    session,
+		})
 
-		if err := t.ExecuteTemplate(w, "accountShow", data); err != nil {
-			log.Fatal(err)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
 }

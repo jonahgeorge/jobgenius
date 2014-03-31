@@ -9,89 +9,75 @@ import (
 	"net/http"
 )
 
-type StaticController struct{}
+type Static struct{}
 
-func (s StaticController) Landing(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (s Static) Landing(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		accounts, _ := AccountModel{}.RetrieveAll(db)
+		accounts := AccountModel{}.RetrieveAll(db)
 		articles, _ := ArticleModel{}.RetrieveAll(db)
-		interviews, _ := InterviewModel{}.RetrieveAll(db)
+		interviews := InterviewModel{}.RetrieveAll(db)
 		session, _ := store.Get(r, "user")
 
-		data := struct {
-			Title      string
-			Accounts   []AccountModel
-			Articles   []ArticleModel
-			Interviews []InterviewModel
-			Session    *sessions.Session
-		}{
-			"Welcome",
-			accounts,
-			articles,
-			interviews,
-			session,
-		}
+		err := t.ExecuteTemplate(w, "landingTemplate", map[string]interface{}{
+			"Title":      "",
+			"Accounts":   accounts,
+			"Articles":   articles,
+			"Interviews": interviews,
+			"Session":    session,
+		})
 
-		if err := t.ExecuteTemplate(w, "landingTemplate", data); err != nil {
+		if err != nil {
 			log.Fatal(err)
 		}
 	}
 }
 
-func (s StaticController) About(store *sessions.CookieStore) http.HandlerFunc {
+func (s Static) About(store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")
 
-		data := struct {
-			Title   string
-			Session *sessions.Session
-		}{
-			"Terms and Conditions",
-			session,
-		}
+		err := t.ExecuteTemplate(w, "aboutTemplate", map[string]interface{}{
+			"Title":   "About",
+			"Session": session,
+		})
 
-		if err := t.ExecuteTemplate(w, "aboutTemplate", data); err != nil {
+		if err != nil {
 			log.Fatal(err)
 		}
 	}
 }
 
-func (s StaticController) Terms(store *sessions.CookieStore) http.HandlerFunc {
+func (s Static) Terms(store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")
 
-		data := struct {
-			Title   string
-			Session *sessions.Session
-		}{
-			"Terms and Conditions",
-			session,
-		}
+		err := t.ExecuteTemplate(w, "termsTemplate", map[string]interface{}{
+			"Title":   "Terms and Conditions",
+			"Session": session,
+		})
 
-		if err := t.ExecuteTemplate(w, "termsTemplate", data); err != nil {
+		if err != nil {
 			log.Fatal(err)
 		}
 	}
 }
 
-func (s StaticController) Privacy(store *sessions.CookieStore) http.HandlerFunc {
+func (s Static) Privacy(store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")
 
-		data := struct {
-			Title   string
-			Session *sessions.Session
-		}{
-			"Terms and Conditions",
-			session,
-		}
+		err := t.ExecuteTemplate(w, "privacyTemplate", map[string]interface{}{
+			"Title":   "Privacy Policy",
+			"Session": session,
+		})
 
-		if err := t.ExecuteTemplate(w, "privacyTemplate", data); err != nil {
+		if err != nil {
 			log.Fatal(err)
 		}
+
 	}
 }

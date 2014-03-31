@@ -10,9 +10,9 @@ import (
 	"net/http"
 )
 
-type UserController struct{}
+type User struct{}
 
-func (u UserController) SignInForm(store *sessions.CookieStore) http.HandlerFunc {
+func (u User) SignInForm(store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")
@@ -31,24 +31,22 @@ func (u UserController) SignInForm(store *sessions.CookieStore) http.HandlerFunc
 	}
 }
 
-func (u UserController) SignInApi(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (u User) SignInApi(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+
 		email := r.FormValue("email")
 		password := r.FormValue("password")
 
 		account := AccountModel{}.RetrieveByEmail(db, email)
 
-		if err := bcrypt.CompareHashAndPassword(account.Password, []byte(password)); err != nil {
+		if err := bcrypt.CompareHashAndPassword([]byte(account.Password.String), []byte(password)); err != nil {
 			http.Redirect(w, r, "/signin", http.StatusTemporaryRedirect)
 		} else {
 
-			var user UserModel
-			user.Email = account.Email
-			user.Name = account.Name
-			user.Id = account.Id
-
 			session, _ := store.Get(r, "user")
-			session.Values["user"] = user
+			session.Values["Email"] = account.Email.String
+			session.Values["Name"] = account.Name.String
+			session.Values["Id"] = account.Id.Int64
 			session.Save(r, w)
 
 			http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
@@ -56,7 +54,7 @@ func (u UserController) SignInApi(db *sql.DB, store *sessions.CookieStore) http.
 	}
 }
 
-func (u UserController) SignUpForm(store *sessions.CookieStore) http.HandlerFunc {
+func (u User) SignUpForm(store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")
@@ -75,7 +73,7 @@ func (u UserController) SignUpForm(store *sessions.CookieStore) http.HandlerFunc
 	}
 }
 
-func (u UserController) SignUpApi(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (u User) SignUpApi(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Assuming password 1 and password 2 match
 
@@ -84,17 +82,17 @@ func (u UserController) SignUpApi(db *sql.DB, store *sessions.CookieStore) http.
 
 		// Assuming user doesn't exist
 
-		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 9)
+		hashedPass, err := bcrypt.GenerateFromPassword([]byte(password), 9)
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		// Send email confirmation
 
-		account := AccountModel{}.Create(db, email, hashedPassword)
+		account := AccountModel{}.Create(db, email, string(hashedPass))
 		var user UserModel
-		user.Email = account.Email
-		user.Id = account.Id
+		user.Email = []byte(account.Email.String)
+		user.Id = int(account.Id.Int64)
 		user.Name = []byte("Anonymous")
 
 		session, _ := store.Get(r, "user")
@@ -105,7 +103,7 @@ func (u UserController) SignUpApi(db *sql.DB, store *sessions.CookieStore) http.
 	}
 }
 
-func (u UserController) SignOut(store *sessions.CookieStore) http.HandlerFunc {
+func (u User) SignOut(store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")
