@@ -71,17 +71,21 @@
 	                    <span class="pull-left"><b>Sector:</b></span>
 	                    <span class="pull-right">{{ .Interview.Basic.Sector.String }}</span><br>
 	                {{ end }}
-	                {{ if .Interview.Basic.Industry.Valid }}
+	                {{ if .Interview.Basic.Industry }}
 	                    <span class="pull-left"><b>Industry:</b></span>
-	                    <span class="pull-right">{{ .Interview.Basic.Industry.String }}</span><br>
+	                    {{ range .Interview.Basic.Industry }}
+	                    <span class="pull-right">{{ .Value.String }}</span><br>
+	                    {{ end }}
 	                {{ end }}
 	                {{ if .Interview.Basic.Experience.Valid }}
 	                    <span class="pull-left"><b>Experience:</b></span>
 	                    <span class="pull-right">{{ .Interview.Basic.Experience.String }}</span><br>
 	                {{ end }}
-	                {{ if .Interview.Basic.Environment.Valid }}
+	                {{ if .Interview.Basic.Environment }}
 	                    <span class="pull-left"><b>Environment:</b></span>
-	                    <span class="pull-right">{{ .Interview.Basic.Environment.String }}</span><br>
+	                    {{ range .Interview.Basic.Environment }}
+	                    <span class="pull-right">{{ .Value.String }}</span><br>
+	                    {{ end }}
 	                {{ end }}
 	                {{ if .Interview.Basic.Salary.Valid }}
 	                    <span class="pull-left"><b>Salary:</b></span>
