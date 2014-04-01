@@ -8,12 +8,15 @@ import (
 )
 
 type InterviewModel struct {
-	Id       sql.NullInt64
-	Name     sql.NullString
-	Position sql.NullString
-	AuthorId sql.NullInt64
-	Author   sql.NullString
-	Basic    BasicBlock
+	Id           sql.NullInt64
+	Name         sql.NullString
+	Position     sql.NullString
+	AuthorId     sql.NullInt64
+	Author       sql.NullString
+	Picture      sql.NullString
+	Basic        BasicBlock
+	Education    []Degree
+	Requirements RequirementsBlock
 }
 
 func (i InterviewModel) Create(db *sql.DB) error {
@@ -29,7 +32,8 @@ func (i InterviewModel) RetrieveAll(db *sql.DB) []InterviewModel {
 				C_INTERVIEW.name, 
 				C_INTERVIEW.position, 
 				C_USER.uid,
-				C_USER.display_name
+				C_USER.display_name,
+				C_USER.email_hash
           	FROM 
           		C_INTERVIEW
             LEFT JOIN 
@@ -46,7 +50,7 @@ func (i InterviewModel) RetrieveAll(db *sql.DB) []InterviewModel {
 	for rows.Next() {
 		var interview InterviewModel
 
-		err = rows.Scan(&interview.Id, &interview.Name, &interview.Position, &interview.AuthorId, &interview.Author)
+		err = rows.Scan(&interview.Id, &interview.Name, &interview.Position, &interview.AuthorId, &interview.Author, &interview.Picture)
 		if err != nil {
 			log.Printf("%s", err)
 		}
@@ -64,7 +68,8 @@ func (i InterviewModel) RetrieveByAuthor(db *sql.DB, id int) []InterviewModel {
 				C_INTERVIEW.name, 
 				C_INTERVIEW.position, 
 				C_USER.uid,
-				C_USER.display_name
+				C_USER.display_name,
+				C_USER.email_hash
           	FROM 
           		C_INTERVIEW
             LEFT JOIN 
@@ -82,7 +87,7 @@ func (i InterviewModel) RetrieveByAuthor(db *sql.DB, id int) []InterviewModel {
 
 	for rows.Next() {
 		var interview InterviewModel
-		err = rows.Scan(&interview.Id, &interview.Name, &interview.Position, &interview.AuthorId, &interview.Author)
+		err = rows.Scan(&interview.Id, &interview.Name, &interview.Position, &interview.AuthorId, &interview.Author, &interview.Picture)
 		if err != nil {
 			log.Printf("%s", err)
 		}
@@ -99,7 +104,8 @@ func (i InterviewModel) RetrieveById(db *sql.DB, id string) InterviewModel {
 				C_INTERVIEW.name, 
 				C_INTERVIEW.position, 
 				C_USER.uid,
-				C_USER.display_name
+				C_USER.display_name,
+				C_USER.email_hash
           	FROM 
           		C_INTERVIEW
             LEFT JOIN 
@@ -112,12 +118,14 @@ func (i InterviewModel) RetrieveById(db *sql.DB, id string) InterviewModel {
 	var interview InterviewModel
 
 	row := db.QueryRow(sql, id)
-	err := row.Scan(&interview.Id, &interview.Name, &interview.Position, &interview.AuthorId, &interview.Author)
+	err := row.Scan(&interview.Id, &interview.Name, &interview.Position, &interview.AuthorId, &interview.Author, &interview.Picture)
 	if err != nil {
 		log.Printf("%s", err)
 	}
 
 	interview.Basic = BasicBlock{}.RetrieveById(db, id)
+	interview.Education = EducationBlock{}.RetrieveById(db, id)
+	interview.Requirements = RequirementsBlock{}.Retrieve(db, id)
 
 	return interview
 }

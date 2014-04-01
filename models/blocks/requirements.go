@@ -1,39 +1,92 @@
 package blocks
 
-// import (
-// 	"database/sql"
-// 	_ "github.com/Go-SQL-Driver/MySQL"
-// 	"log"
-// )
+import (
+	"database/sql"
+	_ "github.com/Go-SQL-Driver/MySQL"
+	"log"
+)
 
-// type RequirementsBlock struct {
-// 	Degrees []Degree
-// }
+type RequirementsBlock struct {
+	Certifications []Field
+	Skills         []Field
+}
 
-// func (r RequirementsBlock) RetrieveById(db *sql.DB, id string) RequirementsBlock {
+type Field struct {
+	Key   sql.NullInt64
+	Value sql.NullString
+}
 
-// 	sql := `SELECT
-// 				C_INTERVIEW.id,
-// 				C_INTERVIEW.name,
-// 				C_INTERVIEW.position,
-// 				C_USER.uid,
-// 				C_USER.display_name
-//           	FROM
-//           		C_INTERVIEW
-//             LEFT JOIN
-//             	C_USER ON C_INTERVIEW.uid = C_USER.uid
-//           	WHERE
-//           		C_INTERVIEW.published = 1
-//           	AND
-//           		C_INTERVIEW.id = ?`
+func (r RequirementsBlock) Retrieve(db *sql.DB, id string) RequirementsBlock {
 
-// 	var block BasicBlock
+	rb := RequirementsBlock{
+		Certifications: RequirementsBlock{}.RetrieveCertifications(db, id),
+		Skills:         RequirementsBlock{}.RetrieveSkills(db, id),
+	}
 
-// 	row := db.QueryRow(sql, id)
-// 	err := row.Scan()
-// 	if err != nil {
-// 		log.Printf("%s", err)
-// 	}
+	return rb
 
-// 	return interview
-// }
+}
+
+func (r RequirementsBlock) RetrieveCertifications(db *sql.DB, id string) []Field {
+
+	sql := `SELECT
+				L_CERTIFICATION.id,
+				L_CERTIFICATION.value
+			FROM
+				F_CERTIFICATION
+			LEFT JOIN
+				L_CERTIFICATION on L_CERTIFICATION.id = F_CERTIFICATION.vid
+			WHERE
+				F_CERTIFICATION.iid = ?`
+
+	var fields []Field
+
+	rows, err := db.Query(sql, id)
+	if err != nil {
+		log.Printf("%s", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var field Field
+
+		err = rows.Scan(&field.Key, &field.Value)
+		if err != nil {
+			log.Printf("%s", err)
+		}
+
+		fields = append(fields, field)
+	}
+	return fields
+}
+
+func (r RequirementsBlock) RetrieveSkills(db *sql.DB, id string) []Field {
+
+	sql := `SELECT
+				F_SKILL.id,
+				F_SKILL.value
+			FROM
+				F_SKILL
+			WHERE
+				F_SKILL.iid = ?`
+
+	var fields []Field
+
+	rows, err := db.Query(sql, id)
+	if err != nil {
+		log.Printf("%s", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var field Field
+
+		err = rows.Scan(&field.Key, &field.Value)
+		if err != nil {
+			log.Printf("%s", err)
+		}
+
+		fields = append(fields, field)
+	}
+	return fields
+}
