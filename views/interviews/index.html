@@ -11,6 +11,9 @@
         <div class="page-header">
           <a href="/" class="left-arrow"><i class="fa fa-chevron-left"></i></a>
           <h1 class="inline">{{ .Title }}</h1>
+          {{ if index .Session.Values "Id" }}
+          <a href="/interview" class="btn btn-success pull-right">New Interview</a>
+          {{ end }}
         </div>
       </div>
 
