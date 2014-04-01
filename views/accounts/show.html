@@ -15,6 +15,9 @@
       
       <h4>Interviews</h4>
       <ul>
+      {{ range .Interviews }}
+        <li><a href="/interview/{{ .Id.Int64 }}">{{ .Position.String }}</a></li> 
+      {{ end }}
       </ul>
 
       <h4>Articles</h4>
