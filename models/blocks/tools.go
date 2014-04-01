@@ -1,46 +1,86 @@
 package blocks
 
-// import (
-// 	"database/sql"
-// 	_ "github.com/Go-SQL-Driver/MySQL"
-// 	"log"
-// )
+import (
+	"database/sql"
+	_ "github.com/Go-SQL-Driver/MySQL"
+	"log"
+)
 
-// type ToolsBlock struct {
-// 	Skills []Skill
-// 	Tools  []Tool
-// }
+type ToolsBlock struct {
+	Skills []Field
+	Tools  []Field
+}
 
-// type Skill struct {
-// }
+func (t ToolsBlock) Retrieve(db *sql.DB, id string) ToolsBlock {
 
-// type Tool struct {
-// }
+	tb := ToolsBlock{
+		Skills: ToolsBlock{}.RetrieveSkills(db, id),
+		Tools:  ToolsBlock{}.RetrieveTools(db, id),
+	}
 
-// func (t ToolsBlock) RetrieveById(db *sql.DB, id string) ToolsBlock {
+	return tb
+}
 
-// 	sql := `SELECT
-// 				C_INTERVIEW.id,
-// 				C_INTERVIEW.name,
-// 				C_INTERVIEW.position,
-// 				C_USER.uid,
-// 				C_USER.display_name
-//           	FROM
-//           		C_INTERVIEW
-//             LEFT JOIN
-//             	C_USER ON C_INTERVIEW.uid = C_USER.uid
-//           	WHERE
-//           		C_INTERVIEW.published = 1
-//           	AND
-//           		C_INTERVIEW.id = ?`
+func (t ToolsBlock) RetrieveTools(db *sql.DB, id string) []Field {
 
-// 	var block BasicBlock
+	sql := `SELECT
+				F_TOOL.id,
+				F_TOOL.value
+			FROM
+				F_TOOL
+			WHERE
+			    F_TOOL.iid = ?`
 
-// 	row := db.QueryRow(sql, id)
-// 	err := row.Scan()
-// 	if err != nil {
-// 		log.Printf("%s", err)
-// 	}
+	var fields []Field
 
-// 	return interview
-// }
+	rows, err := db.Query(sql, id)
+	if err != nil {
+		log.Printf("%s", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var field Field
+
+		err = rows.Scan(&field.Key, &field.Value)
+		if err != nil {
+			log.Printf("%s", err)
+		}
+
+		fields = append(fields, field)
+	}
+	return fields
+}
+
+func (t ToolsBlock) RetrieveSkills(db *sql.DB, id string) []Field {
+
+	sql := `SELECT
+				L_SOFT_SKILL.id,
+				L_SOFT_SKILL.value
+			FROM
+				F_SOFT_SKILL
+			LEFT JOIN
+				L_SOFT_SKILL ON L_SOFT_SKILL.id = F_SOFT_SKILL.vid
+			WHERE
+			    F_SOFT_SKILL.iid = ?`
+
+	var fields []Field
+
+	rows, err := db.Query(sql, id)
+	if err != nil {
+		log.Printf("%s", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var field Field
+
+		err = rows.Scan(&field.Key, &field.Value)
+		if err != nil {
+			log.Printf("%s", err)
+		}
+
+		fields = append(fields, field)
+	}
+	return fields
+}

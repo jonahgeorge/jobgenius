@@ -12,13 +12,52 @@
         </div>
 
 		<div class="col-sm-10 col-sm-offset-1" style="margin-bottom:25px;">
-		    <video id="video" controls width="100%">
-		        <source type="video/mp4" src="http://placehold.it/">
+			<video id="video" poster="http://jobgeniusvideos.s3.amazonaws.com/videos/thumbnails/4342/thumbnail-4342_0002.jpg" controls width="100%">
+			    <source src="http://jobgeniusvideos.s3.amazonaws.com/videos/converted/4342/What_I_do_mp4_1391670592.mp4" type="video/mp4">
+		    	<source src="http://jobgeniusvideos.s3.amazonaws.com/videos/converted/4342/What_I_do_webm_1391670593.webm" type="video/webm">
 		    </video>
 		</div>
 
 	    <div class="col-sm-6 left-col">
-	        <div class="panel panel-default">
+
+	    	<!--  Daily Tasks By Hour  -->
+	    	<div class="panel panel-default">
+		        <div class="panel-heading">
+	                <h3 class="panel-title" style="display:inline;">Daily Tasks By Hour</h3>
+					<span class="glyphicon glyphicon-time pull-right"></span>
+	            </div>
+	            <div class="panel-body">
+	            	<div id="breakdown"></div>
+	            </div>
+	        </div>
+
+	        <!--  Motivation & Fulfillment  -->
+	    	<div class="panel panel-default">
+		        <div class="panel-heading">
+	                <h3 class="panel-title" style="display:inline;">Motivation & Fulfillment</h3>
+					<span class="glyphicon glyphicon-time pull-right"></span>
+	            </div>
+	            <div class="panel-body">
+	            	<div id="fulfillment"></div>
+	            </div>
+	        </div>
+
+	        <!--  Solo vs Group Work  -->
+	    	<div class="panel panel-default">
+		        <div class="panel-heading">
+	                <h3 class="panel-title" style="display:inline;">Solo vs Group Work</h3>
+					<span class="glyphicon glyphicon-time pull-right"></span>
+	            </div>
+	            <div class="panel-body">
+		            <div id="solovgroup"></div>
+	            </div>
+	        </div>
+	    </div>
+
+	    <div class="col-sm-6 right-col">
+
+	    	<!--  Details  -->
+			<div class="panel panel-default">
 	            <div class="panel-heading">
 	                <h3 class="panel-title" style="display:inline;">Details</h3>
 	                <span class="glyphicon glyphicon-search pull-right"></span>
@@ -62,9 +101,8 @@
 	                {{ end }}
 	            </div>
 	        </div>
-	    </div>
 
-	    <div class="col-sm-6 right-col">
+	        <!--  Educational Background  -->
 	        <div class="panel panel-default">
 	            <div class="panel-heading">
 	                <h3 class="panel-title" style="display:inline;">Educational Background</h3>
@@ -87,6 +125,7 @@
 	            </div>
 	        </div>
 
+	        <!-- Job Requirements  -->
 	        <div class="panel panel-default">
 	            <div class="panel-heading">
 	                <h3 class="panel-title" style="display:inline;">Job Requirements</h3>
@@ -106,17 +145,45 @@
                     {{ end }}
 	            </div>
 	        </div>
+
+	        <!-- Skills and Tools  -->
+	        <div class="panel panel-default">
+	            <div class="panel-heading">
+	                <h3 class="panel-title" style="display:inline;">Skills and Tools</h3>
+					<span class="glyphicon glyphicon-wrench pull-right"></span>
+				</div>
+	            <div class="panel-body">
+                    <span class="pull-left"><b>Soft Skills:</b></span>
+                    {{ range .Interview.Tools.Skills }}
+                    <span class="pull-right">{{ .Value.String }}</span><br>
+                    {{ end }}
+                    
+                    <br>
+                    
+                    <span class="pull-left"><b>Tools:</b></span>
+                    {{ range .Interview.Tools.Tools }}
+                    <span class="pull-right">{{ .Value.String }}</span><br>
+                    {{ end }}
+	            </div>
+	        </div>
 	    </div>
 
-	    <div class="col-sm-12">
+<!-- 	    <div class="col-sm-12">
 		    <div class="panel panel-default">
 		        <div class="panel-heading"><h4>Comments</h4></div>
 		        <div class="panel-body"></div>
 			</div>
-		</div>
+		</div> -->
 	</div>
+	
 	{{ template "footer" . }}
-    <foot>{{ template "foot" . }}</foot>
+
+    <foot>
+	    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	    <script type="text/javascript" src="/public/javascript/charts.js"></script>
+	    {{ template "foot" . }}
+    </foot>
+
   </body>
 </html>
 

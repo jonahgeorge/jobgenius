@@ -17,6 +17,7 @@ type InterviewModel struct {
 	Basic        BasicBlock
 	Education    []Degree
 	Requirements RequirementsBlock
+	Tools        ToolsBlock
 }
 
 func (i InterviewModel) Create(db *sql.DB) error {
@@ -126,6 +127,7 @@ func (i InterviewModel) RetrieveById(db *sql.DB, id string) InterviewModel {
 	interview.Basic = BasicBlock{}.RetrieveById(db, id)
 	interview.Education = EducationBlock{}.RetrieveById(db, id)
 	interview.Requirements = RequirementsBlock{}.Retrieve(db, id)
+	interview.Tools = ToolsBlock{}.Retrieve(db, id)
 
 	return interview
 }
