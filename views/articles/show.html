@@ -7,18 +7,20 @@
   <body>
     {{ template "header" . }}
       <div class="container">
+
         <div class="page-header">
           <a href="/articles" class="left-arrow"><i class="fa fa-chevron-left"></i></a>
           <h1 class="inline">{{ .Title }}</h1>
         </div>
-        <div class="well well-small">
-          <span>{{ .Content }}</span>
-        </div>
+
+        <div>{{ .Content }}</div>
+        
         <div class="panel panel-default" style="background-color:#dff0d8; color:#3c763d; border-color:#d6e9c6;">
           <div class="panel-body">
             <span><a href="/auth/signin">Login</a> to join the discussion</span>
           </div>
         </div>
+
       </div>
       {{ template "footer" . }}
     <foot>
