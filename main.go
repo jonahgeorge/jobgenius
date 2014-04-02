@@ -64,6 +64,11 @@ func main() {
 	r.HandleFunc("/api/signin", controllers.User{}.SignInApi(db, store))
 	r.HandleFunc("/api/signup", controllers.User{}.SignUpApi(db, store))
 
+	// chart apis
+	r.HandleFunc("/api/charts/groupwork", controllers.Chart{}.GroupWork(db, store))
+	r.HandleFunc("/api/charts/fulfillment", controllers.Chart{}.Fulfillment(db, store))
+	r.HandleFunc("/api/charts/breakdown", controllers.Chart{}.Breakdown(db, store))
+
 	// static resource files
 	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 
