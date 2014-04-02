@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
   <head>{{ template "head" . }}</head>
-  <body>
+  <body data-interview-id={{ .Interview.Id.Int64 }}>
     {{ template "header" . }}
 	<div class="container">
         <div class="page-header">
@@ -172,20 +172,26 @@
 	        </div>
 	    </div>
 
-<!-- 	    <div class="col-sm-12">
+		<!--    
+		<div class="col-sm-12">
 		    <div class="panel panel-default">
 		        <div class="panel-heading"><h4>Comments</h4></div>
 		        <div class="panel-body"></div>
 			</div>
-		</div> -->
+		</div>
+		-->
+		
 	</div>
 	
 	{{ template "footer" . }}
 
     <foot>
-	    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-	    <script type="text/javascript" src="/public/javascript/charts.js"></script>
 	    {{ template "foot" . }}
+	    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	    <script type="text/javascript">google.load('visualization', '1.0', {'packages':['corechart', 'gauge']});</script>
+	    <script type="text/javascript" src="/public/javascript/charts/breakdown.js"></script>
+	    <script type="text/javascript" src="/public/javascript/charts/fulfillment.js"></script>
+	    <script type="text/javascript" src="/public/javascript/charts/groupwork.js"></script>
     </foot>
 
   </body>
