@@ -1,4 +1,9 @@
 database:
-  user: username
-  pass: password
-  name: database
+  user: 
+  pass: 
+  name: 
+
+session:
+  secret: 
+
+port: 
