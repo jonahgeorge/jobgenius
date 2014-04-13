@@ -1,13 +1,15 @@
 package controllers
 
+/*
 import (
-	"code.google.com/p/go.crypto/bcrypt"
 	"database/sql"
+	"log"
+	"net/http"
+
+	"code.google.com/p/go.crypto/bcrypt"
 	_ "github.com/Go-SQL-Driver/MySQL"
 	"github.com/gorilla/sessions"
 	. "github.com/jonahgeorge/jobgenius.net/models"
-	"log"
-	"net/http"
 )
 
 type User struct{}
@@ -113,3 +115,4 @@ func (u User) SignOut(store *sessions.CookieStore) http.HandlerFunc {
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 	}
 }
+*/

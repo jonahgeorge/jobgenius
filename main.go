@@ -2,79 +2,100 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
+	"log"
+	"net/http"
+
 	_ "github.com/Go-SQL-Driver/MySQL"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/gosexy/to"
 	"github.com/gosexy/yaml"
 	"github.com/jonahgeorge/jobgenius.net/controllers"
-	"log"
-	"net/http"
 )
 
 func main() {
 	// load settings from config file
-	conf, _ := yaml.Open("settings.yml")
-	user := to.String(conf.Get("database", "user"))
-	pass := to.String(conf.Get("database", "pass"))
-	name := to.String(conf.Get("database", "name"))
-	secret := to.String(conf.Get("session", "secret"))
-	port := to.String(conf.Get("port"))
-
-	// open database connection
-	db, err := sql.Open("mysql", user+":"+pass+"@/"+name)
+	conf, err := yaml.Open("config.yml")
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// open database connection
+	db := InitDB(conf)
 	defer db.Close()
-	db.SetMaxIdleConns(100)
 
 	// initialize session storage
+	secret := to.String(conf.Get("server", "secret"))
 	store := sessions.NewCookieStore([]byte(secret))
 
+	// init router
+	router := InitRouter(db, store)
+
+	// register router to serve all requests
+	http.Handle("/", router)
+
+	// load port from config
+	port := fmt.Sprintf(":%s", to.String(conf.Get("server", "port")))
+
+	// spin 'er up
+	err = http.ListenAndServe(port, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// Initialize mux router and register necessary routes
+func InitRouter(db *sql.DB, store *sessions.CookieStore) *mux.Router {
 	// intialize routes muxer
 	r := mux.NewRouter()
 
 	// article routes
 	r.HandleFunc("/articles", controllers.Article{}.Index(db, store))
-	r.HandleFunc("/article/{id:[0-9]+}", controllers.Article{}.Retrieve(db, store))
-	r.HandleFunc("/article", controllers.Article{}.Form(db, store)).Methods("GET")
-	r.HandleFunc("/article", controllers.Article{}.Create(db, store)).Methods("POST")
+	r.HandleFunc("/articles/{id:[0-9]+}", controllers.Article{}.Retrieve(db, store))
+	//r.HandleFunc("/articles", controllers.Article{}.Form(db, store)).Methods("GET")
+	r.HandleFunc("/articles", controllers.Article{}.Create(db, store)).Methods("POST")
 
 	// interview routes
 	r.HandleFunc("/interviews", controllers.Interview{}.Index(db, store))
-	r.HandleFunc("/interview/{id:[0-9]+}", controllers.Interview{}.Retrieve(db, store))
-	r.HandleFunc("/interview", controllers.Interview{}.Form(db, store))
+	r.HandleFunc("/interviews/{id:[0-9]+}", controllers.Interview{}.Retrieve(db, store))
+	r.HandleFunc("/interviews", controllers.Interview{}.Form(db, store))
 
 	// account routes
 	r.HandleFunc("/accounts", controllers.Account{}.Index(db, store))
-	r.HandleFunc("/account/{id:[0-9]+}", controllers.Account{}.Retrieve(db, store))
-
-	// static page routes
-	r.HandleFunc("/about", controllers.Static{}.About(store))
-	r.HandleFunc("/terms", controllers.Static{}.Terms(store))
-	r.HandleFunc("/privacy", controllers.Static{}.Privacy(store))
+	r.HandleFunc("/accounts/{id:[0-9]+}", controllers.Account{}.Retrieve(db, store))
 
 	// user routes
-	r.HandleFunc("/signin", controllers.User{}.SignInForm(store))
-	r.HandleFunc("/signout", controllers.User{}.SignOut(store))
-	r.HandleFunc("/signup", controllers.User{}.SignUpForm(store))
+	// r.HandleFunc("/signin", controllers.User{}.SignInForm(store))
+	// r.HandleFunc("/signout", controllers.User{}.SignOut(store))
+	// r.HandleFunc("/signup", controllers.User{}.SignUpForm(store))
 
 	// api routes
-	r.HandleFunc("/api/signin", controllers.User{}.SignInApi(db, store))
-	r.HandleFunc("/api/signup", controllers.User{}.SignUpApi(db, store))
+	// r.HandleFunc("/api/signin", controllers.User{}.SignInApi(db, store))
+	// r.HandleFunc("/api/signup", controllers.User{}.SignUpApi(db, store))
 
 	// chart apis
 	r.HandleFunc("/api/charts/groupwork", controllers.Chart{}.GroupWork(db, store))
 	r.HandleFunc("/api/charts/fulfillment", controllers.Chart{}.Fulfillment(db, store))
 	r.HandleFunc("/api/charts/breakdown", controllers.Chart{}.Breakdown(db, store))
 
-	// static resource files
-	http.Handle("/public/", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
+	return r
+}
 
-	// route path
-	r.HandleFunc("/", controllers.Static{}.Landing(db, store))
+// Load credentials from config and open database connection pool
+func InitDB(conf *yaml.Yaml) *sql.DB {
+	// load credentials from config file
+	user := to.String(conf.Get("database", "username"))
+	pass := to.String(conf.Get("database", "password"))
+	name := to.String(conf.Get("database", "name"))
 
-	http.Handle("/", r)
-	http.ListenAndServe(":"+port, nil)
+	// open database connection
+	db, err := sql.Open("mysql", user+":"+pass+"@/"+name)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	db.SetMaxIdleConns(100)
+
+	return db
 }
