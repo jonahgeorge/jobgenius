@@ -2,11 +2,12 @@ package controllers
 
 import (
 	"database/sql"
+	"net/http"
+
 	_ "github.com/Go-SQL-Driver/MySQL"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	. "github.com/jonahgeorge/jobgenius.net/models"
-	"net/http"
 )
 
 type Account struct{}
@@ -35,7 +36,7 @@ func (a Account) Retrieve(db *sql.DB, store *sessions.CookieStore) http.HandlerF
 		params := mux.Vars(r)
 		account := AccountModel{}.RetrieveById(db, params["id"])
 		articles, _ := ArticleModel{}.RetrieveByAuthor(db, int(account.Id.Int64))
-		interviews := InterviewModel{}.RetrieveByAuthor(db, int(account.Id.Int64))
+		interviews := InterviewFactory{}.RetrieveByAuthor(db, int(account.Id.Int64))
 		session, _ := store.Get(r, "user")
 
 		err := t.ExecuteTemplate(w, "accounts/show", map[string]interface{}{

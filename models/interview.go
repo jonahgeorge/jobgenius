@@ -2,29 +2,16 @@ package models
 
 import (
 	"database/sql"
+	"log"
+
 	_ "github.com/Go-SQL-Driver/MySQL"
 	. "github.com/jonahgeorge/jobgenius.net/models/blocks"
-	"log"
 )
 
-type InterviewModel struct {
-	Id           sql.NullInt64
-	Name         sql.NullString
-	Position     sql.NullString
-	AuthorId     sql.NullInt64
-	Author       sql.NullString
-	Picture      sql.NullString
-	Basic        BasicBlock
-	Education    []Degree
-	Requirements RequirementsBlock
-	Tools        ToolsBlock
+type InterviewFactory struct {
 }
 
-func (i InterviewModel) Create(db *sql.DB) error {
-	return nil
-}
-
-func (i InterviewModel) RetrieveAll(db *sql.DB) []InterviewModel {
+func (i InterviewFactory) RetrieveAll(db *sql.DB) []InterviewModel {
 
 	var interviews []InterviewModel
 
@@ -61,7 +48,7 @@ func (i InterviewModel) RetrieveAll(db *sql.DB) []InterviewModel {
 	return interviews
 }
 
-func (i InterviewModel) RetrieveByAuthor(db *sql.DB, id int) []InterviewModel {
+func (i InterviewFactory) RetrieveByAuthor(db *sql.DB, id int) []InterviewModel {
 	var interviews []InterviewModel
 
 	sql := `SELECT
@@ -98,7 +85,7 @@ func (i InterviewModel) RetrieveByAuthor(db *sql.DB, id int) []InterviewModel {
 	return interviews
 }
 
-func (i InterviewModel) RetrieveById(db *sql.DB, id string) InterviewModel {
+func (i InterviewFactory) RetrieveById(db *sql.DB, id string) InterviewModel {
 
 	sql := `SELECT
 				C_INTERVIEW.id, 
@@ -130,6 +117,23 @@ func (i InterviewModel) RetrieveById(db *sql.DB, id string) InterviewModel {
 	interview.Tools = ToolsBlock{}.Retrieve(db, id)
 
 	return interview
+}
+
+type InterviewModel struct {
+	Id           sql.NullInt64
+	Name         sql.NullString
+	Position     sql.NullString
+	AuthorId     sql.NullInt64
+	Author       sql.NullString
+	Picture      sql.NullString
+	Basic        BasicBlock
+	Education    []Degree
+	Requirements RequirementsBlock
+	Tools        ToolsBlock
+}
+
+func (i InterviewModel) Create(db *sql.DB) error {
+	return nil
 }
 
 func (i InterviewModel) Update(db *sql.DB) error {

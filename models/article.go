@@ -2,22 +2,31 @@ package models
 
 import (
 	"database/sql"
-	_ "github.com/Go-SQL-Driver/MySQL"
 	"log"
+
+	_ "github.com/Go-SQL-Driver/MySQL"
 )
 
+type ArticleFactory struct {
+}
+
 type ArticleModel struct {
-	Id      sql.NullInt64
-	Author  sql.NullString
-	Picture sql.NullString
-	Date    sql.NullString
-	Title   sql.NullString
-	Content sql.NullString
+	Id      *int
+	Author  *string
+	Picture *string
+	Date    *string
+	Title   *string
+	Content *string
 }
 
 // Create an article
 func (a ArticleModel) Create(db *sql.DB, data map[string]interface{}) (int64, error) {
-	sql := `INSERT INTO C_ARTICLE (title, uid, body, published) VALUES (?, ?, ?, 1)`
+
+	sql := `
+	INSERT INTO 
+	C_ARTICLE (title, uid, body, published) 
+	VALUES (?, ?, ?, 1)`
+
 	result, err := db.Exec(sql, data["Title"], data["AuthorId"], data["Content"])
 	if err != nil {
 		log.Printf("%s", err)
@@ -32,18 +41,19 @@ func (a ArticleModel) Create(db *sql.DB, data map[string]interface{}) (int64, er
 func (a ArticleModel) RetrieveAll(db *sql.DB) ([]ArticleModel, error) {
 	var articles []ArticleModel
 
-	sql := `SELECT 
-				C_USER.display_name,
-				C_USER.email_hash,
-				C_ARTICLE.aid, 
-				C_ARTICLE.title, 
-				C_ARTICLE.body
-            FROM 
-            	C_ARTICLE
-             LEFT JOIN 
-             	C_USER ON C_ARTICLE.uid = C_USER.uid
-            WHERE 
-            	C_ARTICLE.published = 1`
+	sql := `
+	SELECT 
+		C_USER.display_name
+	,	C_USER.email_hash
+	,	C_ARTICLE.aid
+	,	C_ARTICLE.title
+	,	C_ARTICLE.body
+	FROM 
+		C_ARTICLE
+	 LEFT JOIN 
+		C_USER ON C_ARTICLE.uid = C_USER.uid
+	WHERE 
+		C_ARTICLE.published = 1`
 
 	rows, err := db.Query(sql)
 	if err != nil {
@@ -67,25 +77,27 @@ func (a ArticleModel) RetrieveAll(db *sql.DB) ([]ArticleModel, error) {
 // Retrieve one article by article id (primary key)
 func (a ArticleModel) RetrieveById(db *sql.DB, id string) (ArticleModel, error) {
 
-	sql := `SELECT 
-				C_USER.display_name,
-				C_USER.email_hash,
-				C_ARTICLE.aid, 
-				C_ARTICLE.title, 
-				C_ARTICLE.body, 
-				C_ARTICLE.timestamp
-            FROM 
-            	C_ARTICLE
-            LEFT JOIN 
-            	C_USER ON C_ARTICLE.uid = C_USER.uid
-            WHERE 
-            	C_ARTICLE.published = 1 
-             AND 
-            	C_ARTICLE.aid = ?`
+	sql := `
+	SELECT 
+		C_USER.display_name
+	,	C_USER.email_hash
+	,	C_ARTICLE.aid
+	,	C_ARTICLE.title
+	,	C_ARTICLE.body 
+	,	C_ARTICLE.timestamp
+	FROM 
+		C_ARTICLE
+	LEFT JOIN 
+		C_USER ON C_ARTICLE.uid = C_USER.uid
+	WHERE 
+		C_ARTICLE.published = 1 
+	 AND 
+		C_ARTICLE.aid = ?`
 
 	var article ArticleModel
 	row := db.QueryRow(sql, id)
-	err := row.Scan(&article.Author, &article.Picture, &article.Id, &article.Title, &article.Content, &article.Date)
+	err := row.Scan(&article.Author, &article.Picture, &article.Id,
+		&article.Title, &article.Content, &article.Date)
 	return article, err
 }
 
@@ -93,21 +105,22 @@ func (a ArticleModel) RetrieveById(db *sql.DB, id string) (ArticleModel, error) 
 func (a ArticleModel) RetrieveByAuthor(db *sql.DB, id int) ([]ArticleModel, error) {
 	var articles []ArticleModel
 
-	sql := `SELECT 
-				C_USER.display_name,
-				C_USER.email_hash,
-				C_ARTICLE.aid, 
-				C_ARTICLE.title, 
-				C_ARTICLE.body, 
-				C_ARTICLE.timestamp
-            FROM 
-            	C_ARTICLE
-            LEFT JOIN 
-            	C_USER ON C_ARTICLE.uid = C_USER.uid
-            WHERE 
-            	C_ARTICLE.published = 1 
-             AND 
-            	C_USER.uid = ?`
+	sql := `
+	SELECT 
+		C_USER.display_name
+	,	C_USER.email_hash
+	,	C_ARTICLE.aid
+	,	C_ARTICLE.title
+	,	C_ARTICLE.body
+	,	C_ARTICLE.timestamp
+	FROM 
+		C_ARTICLE
+	LEFT JOIN 
+		C_USER ON C_ARTICLE.uid = C_USER.uid
+	WHERE 
+		C_ARTICLE.published = 1 
+	 AND 
+		C_USER.uid = ?`
 
 	rows, err := db.Query(sql, id)
 	if err != nil {

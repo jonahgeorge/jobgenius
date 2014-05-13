@@ -3,51 +3,55 @@ package controllers
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/Go-SQL-Driver/MySQL"
-	"github.com/gorilla/mux"
-	"github.com/gorilla/sessions"
-	. "github.com/jonahgeorge/jobgenius.net/models"
-	"github.com/russross/blackfriday"
 	"html/template"
 	"log"
 	"net/http"
+
+	_ "github.com/Go-SQL-Driver/MySQL"
+	. "github.com/jonahgeorge/jobgenius.net/models"
+
+	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
+	"github.com/russross/blackfriday"
 )
 
-type Article struct{}
+type ArticleController struct{}
 
 // Handles the rendering of all articles to the index page
-func (a Article) Index(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (a ArticleController) Index(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		articles, err := ArticleModel{}.RetrieveAll(db)
 		session, err := store.Get(r, "user")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 
-		err = t.ExecuteTemplate(w, "articleIndex", map[string]interface{}{
+		err = t.ExecuteTemplate(w, "article/index", map[string]interface{}{
 			"Title":    "Articles",
 			"Articles": articles,
 			"Session":  session,
 		})
-
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			log.Println(err)
 		}
 	}
 }
 
 // Handles the retrieval and rendering of a single article by the 'id' parameter
-func (a Article) Retrieve(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (a ArticleController) Retrieve(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		params := mux.Vars(r)
 
 		article, err := ArticleModel{}.RetrieveById(db, params["id"])
 		session, err := store.Get(r, "user")
-		mrkdwn := template.HTML(blackfriday.MarkdownCommon([]byte(article.Content.String)))
 
 		err = t.ExecuteTemplate(w, "articleShow", map[string]interface{}{
-			"Title":   article.Title.String,
-			"Date":    article.Date.String,
-			"Content": mrkdwn,
+			"Title": article.Title,
+			"Date":  article.Date,
+			"Content": template.HTML(
+				blackfriday.MarkdownCommon([]byte(*article.Content))),
 			"Session": session,
 		})
 
@@ -58,7 +62,7 @@ func (a Article) Retrieve(db *sql.DB, store *sessions.CookieStore) http.HandlerF
 }
 
 // Handles the rendering of the new article form page
-func (a Article) Form(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (a ArticleController) Form(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, err := store.Get(r, "user")
@@ -77,7 +81,7 @@ func (a Article) Form(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc 
 }
 
 // Handles the creation of articles from the article form page
-func (a Article) Create(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (a ArticleController) Create(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")

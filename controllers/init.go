@@ -10,5 +10,5 @@ func init() {
 	t = template.Must(t.ParseGlob("views/interviews/*.html"))
 	t = template.Must(t.ParseGlob("views/accounts/*.html"))
 	t = template.Must(t.ParseGlob("views/users/*.html"))
-	t = template.Must(t.ParseGlob("views/static/*.html"))
+	t = template.Must(t.ParseGlob("views/*.html"))
 }

@@ -2,11 +2,12 @@ package controllers
 
 import (
 	"database/sql"
-	_ "github.com/Go-SQL-Driver/MySQL"
-	"github.com/gorilla/sessions"
-	. "github.com/jonahgeorge/jobgenius.net/models"
 	"log"
 	"net/http"
+
+	_ "github.com/Go-SQL-Driver/MySQL"
+	"github.com/gorilla/sessions"
+	"github.com/jonahgeorge/jobgenius.net/models"
 )
 
 type Static struct{}
@@ -14,12 +15,12 @@ type Static struct{}
 func (s Static) Landing(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		accounts := AccountModel{}.RetrieveAll(db)
-		articles, _ := ArticleModel{}.RetrieveAll(db)
-		interviews := InterviewModel{}.RetrieveAll(db)
+		accounts := models.AccountModel{}.RetrieveAll(db)
+		articles, _ := models.ArticleModel{}.RetrieveAll(db)
+		interviews := models.InterviewFactory{}.RetrieveAll(db)
 		session, _ := store.Get(r, "user")
 
-		err := t.ExecuteTemplate(w, "landingTemplate", map[string]interface{}{
+		err := t.ExecuteTemplate(w, "landing", map[string]interface{}{
 			"Title":      "",
 			"Accounts":   accounts,
 			"Articles":   articles,

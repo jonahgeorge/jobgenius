@@ -2,19 +2,20 @@ package controllers
 
 import (
 	"database/sql"
+	"net/http"
+
 	_ "github.com/Go-SQL-Driver/MySQL"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
-	. "github.com/jonahgeorge/jobgenius.net/models"
-	"net/http"
+	"github.com/jonahgeorge/jobgenius.net/models"
 )
 
-type Interview struct{}
+type InterviewController struct{}
 
-func (i Interview) Index(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (i InterviewController) Index(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		interviews := InterviewModel{}.RetrieveAll(db)
+		interviews := models.InterviewFactory{}.RetrieveAll(db)
 		session, _ := store.Get(r, "user")
 
 		err := t.ExecuteTemplate(w, "interviews/index", map[string]interface{}{
@@ -29,11 +30,11 @@ func (i Interview) Index(db *sql.DB, store *sessions.CookieStore) http.HandlerFu
 	}
 }
 
-func (i Interview) Retrieve(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (i InterviewController) Retrieve(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		params := mux.Vars(r)
-		interview := InterviewModel{}.RetrieveById(db, params["id"])
+		interview := models.InterviewFactory{}.RetrieveById(db, params["id"])
 		session, _ := store.Get(r, "user")
 
 		err := t.ExecuteTemplate(w, "interviews/show", map[string]interface{}{
@@ -48,7 +49,12 @@ func (i Interview) Retrieve(db *sql.DB, store *sessions.CookieStore) http.Handle
 	}
 }
 
-func (i Interview) Form(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (i InterviewController) Form(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+	}
+}
+
+func (i InterviewController) Create(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 	}
 }
