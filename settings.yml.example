@@ -1,9 +1,0 @@
-database:
-  user: 
-  pass: 
-  name: 
-
-session:
-  secret: 
-
-port: 
