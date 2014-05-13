@@ -1,4 +1,4 @@
-{{ define "landingTemplate" }}
+{{ define "landing" }}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -18,13 +18,13 @@
       <div class="col-left col-sm-6">
         <h3>Recent Articles</h3>
         {{ range .Articles }}
-          <a href="/article/{{ .Id.Int64 }}">
+          <a href="/articles/{{.Id}}">
             <div class="panel panel-default">
               <div class="panel-body">
                 <div style="display:inline-block;vertical-align:middle;">
-                  <img class="img-responsive img-rounded" src="http://www.gravatar.com/avatar/{{ .Picture.String }}?d=identicon&s=50">
+                  <img class="img-responsive img-rounded" src="http://www.gravatar.com/avatar/{{ .Picture }}?d=identicon&s=50">
                 </div>
-                <span style="display:inline-block;vertical-align:middle;margin-left:15px;">{{ .Title.String }}</span>
+                <span style="display:inline-block;vertical-align:middle;margin-left:15px;">{{ .Title }}</span>
               </div>
             </div>
           </a>
@@ -34,7 +34,7 @@
       <div class="col-right col-sm-6">
         <h3>Recent Interviews</h3>
         {{ range .Interviews }}
-          <a href="/interview/{{ .Id.Int64 }}">
+          <a href="/interviews/{{ .Id.Int64 }}">
             <div class="panel panel-default">
               <div class="panel-body">
                 <div style="display:inline-block;vertical-align:middle;">
