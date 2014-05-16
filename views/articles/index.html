@@ -1,63 +1,90 @@
 {{ define "article/index" }}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    {{ template "head" . }}
-  </head>
-  <body>
-    {{ template "header" . }}
-    <div class="container">
-      <div class="col col-sm-12">
-        <div class="page-header">
-          <a href="/" class="left-arrow"><i class="fa fa-chevron-left"></i></a>
-          <h1 class="inline">{{ .Title }}</h1>
-          {{ if index .Session.Values "Id" }}
-          <a href="/articles/new" class="btn btn-success pull-right">New Article</a>
-          {{ end }}
-        </div>
-      </div>
+	<head>
+		{{ template "head" . }}
+		<style>
+			input[name="name"] { width:300px; margin-right:5px; }
+			#reset { margin-left:5px; }
+		</style>
+	</head>
+	<body>
+		{{ template "header" . }}
+		<div class="container">
+			<div class="col col-sm-12">
+				<div class="page-header">
+					<h1 class="inline">{{ .Title }}</h1>
+					<small class="pull-right">
+						<form action="/mca/members" method="get">
 
-      <div class="col-left col-sm-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">Filter<span class="glyphicon glyphicon-search pull-right"></span></div>
-            <div class="panel-body">
-              <div class="filter">
-                <label>
-                  <input type="checkbox">Career Advice
-                </label>
-                <label>
-                  <input type="checkbox">Education
-                </label>
-                <label>
-                  <input type="checkbox">Career Research
-                </label>
-                <label>
-                  <input type="checkbox">Interview Advice
-                </label>
-              </div>
-            </div>
-        </div>
-      </div>
+							<a href="/mca/members"
+								id="reset"
+								class="btn btn-danger pull-right inline">Reset</a>
 
-      <div class="col-right col-sm-9">
-        {{range .Articles}}
-        <a href='/articles/{{.Id}}'>
-          <div class="panel panel-default">
-            <div class="panel-body">
-              <div style="display:inline-block;vertical-align:middle;">
-                <img class="img-responsive img-rounded" src="http://www.gravatar.com/avatar/{{.Picture}}?d=identicon&s=50">
-              </div>
-              <span style="display:inline-block;vertical-align:middle;margin-left:15px;">{{.Title}}</span>
-            </div>
-          </div>
-        </a>
-        {{end}}
-      </div>
-    </div>
-    {{ template "footer" . }}
-    <foot>
-      {{ template "foot" . }}
-    </foot>
-  </body>
+							<button class="btn btn-primary pull-right inline" 
+								type="submit">Search</button>
+
+							<input class="form-control inline pull-right" 
+							name="name" 
+							placeholder="Search By Name"
+							autofocus>
+						</form>
+					</small>
+				</div>
+			</div>
+
+			<div class="col-left col-sm-9">
+				{{range .Articles}}
+				<a href='/articles/{{.Id}}'>
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="preview">
+								<img class="preview img-responsive img-rounded" src="http://identicons.github.com/{{.User.Id}}.png">
+							</div>
+							<span class="preview">{{.Title}}</span>
+						</div>
+					</div>
+				</a>
+				{{end}}
+			</div>
+
+			<div class="col-right col-sm-3">
+
+				{{ if index .Session.Values "Id" }}
+				<a href="/articles/new" 
+					style="width:100%; margin-bottom:15px;" 
+					class="btn btn-default">New Article</a>
+				{{ end }}
+
+				<div class="panel panel-default">
+					<div class="panel-heading">Categories<span class="glyphicon glyphicon-search pull-right"></span></div>
+					<div class="panel-body">
+						<div class="filter">
+							<form action="/articles" method="get">		
+								{{ range .Filters }}
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" 
+										name="filter" 
+										value="{{ .Value }}" />{{ .Value }}
+									</label>
+								</div>
+								{{ end }}
+
+								<button style="width:100%; margin-top:5px;" 
+									class="btn btn-default" 
+									type="submit">Filter</button>	
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		{{ template "footer" . }}
+		<foot>
+		{{ template "foot" . }}
+		</foot>
+	</body>
 </html>
 {{ end }}

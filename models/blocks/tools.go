@@ -2,8 +2,9 @@ package blocks
 
 import (
 	"database/sql"
-	_ "github.com/Go-SQL-Driver/MySQL"
 	"log"
+
+	_ "github.com/Go-SQL-Driver/MySQL"
 )
 
 type ToolsBlock struct {
@@ -23,13 +24,14 @@ func (t ToolsBlock) Retrieve(db *sql.DB, id string) ToolsBlock {
 
 func (t ToolsBlock) RetrieveTools(db *sql.DB, id string) []Field {
 
-	sql := `SELECT
-				F_TOOL.id,
-				F_TOOL.value
-			FROM
-				F_TOOL
-			WHERE
-			    F_TOOL.iid = ?`
+	sql := `
+	SELECT
+		Interviews_Tools.id,
+		Interviews_Tools.value
+	FROM
+		Interviews_Tools
+	WHERE
+		Interviews_Tools.iid = ?`
 
 	var fields []Field
 
@@ -54,15 +56,16 @@ func (t ToolsBlock) RetrieveTools(db *sql.DB, id string) []Field {
 
 func (t ToolsBlock) RetrieveSkills(db *sql.DB, id string) []Field {
 
-	sql := `SELECT
-				L_SOFT_SKILL.id,
-				L_SOFT_SKILL.value
-			FROM
-				F_SOFT_SKILL
-			LEFT JOIN
-				L_SOFT_SKILL ON L_SOFT_SKILL.id = F_SOFT_SKILL.vid
-			WHERE
-			    F_SOFT_SKILL.iid = ?`
+	sql := `
+	SELECT
+		Interviews_Soft_Skills_Lookup.id,
+		Interviews_Soft_Skills_Lookup.value
+	FROM
+		Interviews_Soft_Skills	
+	LEFT JOIN
+		Interviews_Soft_Skills_Lookup ON Interviews_Soft_Skills_Lookup.id = Interviews_Soft_Skills.vid
+	WHERE
+		Interviews_Soft_Skills.iid = ?`
 
 	var fields []Field
 

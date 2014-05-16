@@ -15,21 +15,28 @@ type Static struct{}
 func (s Static) Landing(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		accounts := models.AccountModel{}.RetrieveAll(db)
-		articles, _ := models.ArticleModel{}.RetrieveAll(db)
+		// Retrieve data
+		articles, err := models.ArticleFactory{}.RetrieveAll(db)
 		interviews := models.InterviewFactory{}.RetrieveAll(db)
-		session, _ := store.Get(r, "user")
+		session, err := store.Get(r, "user")
 
-		err := t.ExecuteTemplate(w, "landing", map[string]interface{}{
-			"Title":      "",
-			"Accounts":   accounts,
-			"Articles":   articles,
-			"Interviews": interviews,
-			"Session":    session,
-		})
-
+		// Catch retrieval errors and display error page
 		if err != nil {
-			log.Fatal(err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
+		// Render template
+		err = t.ExecuteTemplate(w, "landing",
+			map[string]interface{}{
+				"Title":      "",
+				"Articles":   articles,
+				"Interviews": interviews,
+				"Session":    session,
+			})
+
+		// Rendering errors
+		if err != nil {
+			log.Println(err)
 		}
 	}
 }

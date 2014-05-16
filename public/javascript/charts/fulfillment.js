@@ -15,25 +15,25 @@ $.ajax({
 
 	var obj = [];
 	obj.push("Development");
-	obj.push(msg.Development.Int64);
+	obj.push(msg.Development);
 	obj.push(5); // Industry Average
 	arr.push(obj);
 
 	var obj = [];
 	obj.push("Independence");
-	obj.push(msg.Independence.Int64);
+	obj.push(msg.Independence);
 	obj.push(5); // Industry Average
 	arr.push(obj);
 
 	var obj = [];
 	obj.push("Impact");
-	obj.push(msg.Impact.Int64);
+	obj.push(msg.Impact);
 	obj.push(5); // Industry Average
 	arr.push(obj);
 
 	var obj = [];
 	obj.push("Personal Life");
-	obj.push(msg.Personal.Int64);
+	obj.push(msg.Personal);
 	obj.push(5); // Industry Average
 	arr.push(obj);
 

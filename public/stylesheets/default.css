@@ -1,3 +1,38 @@
+/* articles/show */
+.body img {
+	width:75%;
+	margin-left:12.5%;
+	margin-right:12.5%;
+	margin-top:15px;
+	margin-bottom:15px;
+}
+
+.panel-body>div.preview {
+	display:inline-block;
+	vertical-align:middle;
+	margin-right:25px;
+	float:left;
+}
+
+.panel-body>span.preview {
+	float:left;
+	line-height:50px;
+	vertical-align:middle;
+}
+
+.body {
+	margin-top:25px;
+	font-size: 16px;
+}
+
+.navbar .profile {
+	width: 25px;
+}
+
+img.preview {
+	width: 50px;
+}
+
 .inline {
   display:inline;
 }

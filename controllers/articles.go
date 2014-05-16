@@ -21,8 +21,24 @@ type ArticleController struct{}
 func (a ArticleController) Index(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		articles, err := ArticleModel{}.RetrieveAll(db)
+		var articles []ArticleModel
+		var err error
+
+		// Parse GET parameters
+		r.ParseForm()
+
+		// Get article categories and session
+		filters, err := ArticleFactory{}.GetCategories(db)
 		session, err := store.Get(r, "user")
+
+		if len(r.Form["filter"]) > 0 {
+			// If filter was passed, use filter function
+			articles, err = ArticleFactory{}.Filter(db, r.Form["filter"])
+		} else {
+			// If not, use normal retrieve
+			articles, err = ArticleFactory{}.RetrieveAll(db)
+		}
+
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
@@ -31,7 +47,9 @@ func (a ArticleController) Index(db *sql.DB, store *sessions.CookieStore) http.H
 			"Title":    "Articles",
 			"Articles": articles,
 			"Session":  session,
+			"Filters":  filters,
 		})
+
 		if err != nil {
 			log.Println(err)
 		}
@@ -42,21 +60,26 @@ func (a ArticleController) Index(db *sql.DB, store *sessions.CookieStore) http.H
 func (a ArticleController) Retrieve(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
+		// Parse url parameters
 		params := mux.Vars(r)
 
-		article, err := ArticleModel{}.RetrieveById(db, params["id"])
+		article, err := ArticleFactory{}.RetrieveById(db, params["id"])
 		session, err := store.Get(r, "user")
-
-		err = t.ExecuteTemplate(w, "articleShow", map[string]interface{}{
-			"Title": article.Title,
-			"Date":  article.Date,
-			"Content": template.HTML(
-				blackfriday.MarkdownCommon([]byte(*article.Content))),
-			"Session": session,
-		})
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
+		err = t.ExecuteTemplate(w, "article/show",
+			map[string]interface{}{
+				"Article": article,
+				"Markdown": template.HTML(
+					blackfriday.MarkdownCommon([]byte(*article.Body))),
+				"Session": session,
+			})
+
+		if err != nil {
+			log.Println(err)
 		}
 	}
 }
@@ -66,17 +89,18 @@ func (a ArticleController) Form(db *sql.DB, store *sessions.CookieStore) http.Ha
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, err := store.Get(r, "user")
-		log.Printf("%+v", session)
-		log.Printf("%s", session.Values["Id"])
-
-		err = t.ExecuteTemplate(w, "articleForm", map[string]interface{}{
-			"Title":   "New Article",
-			"Session": session,
-		})
-
+		filters, err := ArticleFactory{}.GetCategories(db)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
+
+		err = t.ExecuteTemplate(w, "article/form",
+			map[string]interface{}{
+				"Title":   "New Article",
+				"Session": session,
+				"Filters": filters,
+			})
 	}
 }
 
@@ -86,21 +110,20 @@ func (a ArticleController) Create(db *sql.DB, store *sessions.CookieStore) http.
 
 		session, _ := store.Get(r, "user")
 
-		id, err := ArticleModel{}.Create(db, map[string]interface{}{
-			"AuthorId": session.Values["Id"],
-			"Title":    r.FormValue("title"),
-			"Content":  r.FormValue("content"),
-		})
-
-		log.Printf("%s", id)
+		id, err := ArticleModel{}.Create(db,
+			map[string]interface{}{
+				"uid":   session.Values["Id"],
+				"title": r.FormValue("title"),
+				"slug":  r.FormValue("slug"),
+				"body":  r.FormValue("body"),
+			})
 
 		if err != nil {
 			log.Printf("%s", err)
 			http.Redirect(w, r, "/articles", http.StatusTemporaryRedirect)
-		} else {
-			url := fmt.Sprintf("/article/%d", id)
-			log.Printf("%s", url)
-			http.Redirect(w, r, url, http.StatusTemporaryRedirect)
+			return
 		}
+
+		http.Redirect(w, r, fmt.Sprintf("/articles/%d", id), http.StatusTemporaryRedirect)
 	}
 }

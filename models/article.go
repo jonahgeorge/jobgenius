@@ -3,70 +3,74 @@ package models
 import (
 	"database/sql"
 	"log"
+	"strings"
 
 	_ "github.com/Go-SQL-Driver/MySQL"
+	"github.com/jonahgeorge/jobgenius.net/models/blocks"
 )
 
 type ArticleFactory struct {
 }
 
-type ArticleModel struct {
-	Id      *int
-	Author  *string
-	Picture *string
-	Date    *string
-	Title   *string
-	Content *string
-}
-
-// Create an article
-func (a ArticleModel) Create(db *sql.DB, data map[string]interface{}) (int64, error) {
+func (a ArticleFactory) GetCategories(db *sql.DB) ([]blocks.Field, error) {
 
 	sql := `
-	INSERT INTO 
-	C_ARTICLE (title, uid, body, published) 
-	VALUES (?, ?, ?, 1)`
+	SELECT *
+	FROM Articles_Categories_Lookup`
 
-	result, err := db.Exec(sql, data["Title"], data["AuthorId"], data["Content"])
+	var fields []blocks.Field
+
+	rows, err := db.Query(sql)
 	if err != nil {
-		log.Printf("%s", err)
+		return fields, err
 	}
 
-	id, err := result.LastInsertId()
+	for rows.Next() {
+		var field blocks.Field
+		err := rows.Scan(&field.Key, &field.Value)
+		if err != nil {
+			return fields, err
+		}
+		fields = append(fields, field)
+	}
 
-	return id, err
+	return fields, err
 }
 
 // Retrieve all articles
-func (a ArticleModel) RetrieveAll(db *sql.DB) ([]ArticleModel, error) {
+func (a ArticleFactory) RetrieveAll(db *sql.DB) ([]ArticleModel, error) {
 	var articles []ArticleModel
 
 	sql := `
 	SELECT 
-		C_USER.display_name
-	,	C_USER.email_hash
-	,	C_ARTICLE.aid
-	,	C_ARTICLE.title
-	,	C_ARTICLE.body
+		Users.uid
+	,	Users.display_name
+	,	Articles.aid
+	,	Articles.title
+	,	Articles.slug
+	,	Articles.body
 	FROM 
-		C_ARTICLE
+		Articles
 	 LEFT JOIN 
-		C_USER ON C_ARTICLE.uid = C_USER.uid
+		Users ON Articles.uid = Users.uid
 	WHERE 
-		C_ARTICLE.published = 1`
+		Articles.published = 1`
 
 	rows, err := db.Query(sql)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	defer rows.Close()
 
 	for rows.Next() {
 		var article ArticleModel
 
-		err = rows.Scan(&article.Author, &article.Picture, &article.Id, &article.Title, &article.Content)
+		err = rows.Scan(
+			&article.User.Id, &article.User.DisplayName,
+			&article.Id, &article.Title, &article.Slug, &article.Body)
+
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 
 		articles = append(articles, article)
@@ -75,69 +79,148 @@ func (a ArticleModel) RetrieveAll(db *sql.DB) ([]ArticleModel, error) {
 }
 
 // Retrieve one article by article id (primary key)
-func (a ArticleModel) RetrieveById(db *sql.DB, id string) (ArticleModel, error) {
+func (a ArticleFactory) RetrieveById(db *sql.DB, id string) (ArticleModel, error) {
 
 	sql := `
 	SELECT 
-		C_USER.display_name
-	,	C_USER.email_hash
-	,	C_ARTICLE.aid
-	,	C_ARTICLE.title
-	,	C_ARTICLE.body 
-	,	C_ARTICLE.timestamp
+		Users.uid
+	,	Users.display_name
+	,	Articles.aid
+	,	Articles.title
+	,	Articles.slug
+	,	Articles.body 
+	,	Articles.timestamp
 	FROM 
-		C_ARTICLE
+		Articles
 	LEFT JOIN 
-		C_USER ON C_ARTICLE.uid = C_USER.uid
+		Users ON Articles.uid = Users.uid
 	WHERE 
-		C_ARTICLE.published = 1 
+		Articles.published = 1 
 	 AND 
-		C_ARTICLE.aid = ?`
+		Articles.aid = ?`
 
 	var article ArticleModel
 	row := db.QueryRow(sql, id)
-	err := row.Scan(&article.Author, &article.Picture, &article.Id,
-		&article.Title, &article.Content, &article.Date)
+
+	err := row.Scan(
+		&article.User.Id, &article.User.DisplayName, &article.Id,
+		&article.Title, &article.Slug, &article.Body, &article.Date)
+
 	return article, err
 }
 
 // Retrieve a slice of articles authored by the user id parameter
-func (a ArticleModel) RetrieveByAuthor(db *sql.DB, id int) ([]ArticleModel, error) {
+func (a ArticleFactory) RetrieveByAuthor(db *sql.DB, id int) ([]ArticleModel, error) {
 	var articles []ArticleModel
 
 	sql := `
 	SELECT 
-		C_USER.display_name
-	,	C_USER.email_hash
-	,	C_ARTICLE.aid
-	,	C_ARTICLE.title
-	,	C_ARTICLE.body
-	,	C_ARTICLE.timestamp
+		Users.uid
+	,	Users.display_name
+	,	Articles.aid
+	,	Articles.title
+	,	Articles.slug
+	,	Articles.body
+	,	Articles.timestamp
 	FROM 
-		C_ARTICLE
+		Articles
 	LEFT JOIN 
-		C_USER ON C_ARTICLE.uid = C_USER.uid
+		Users ON Articles.uid = Users.uid
 	WHERE 
-		C_ARTICLE.published = 1 
+		Articles.published = 1 
 	 AND 
-		C_USER.uid = ?`
+		Users.uid = ?`
 
 	rows, err := db.Query(sql, id)
 	if err != nil {
-		log.Fatal(err)
+		return articles, err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
 		var article ArticleModel
-		err = rows.Scan(&article.Author, &article.Picture, &article.Id, &article.Title, &article.Content, &article.Date)
+		err = rows.Scan(
+			&article.User.Id, &article.User.DisplayName, &article.Id,
+			&article.Title, &article.Slug, &article.Body, &article.Date)
 		if err != nil {
-			log.Fatal(err)
+			return articles, err
 		}
 		articles = append(articles, article)
 	}
 
 	return articles, err
+}
+
+func (a ArticleFactory) Filter(db *sql.DB, filters []string) ([]ArticleModel, error) {
+	sql := `
+	SELECT 
+		Users.uid
+	,	Users.display_name
+	,	Articles.aid
+	,	Articles.title
+	,	Articles.slug
+	,	Articles.body 
+	,	Articles.timestamp
+	FROM 
+		Articles
+	LEFT JOIN 
+		Users ON Articles.uid = Users.uid
+	LEFT JOIN
+		Articles_Categories ON Articles_Categories.id = Articles.aid
+	LEFT JOIN
+		Articles_Categories_Lookup ON Articles_Categories_Lookup.id = Articles_Categories.value
+	WHERE 
+		Articles.published = 1
+	AND
+		Articles_Categories_Lookup.value IN ('` + strings.Join(filters, "','") + `')
+	GROUP BY
+		Articles.aid`
+
+	var articles []ArticleModel
+	rows, err := db.Query(sql)
+	if err != nil {
+		return articles, err
+	}
+
+	for rows.Next() {
+		var article ArticleModel
+		err := rows.Scan(
+			&article.User.Id, &article.User.DisplayName, &article.Id,
+			&article.Title, &article.Slug, &article.Body, &article.Date)
+		if err != nil {
+			return articles, err
+		}
+		articles = append(articles, article)
+	}
+
+	return articles, err
+}
+
+type ArticleModel struct {
+	Id    *int
+	User  UserModel
+	Date  *string
+	Title *string
+	Slug  *string
+	Body  *string
+}
+
+// Create an article
+func (a ArticleModel) Create(db *sql.DB, data map[string]interface{}) (int64, error) {
+
+	sql := `
+	INSERT INTO 
+	Articles (title, subtitle, uid, body, published) 
+	VALUES (?, ?, ?, ?, 1)`
+
+	result, err := db.Exec(sql, data["title"], data["slug"], data["uid"], data["body"])
+	if err != nil {
+		log.Printf("%s", err)
+	}
+
+	id, err := result.LastInsertId()
+
+	return id, err
 }
 
 func (a ArticleModel) Update(db *sql.DB) error {

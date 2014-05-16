@@ -2,34 +2,36 @@ package blocks
 
 import (
 	"database/sql"
-	_ "github.com/Go-SQL-Driver/MySQL"
 	"log"
+
+	_ "github.com/Go-SQL-Driver/MySQL"
 )
 
 type EducationBlock struct{}
 
 type Degree struct {
-	Degree        sql.NullString
-	Concentration sql.NullString
-	University    sql.NullString
-	Year          sql.NullInt64
+	Degree        *string
+	Concentration *string
+	University    *string
+	Year          *int
 }
 
 func (e EducationBlock) RetrieveById(db *sql.DB, id string) []Degree {
 
-	sql := `SELECT  
-				L_DEGREE.value as degree, 
-				F_EDUCATION.concentration, 
-				L_UNIVERSITY.value as university, 
-				F_EDUCATION.year
-            FROM
-            	F_EDUCATION
-            LEFT JOIN
-                L_UNIVERSITY on L_UNIVERSITY.id = F_EDUCATION.university
-            LEFT JOIN
-            	L_DEGREE on F_EDUCATION.degree = L_DEGREE.id
-            WHERE
-            	F_EDUCATION.iid = ?`
+	sql := `
+	SELECT  
+		Interviews_Degree_Lookup.value as degree, 
+		Interviews_Education.concentration, 
+		Interviews_University_Lookup.value as university,
+		Interviews_Education.year
+	FROM
+		Interviews_Education
+	LEFT JOIN
+		Interviews_University_Lookup on Interviews_University_Lookup.id = Interviews_Education.university
+	LEFT JOIN
+		Interviews_Degree_Lookup on Interviews_Education.degree = Interviews_Degree_Lookup.id
+	WHERE
+		Interviews_Education.iid = ?`
 
 	var degrees []Degree
 

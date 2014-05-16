@@ -1,18 +1,66 @@
 package controllers
 
 import (
-	"code.google.com/p/go.crypto/bcrypt"
 	"database/sql"
-	_ "github.com/Go-SQL-Driver/MySQL"
-	"github.com/gorilla/sessions"
-	. "github.com/jonahgeorge/jobgenius.net/models"
 	"log"
 	"net/http"
+
+	"code.google.com/p/go.crypto/bcrypt"
+
+	_ "github.com/Go-SQL-Driver/MySQL"
+	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
+	. "github.com/jonahgeorge/jobgenius.net/models"
 )
 
-type User struct{}
+type UserController struct {
+}
 
-func (u User) SignInForm(store *sessions.CookieStore) http.HandlerFunc {
+func (u UserController) Index(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		users := UserModel{}.RetrieveAll(db)
+		session, err := store.Get(r, "user")
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
+		err = t.ExecuteTemplate(w, "accounts/index",
+			map[string]interface{}{
+				"Title":    "Accounts",
+				"Accounts": users,
+				"Session":  session,
+			})
+	}
+}
+
+func (u UserController) Retrieve(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		params := mux.Vars(r)
+
+		user := UserModel{}.RetrieveById(db, params["id"])
+		articles, err := ArticleFactory{}.RetrieveByAuthor(db, *user.Id)
+		interviews := InterviewFactory{}.RetrieveByAuthor(db, *user.Id)
+		session, err := store.Get(r, "user")
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
+		err = t.ExecuteTemplate(w, "accounts/show",
+			map[string]interface{}{
+				"Title":      "Account",
+				"Account":    user,
+				"Articles":   articles,
+				"Interviews": interviews,
+				"Session":    session,
+			})
+	}
+}
+
+func (u UserController) SignInForm(store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")
@@ -31,30 +79,31 @@ func (u User) SignInForm(store *sessions.CookieStore) http.HandlerFunc {
 	}
 }
 
-func (u User) SignInApi(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (u UserController) SignInApi(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		email := r.FormValue("email")
 		password := r.FormValue("password")
 
-		account := AccountModel{}.RetrieveByEmail(db, email)
+		user := UserModel{}.RetrieveByEmail(db, email)
 
-		if err := bcrypt.CompareHashAndPassword([]byte(account.Password.String), []byte(password)); err != nil {
+		err := bcrypt.CompareHashAndPassword([]byte(*user.Password), []byte(password))
+		if err != nil {
 			http.Redirect(w, r, "/signin", http.StatusTemporaryRedirect)
-		} else {
-
-			session, _ := store.Get(r, "user")
-			session.Values["Email"] = account.Email.String
-			session.Values["Name"] = account.Name.String
-			session.Values["Id"] = account.Id.Int64
-			session.Save(r, w)
-
-			http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+			return
 		}
+
+		session, _ := store.Get(r, "user")
+		session.Values["Email"] = user.Email
+		session.Values["DisplayName"] = user.DisplayName
+		session.Values["Id"] = user.Id
+		session.Save(r, w)
+
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 	}
 }
 
-func (u User) SignUpForm(store *sessions.CookieStore) http.HandlerFunc {
+func (u UserController) SignUpForm(store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")
@@ -73,7 +122,7 @@ func (u User) SignUpForm(store *sessions.CookieStore) http.HandlerFunc {
 	}
 }
 
-func (u User) SignUpApi(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (u UserController) SignUpApi(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Assuming password 1 and password 2 match
 
@@ -89,21 +138,17 @@ func (u User) SignUpApi(db *sql.DB, store *sessions.CookieStore) http.HandlerFun
 
 		// Send email confirmation
 
-		account := AccountModel{}.Create(db, email, string(hashedPass))
-		var user UserModel
-		user.Email = []byte(account.Email.String)
-		user.Id = int(account.Id.Int64)
-		user.Name = []byte("Anonymous")
+		account := UserModel{}.Create(db, email, string(hashedPass))
 
 		session, _ := store.Get(r, "user")
-		session.Values["user"] = user
+		session.Values["user"] = account
 		session.Save(r, w)
 
 		http.Redirect(w, r, "/settings", http.StatusTemporaryRedirect)
 	}
 }
 
-func (u User) SignOut(store *sessions.CookieStore) http.HandlerFunc {
+func (u UserController) SignOut(store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")

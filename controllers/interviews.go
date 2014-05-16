@@ -16,17 +16,16 @@ func (i InterviewController) Index(db *sql.DB, store *sessions.CookieStore) http
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		interviews := models.InterviewFactory{}.RetrieveAll(db)
-		session, _ := store.Get(r, "user")
+		session, err := store.Get(r, "user")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 
-		err := t.ExecuteTemplate(w, "interviews/index", map[string]interface{}{
+		err = t.ExecuteTemplate(w, "interviews/index", map[string]interface{}{
 			"Title":      "Interviews",
 			"Interviews": interviews,
 			"Session":    session,
 		})
-
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
 	}
 }
 
@@ -38,7 +37,7 @@ func (i InterviewController) Retrieve(db *sql.DB, store *sessions.CookieStore) h
 		session, _ := store.Get(r, "user")
 
 		err := t.ExecuteTemplate(w, "interviews/show", map[string]interface{}{
-			"Title":     interview.Name.String,
+			"Title":     interview.Name,
 			"Interview": interview,
 			"Session":   session,
 		})

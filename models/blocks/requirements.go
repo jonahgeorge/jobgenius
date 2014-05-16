@@ -2,8 +2,9 @@ package blocks
 
 import (
 	"database/sql"
-	_ "github.com/Go-SQL-Driver/MySQL"
 	"log"
+
+	_ "github.com/Go-SQL-Driver/MySQL"
 )
 
 type RequirementsBlock struct {
@@ -12,8 +13,8 @@ type RequirementsBlock struct {
 }
 
 type Field struct {
-	Key   sql.NullInt64
-	Value sql.NullString
+	Key   *int
+	Value *string
 }
 
 func (r RequirementsBlock) Retrieve(db *sql.DB, id string) RequirementsBlock {
@@ -29,15 +30,16 @@ func (r RequirementsBlock) Retrieve(db *sql.DB, id string) RequirementsBlock {
 
 func (r RequirementsBlock) RetrieveCertifications(db *sql.DB, id string) []Field {
 
-	sql := `SELECT
-				L_CERTIFICATION.id,
-				L_CERTIFICATION.value
-			FROM
-				F_CERTIFICATION
-			LEFT JOIN
-				L_CERTIFICATION on L_CERTIFICATION.id = F_CERTIFICATION.vid
-			WHERE
-				F_CERTIFICATION.iid = ?`
+	sql := `
+	SELECT
+		Interviews_Certification_Lookup.id,
+		Interviews_Certification_Lookup.value
+	FROM
+		Interviews_Certification
+	LEFT JOIN
+		Interviews_Certification_Lookup on Interviews_Certification_Lookup.id = Interviews_Certification.vid
+	WHERE
+		Interviews_Certification.iid = ?`
 
 	var fields []Field
 
@@ -62,13 +64,14 @@ func (r RequirementsBlock) RetrieveCertifications(db *sql.DB, id string) []Field
 
 func (r RequirementsBlock) RetrieveSkills(db *sql.DB, id string) []Field {
 
-	sql := `SELECT
-				F_SKILL.id,
-				F_SKILL.value
-			FROM
-				F_SKILL
-			WHERE
-				F_SKILL.iid = ?`
+	sql := `
+	SELECT
+		Interviews_Skill.id,
+		Interviews_Skill.value
+	FROM
+		Interviews_Skill
+	WHERE
+		Interviews_Skill.iid = ?`
 
 	var fields []Field
 

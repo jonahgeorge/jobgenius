@@ -1,4 +1,4 @@
-{{ define "articleForm" }}
+{{ define "article/form" }}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -12,17 +12,26 @@
         <h1 class="inline">{{ .Title }}</h1>
       </div>
 
-      <form action="/article" method="POST">
+      <form action="/articles" method="post">
         <h5>Title</h5>
         <input class="form-control" type="text" name="title">
 
         <h5>Subtitle</h5>
-        <input class="form-control" type="text" name="subtitle">
+        <input class="form-control" type="text" name="slug">
 
-        <!-- <h5>Category</h5> -->
+        <h5>Category</h5>
+		{{range .Filters}}
+		<div class="checkbox">
+			<label>
+				<input type="checkbox" 
+						name="filter" 
+						value="{{ .Value }}" />{{ .Value }}
+			</label>
+		</div>
+		{{end}}
 
         <h5>Body</h5>
-        <textarea class="form-control" name="content" style="height:200px;"></textarea>
+        <textarea class="form-control" name="body" style="height:200px;"></textarea>
 
         <br>
         <a href="http://daringfireball.net/projects/markdown/syntax" target="_blank" class="breadcrumb pull-right">Formatting help</a>

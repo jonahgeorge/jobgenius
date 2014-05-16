@@ -15,12 +15,12 @@ $.ajax({
 
 	var obj = [];
 	obj.push("Solo");
-	obj.push(msg.Solo.Int64);
+	obj.push(msg.Solo);
 	arr.push(obj);
 
 	var obj = [];
 	obj.push("Group");
-	obj.push(msg.Group.Int64);
+	obj.push(msg.Group);
 	arr.push(obj);
 
 	google.setOnLoadCallback( drawChart(arr) );

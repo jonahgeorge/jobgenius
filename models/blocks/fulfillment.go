@@ -2,28 +2,30 @@ package blocks
 
 import (
 	"database/sql"
-	_ "github.com/Go-SQL-Driver/MySQL"
 	"log"
+
+	_ "github.com/Go-SQL-Driver/MySQL"
 )
 
 type FulfillmentChart struct {
-	Development  sql.NullInt64
-	Independence sql.NullInt64
-	Impact       sql.NullInt64
-	Personal     sql.NullInt64
+	Development  *int
+	Independence *int
+	Impact       *int
+	Personal     *int
 }
 
 func (f FulfillmentChart) RetrieveById(db *sql.DB, id string) FulfillmentChart {
 
-	sql := `SELECT
-				development,
-				independence,
-				impact,
-				personal
-			FROM
-				F_FULFILLMENT
-			WHERE
-				F_FULFILLMENT.iid = ?`
+	sql := `
+	SELECT
+		development,
+		independence,
+		impact,
+		personal
+	FROM
+		Interviews_Fulfillment
+	WHERE
+		Interviews_Fulfillment.iid = ?`
 
 	var chart FulfillmentChart
 
@@ -55,11 +57,13 @@ func (f FulfillmentChart) RetrieveIndustryAverage(db *sql.DB, id string) Fulfill
 	// 	log.Printf("%s", err)
 	// }
 
+	average := 6
+
 	chart := FulfillmentChart{
-		Development:  sql.NullInt64{Valid: true, Int64: 5},
-		Independence: sql.NullInt64{Valid: true, Int64: 5},
-		Impact:       sql.NullInt64{Valid: true, Int64: 5},
-		Personal:     sql.NullInt64{Valid: true, Int64: 5},
+		Development:  &average,
+		Independence: &average,
+		Impact:       &average,
+		Personal:     &average,
 	}
 
 	return chart

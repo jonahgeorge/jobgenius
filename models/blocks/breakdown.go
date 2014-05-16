@@ -2,8 +2,9 @@ package blocks
 
 import (
 	"database/sql"
-	_ "github.com/Go-SQL-Driver/MySQL"
 	"log"
+
+	_ "github.com/Go-SQL-Driver/MySQL"
 )
 
 type BreakdownChart []Value
@@ -16,13 +17,14 @@ type Value struct {
 
 func (b BreakdownChart) RetrieveById(db *sql.DB, id string) []Value {
 
-	sql := `SELECT 
-				nid, 
-				tid
-			FROM
-				F_DAILY_BREAKDOWN
-			WHERE
-				F_DAILY_BREAKDOWN.iid = ?`
+	sql := `
+	SELECT 
+		nid, 
+		tid
+	FROM
+		Interviews_Daily_Breakdown	
+	WHERE
+		Interviews_Daily_Breakdown.iid = ?`
 
 	var values []Value
 

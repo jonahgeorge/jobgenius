@@ -22,16 +22,16 @@
           <li>
             <a href="#">
               <div style="display:inline-block;vertical-align:middle;">
-                <img class="img-responsive img-rounded" src="http://placehold.it/25">
+				  <img class="profile img-rounded" src="http://identicons.github.com/{{.Session.Values.Id}}.png">
               </div>
-              {{ index .Session.Values "Name" }}
+              {{ index .Session.Values "DisplayName" }}
             </a>
           </li>
           <li class="dropdown">
             <a id="create" href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-plus"></i></a>
             <ul class="dropdown-menu">
-              <li><a href="/interview"><i class="fa fa-fw fa-user"></i> New Interview</a></li>
-              <li><a href="/article"><i class="fa fa-fw fa-pencil-square-o"></i> New Article</a></li>
+              <li><a href="/interviews/new"><i class="fa fa-fw fa-user"></i> New Interview</a></li>
+              <li><a href="/articles/new"><i class="fa fa-fw fa-pencil-square-o"></i> New Article</a></li>
             </ul>
           </li>
           <li>

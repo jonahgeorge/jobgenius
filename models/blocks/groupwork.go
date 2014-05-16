@@ -2,24 +2,26 @@ package blocks
 
 import (
 	"database/sql"
-	_ "github.com/Go-SQL-Driver/MySQL"
 	"log"
+
+	_ "github.com/Go-SQL-Driver/MySQL"
 )
 
 type GroupworkChart struct {
-	Solo  sql.NullInt64
-	Group sql.NullInt64
+	Solo  *int
+	Group *int
 }
 
 func (g GroupworkChart) RetrieveById(db *sql.DB, id string) GroupworkChart {
 
-	sql := `SELECT 
-				vid AS 'Solo',
-				(100 - vid) AS 'Group'
-			FROM
-				F_SOLO_GROUP
-			WHERE
-				F_SOLO_GROUP.iid = ?`
+	sql := `
+	SELECT 
+		vid AS 'Solo',
+		(100 - vid) AS 'Group'
+	FROM
+		Interviews_Groupwork
+	WHERE
+		Interviews_Groupwork.iid = ?`
 
 	var chart GroupworkChart
 
