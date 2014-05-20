@@ -1,0 +1,31 @@
+{{define "interviews/components/requirements"}}
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title inline">Job Requirements</h3>
+		<span class="glyphicon glyphicon-list pull-right"></span>
+	</div>
+	<ul class="list-group">
+		{{if .Interview.Requirements.Certifications}}
+		<li class="list-group-item">
+			<div class="left">Certifications</div>
+			<div class="right">
+			{{ range .Interview.Requirements.Certifications }}
+				{{ .Value }}<br/>
+			{{ end }}
+			</div>
+		</li>
+		{{end}}
+
+		{{if .Interview.Requirements.Skills}}
+		<li class="list-group-item">
+			<div class="left">Skills</div>
+			<div class="right">
+			{{ range .Interview.Requirements.Skills }}
+				{{ .Value }}<br/>
+			{{end}}
+		</div>
+		{{end}}
+	</ul>
+</div>
+{{end}}
+

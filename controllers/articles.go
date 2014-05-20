@@ -31,7 +31,10 @@ func (a ArticleController) Index(db *sql.DB, store *sessions.CookieStore) http.H
 		filters, err := ArticleFactory{}.GetCategories(db)
 		session, err := store.Get(r, "user")
 
-		if len(r.Form["filter"]) > 0 {
+		if len(r.Form["title"]) > 0 {
+			log.Println("Executing search by article title.")
+			articles = ArticleFactory{}.RetrieveByName(db, r.Form["title"][0])
+		} else if len(r.Form["filter"]) > 0 {
 			// If filter was passed, use filter function
 			articles, err = ArticleFactory{}.Filter(db, r.Form["filter"])
 		} else {
@@ -65,6 +68,11 @@ func (a ArticleController) Retrieve(db *sql.DB, store *sessions.CookieStore) htt
 
 		article, err := ArticleFactory{}.RetrieveById(db, params["id"])
 		session, err := store.Get(r, "user")
+		isAuthor := false
+
+		if session.Values["Id"] == *article.User.Id {
+			isAuthor = true
+		}
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -75,7 +83,8 @@ func (a ArticleController) Retrieve(db *sql.DB, store *sessions.CookieStore) htt
 				"Article": article,
 				"Markdown": template.HTML(
 					blackfriday.MarkdownCommon([]byte(*article.Body))),
-				"Session": session,
+				"Session":  session,
+				"IsAuthor": isAuthor,
 			})
 
 		if err != nil {

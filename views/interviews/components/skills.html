@@ -1,0 +1,27 @@
+{{define "interviews/components/skills"}}	
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title inline">Skills and Tools</h3>
+		<span class="glyphicon glyphicon-wrench pull-right"></span>
+	</div>
+	<ul class="list-group">
+		<li class="list-group-item">
+			<div class="left">Soft Skills</div>
+			<div class="right">
+			{{ range .Interview.Tools.Skills }}
+			{{ .Value }}<br/>
+			{{ end }}
+			</div>
+		</li>
+
+		<li class="list-group-item">
+			<div class="left">Tools</div>
+			<div class="right">
+			{{ range .Interview.Tools.Tools }}
+			{{ .Value }}<br/>
+			{{ end }}
+			</div>
+		</li>
+	</ul>
+</div>
+{{end}}

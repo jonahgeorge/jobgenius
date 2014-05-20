@@ -1,56 +1,45 @@
 {{ define "landing" }}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    {{ template "head" . }}
-  </head>
-  <body>
-    {{ template "header" . }}
-    <div class="container">
-      <div class="col col-sm-12">
-        <div class="jumbotron">
-          <h1>Job Genius, Inc.</h1>
-          <p>Learn about jobs directly from the professionals doing them.</p>
-          <p><a class="btn btn-primary btn-lg" href="/getting-started">Learn more</a></p>
-        </div>
-      </div>
+{{ template "header" . }}
 
-      <div class="col-left col-sm-6">
-        <h3>Recent Articles</h3>
-        {{ range .Articles }}
-          <a href="/articles/{{.Id}}">
-            <div class="panel panel-default">
-              <div class="panel-body">
-                <div class="preview">
-					<img class="preview img-responsive img-rounded" src="http://identicons.github.com/{{.User.Id}}.png">
-                </div>
-                <span class="preview">{{ .Title }}</span>
-              </div>
-            </div>
-          </a>
-        {{ end }}
-      </div>
+<div class="banner">
+	<div class="container">
+		<h3 class="title">Learn about jobs directly from the professionals doing them.</h3>
+		<h4 class="slug">Connecting students and professionals to make the transition from learning to working as enjoyable as possible.</h4>
+	</div>
+</div>
 
-      <div class="col-right col-sm-6">
-        <h3>Recent Interviews</h3>
-        {{ range .Interviews }}
-          <a href="/interviews/{{ .Id }}">
-            <div class="panel panel-default">
-              <div class="panel-body">
-                <div class="preview">
-					<img class="preview img-responsive img-rounded" src="http://identicons.github.com/{{.User.Id}}.png">
-                </div>
-                <span class="preview">{{ .Name }}</span>
-              </div>
-            </div>
-          </a>
-        {{ end }}
-      </div>
-      {{ template "footer" . }}
-    </div>
-    <foot>
-    {{ template "foot" . }}
-    </foot>
-  </body>
-</html>
+<div class="container">
+	<div class="col-left col-sm-6">
+		<h3>Recent Articles</h3>
+		{{ range .Articles }}
+		<a href="/articles/{{.Id}}">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="preview">
+						<img class="preview img-responsive img-rounded" src="http://identicons.github.com/{{.User.Id}}.png">
+					</div>
+					<span class="preview">{{ .Title }}</span>
+				</div>
+			</div>
+		</a>
+		{{ end }}
+	</div>
+
+	<div class="col-right col-sm-6">
+		<h3>Recent Interviews</h3>
+		{{ range .Interviews }}
+		<a href="/interviews/{{ .Id }}">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="preview">
+						<img class="preview img-responsive img-rounded" src="http://identicons.github.com/{{.User.Id}}.png">
+					</div>
+					<span class="preview">{{ .Name }}</span>
+				</div>
+			</div>
+		</a>
+		{{ end }}
+	</div>
+</div>
+{{ template "footer" . }}
 {{ end }}

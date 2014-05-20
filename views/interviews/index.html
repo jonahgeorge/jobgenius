@@ -1,72 +1,51 @@
 {{ define "interviews/index" }}
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		{{ template "head" . }}
-		<style>
-			input[name="name"] { width:300px; margin-right:5px; }
-			#reset { margin-left:5px; }
-		</style>
-	</head>
-	<body>
-		{{ template "header" . }}
-		<div class="container">
-			<div class="col col-sm-12">
-				<div class="page-header">
-					<h1 class="inline">{{ .Title }}</h1>
-					<small class="pull-right">
-						<form action="/mca/members" method="get">
-
-							<a href="/mca/members"
-								id="reset"
-								class="btn btn-danger pull-right inline">Reset</a>
-
-							<button class="btn btn-primary pull-right inline" 
-								type="submit">Search</button>
-
-							<input class="form-control inline pull-right" 
-							name="name" 
-							placeholder="Search By Name"
-							autofocus>
-						</form>
-					</small>
-				</div>
-			</div>
-
-			<div class="col-left col-sm-9">
-				{{ range .Interviews }}
-				<a href='/interviews/{{ .Id }}'>
-					<div class="panel panel-default">
-						<div class="panel-body">
-							<div class="preview">
-								<img class="preview img-responsive img-rounded" src="http://identicons.github.com/{{.User.Id}}.png">
-							</div>
-							<span class="preview">{{ .Name }} - {{ .Position }}</span>
-						</div>
-					</div>
-				</a>
-				{{ end }}
-			</div>
-
-			<div class="col-left col-sm-3">
-
-				{{ if index .Session.Values "Id" }}
-				<a href="/interviews/new" 
-					style="width:100%; margin-bottom:15px;" 
-					class="btn btn-default">New Interview</a>
-				{{ end }}
-
-				<div class="panel panel-default">
-					<div class="panel-heading">Filter<span class="glyphicon glyphicon-search pull-right"></span></div>
-					<div class="panel-body"></div>
-				</div>
-			</div>
-
+{{ template "header" . }}
+<div class="container">
+	<div class="col col-sm-12">
+		<div class="page-header">
+			<h1>{{ .Title }}</h1>
 		</div>
-		{{ template "footer" . }}
-		<foot>
-		{{ template "foot" . }}
-		</foot>
-	</body>
-</html>
+	</div>
+
+	<div class="col-left col-sm-9">
+		{{ range .Interviews }}
+		<a href='/interviews/{{ .Id }}'>
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="preview">
+						<img class="preview img-responsive img-rounded" src="http://identicons.github.com/{{.User.Id}}.png">
+					</div>
+					<span class="preview">{{ .Name }} - {{ .Position }}</span>
+				</div>
+			</div>
+		</a>
+		{{ end }}
+	</div>
+
+	<div class="col-right col-sm-3">
+
+
+		{{ if index .Session.Values "Id" }}
+		<a href="/interviews/new" 
+			style="width:100%; margin-bottom:15px;" 
+			class="btn btn-success">New Interview</a>
+		{{ end }}
+
+		<form action="/interviews" method="get">
+			<input class="searchbar form-control" 
+				name="name" 
+				placeholder="Search By Name or Job Title" />
+			<button class="btn btn-primary search-btn" 
+				type="submit">Search</button>
+			<a href="/interviews"
+				class="reset-btn btn btn-danger">Reset</a>
+		</form>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">Filter<span class="glyphicon glyphicon-search pull-right"></span></div>
+			<div class="panel-body"></div>
+		</div>
+	</div>
+</div>
+{{ template "footer" . }}
 {{ end }}

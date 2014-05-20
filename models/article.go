@@ -37,6 +37,46 @@ func (a ArticleFactory) GetCategories(db *sql.DB) ([]blocks.Field, error) {
 	return fields, err
 }
 
+func (a ArticleFactory) GetRecent(db *sql.DB) []ArticleModel {
+
+	sql := `
+	SELECT 
+		Users.uid
+	,	Users.display_name
+	,	Articles.aid
+	,	Articles.title
+	,	Articles.slug
+	,	Articles.body
+	FROM 
+		Articles
+	 LEFT JOIN 
+		Users ON Articles.uid = Users.uid
+	WHERE 
+		Articles.published = 1
+	ORDER BY
+		Articles.timestamp
+	LIMIT 5`
+
+	rows, err := db.Query(sql)
+	if err != nil {
+		log.Println(err)
+	}
+	defer rows.Close()
+
+	var articles []ArticleModel
+	for rows.Next() {
+		var article ArticleModel
+		err = rows.Scan(
+			&article.User.Id, &article.User.DisplayName,
+			&article.Id, &article.Title, &article.Slug, &article.Body)
+		if err != nil {
+			log.Println(err)
+		}
+		articles = append(articles, article)
+	}
+	return articles
+}
+
 // Retrieve all articles
 func (a ArticleFactory) RetrieveAll(db *sql.DB) ([]ArticleModel, error) {
 	var articles []ArticleModel
@@ -196,6 +236,47 @@ func (a ArticleFactory) Filter(db *sql.DB, filters []string) ([]ArticleModel, er
 	return articles, err
 }
 
+func (a ArticleFactory) RetrieveByName(db *sql.DB, name string) []ArticleModel {
+	sql := `
+	SELECT 
+		Users.uid
+	,	Users.display_name
+	,	Articles.aid
+	,	Articles.title
+	,	Articles.slug
+	,	Articles.body 
+	,	Articles.timestamp
+	FROM 
+		Articles
+	LEFT JOIN 
+		Users ON Articles.uid = Users.uid
+	WHERE 
+		Articles.published = 1
+	AND 
+		Articles.title LIKE ?
+	OR
+		Articles.slug LIKE ?`
+
+	var articles []ArticleModel
+	rows, err := db.Query(sql, "%"+name+"%", "%"+name+"%")
+	if err != nil {
+		return articles
+	}
+
+	for rows.Next() {
+		var article ArticleModel
+		err := rows.Scan(
+			&article.User.Id, &article.User.DisplayName, &article.Id,
+			&article.Title, &article.Slug, &article.Body, &article.Date)
+		if err != nil {
+			return articles
+		}
+		articles = append(articles, article)
+	}
+
+	return articles
+}
+
 type ArticleModel struct {
 	Id    *int
 	User  UserModel
@@ -210,7 +291,7 @@ func (a ArticleModel) Create(db *sql.DB, data map[string]interface{}) (int64, er
 
 	sql := `
 	INSERT INTO 
-	Articles (title, subtitle, uid, body, published) 
+	Articles (title, slug, uid, body, published) 
 	VALUES (?, ?, ?, ?, 1)`
 
 	result, err := db.Exec(sql, data["title"], data["slug"], data["uid"], data["body"])

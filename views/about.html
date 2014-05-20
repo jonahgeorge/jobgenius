@@ -1,82 +1,73 @@
 {{ define "aboutTemplate" }}
-<!DOCTYPE html>
-<html>
-  <head>
-    {{ template "head" . }}
-    <style>
-      img {
-        border-radius:2px;
-      }
-    </style>
-  </head>
-  <body>
-    {{ template "header" . }}
-    <div class="container">
+{{ template "header" . }}
+<style>
+	img { border-radius:2px; }
+</style>
 
-      <div class="page-header">
-        <h1>Our Mission</h1>
-      </div>
+<div class="container">
 
-      <p>
-        The mission of Job Genius is to help young people identify careers and jobs they will both enjoy and find meaningful. 
-        We aim to accomplish this goal by creating the world’s largest library of video informational interviews with professionals 
-        answering typical career questions and showing shots of them on the job. We will grow this library through user generated content. 
-        Any professional in the world can come to our site and upload an informational interview directly from their smart phone or tablet. 
-        In this way, young people will be able to learn about any job directly from the professionals doing it. Who are we? We are a ragtag 
-        group of college students from UCLA and OSU, doing our part to make the world a better and happier place. We will never 
-        charge students to access your informational interview.
-      </p>
+	<div class="page-header">
+		<h1>Our Mission</h1>
+	</div>
 
-      <div class="page-header">
-        <h1>Our Team</h1>
-      </div>
+	<p>
+	The mission of Job Genius is to help young people identify careers and jobs they will both enjoy and find meaningful. 
+	We aim to accomplish this goal by creating the world’s largest library of video informational interviews with professionals 
+	answering typical career questions and showing shots of them on the job. We will grow this library through user generated content. 
+	Any professional in the world can come to our site and upload an informational interview directly from their smart phone or tablet. 
+	In this way, young people will be able to learn about any job directly from the professionals doing it. Who are we? We are a ragtag 
+	group of college students from UCLA and OSU, doing our part to make the world a better and happier place. We will never 
+	charge students to access your informational interview.
+	</p>
 
-      <div class="media">
-        <a class="pull-left" href="#">
-          <img class="media-object" src="/public/images/edward.png">
-        </a>
-        <div class="media-body">
-          <a href="#"><h4 class="media-heading">Edward Gonzalez</h4></a>
-          <h5 class="media-heading">Founder and CEO</h5>
-          <p>
-            Edward is a former Marine and former school principal. He has over a decade of experience 
-            designing and implementing educational programs. He is currently working towards his MBA 
-            at UCLA Anderson School of Management.
-          </p>
-        </div>
-      </div>
+	<div class="page-header">
+		<h1>Our Team</h1>
+	</div>
 
-      <div class="media">
-        <a class="pull-left" href="#">
-          <img class="media-object" src="/public/images/rohan.png">
-        </a>
-        <div class="media-body">
-          <a href="#"><h4 class="media-heading">Rohan Castelino</h4></a>
-          <h5 class="media-heading">Social Media and Marketing Officer</h5>
-          <p>
-            Rohan is a content and media expert with almost a decade of experience in the entertainment industry, 
-            both in the US and abroad. He is currently working towards his MBA at UCLA Anderson School of Management.
-          </p>
-        </div>
-      </div>
+	<div class="media">
+		<a class="pull-left" href="#">
+			<img class="media-object" src="/public/images/edward.png">
+		</a>
+		<div class="media-body">
+			<a href="#"><h4 class="media-heading">Edward Gonzalez</h4></a>
+			<h5 class="media-heading">Founder and CEO</h5>
+			<p>
+			Edward is a former Marine and former school principal. He has over a decade of experience 
+			designing and implementing educational programs. He is currently working towards his MBA 
+			at UCLA Anderson School of Management.
+			</p>
+		</div>
+	</div>
 
-      <div class="media">
-        <a class="pull-left" href="#">
-          <img class="media-object" src="/public/images/jonah.png">
-        </a>
-        <div class="media-body">
-          <a href="#"><h4 class="media-heading">Jonah George</h4></a>
-          <h5 class="media-heading">Developer and Technical Officer</h5>
-          <p>
-            Jonah is an award winning developer and former US Rowing Junior National champion. He is currently 
-            majoring in Information Systems at Oregon State University.
-          </p>
-        </div>
-      </div>
+	<div class="media">
+		<a class="pull-left" href="#">
+			<img class="media-object" src="/public/images/rohan.png">
+		</a>
+		<div class="media-body">
+			<a href="#"><h4 class="media-heading">Rohan Castelino</h4></a>
+			<h5 class="media-heading">Social Media and Marketing Officer</h5>
+			<p>
+			Rohan is a content and media expert with almost a decade of experience in the entertainment industry, 
+			both in the US and abroad. He is currently working towards his MBA at UCLA Anderson School of Management.
+			</p>
+		</div>
+	</div>
 
-      {{ template "footer" . }}
-    </div>
-    {{ template "foot" . }}
+	<div class="media">
+		<a class="pull-left" href="#">
+			<img class="media-object" src="/public/images/jonah.png">
+		</a>
+		<div class="media-body">
+			<a href="#"><h4 class="media-heading">Jonah George</h4></a>
+			<h5 class="media-heading">Developer and Technical Officer</h5>
+			<p>
+			Jonah is an award winning developer and former US Rowing Junior National champion. He is currently 
+			majoring in Computer Science with a minor in Business at Oregon State University.
+			</p>
+		</div>
+	</div>
+</div>
+{{ template "footer" . }}
   </body>
 </html>
 {{ end }}

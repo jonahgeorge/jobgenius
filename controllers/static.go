@@ -10,13 +10,13 @@ import (
 	"github.com/jonahgeorge/jobgenius.net/models"
 )
 
-type Static struct{}
+type MainController struct{}
 
-func (s Static) Landing(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (m MainController) Landing(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		// Retrieve data
-		articles, err := models.ArticleFactory{}.RetrieveAll(db)
+		articles := models.ArticleFactory{}.GetRecent(db)
 		interviews := models.InterviewFactory{}.RetrieveAll(db)
 		session, err := store.Get(r, "user")
 
@@ -41,7 +41,7 @@ func (s Static) Landing(db *sql.DB, store *sessions.CookieStore) http.HandlerFun
 	}
 }
 
-func (s Static) About(store *sessions.CookieStore) http.HandlerFunc {
+func (m MainController) About(store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")
@@ -57,7 +57,7 @@ func (s Static) About(store *sessions.CookieStore) http.HandlerFunc {
 	}
 }
 
-func (s Static) Terms(store *sessions.CookieStore) http.HandlerFunc {
+func (m MainController) Terms(store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")
@@ -73,7 +73,7 @@ func (s Static) Terms(store *sessions.CookieStore) http.HandlerFunc {
 	}
 }
 
-func (s Static) Privacy(store *sessions.CookieStore) http.HandlerFunc {
+func (m MainController) Privacy(store *sessions.CookieStore) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")

@@ -1,14 +1,27 @@
 {{ define "interviews/show" }}
-
 <!DOCTYPE html>
 <html>
   <head>{{ template "head" . }}</head>
   <body data-interview-id={{ .Interview.Id }}>
     {{ template "header" . }}
 	<div class="container">
+
+		{{if .IsAuthor}}				
+		<div class="panel panel-warning">
+			<div class="panel-heading">
+				<h3 class="panel-title">Author Interface</h3>
+			</div>
+			<div class="panel-body">
+				<!--
+				<button class="btn btn-default">Edit</button>
+				<button class="btn btn-default">Publish</button>
+				-->
+			</div>
+		</div>
+		{{end}}
+
         <div class="page-header">
-			<a href="/interviews" class="left-arrow"><i class="fa fa-chevron-left"></i></a>
-			<h1 class="inline">{{ .Interview.Name }} <small>{{ .Interview.Position }}</small></h1>
+			<h1>{{ .Interview.Name }} <small>{{ .Interview.Position }}</small></h1>
         </div>
 
 		<div class="col-sm-10 col-sm-offset-1" style="margin-bottom:25px;">
@@ -55,123 +68,10 @@
 	    </div>
 
 	    <div class="col-sm-6 right-col">
-
-	    	<!--  Details  -->
-			<div class="panel panel-default">
-	            <div class="panel-heading">
-	                <h3 class="panel-title" style="display:inline;">Details</h3>
-	                <span class="glyphicon glyphicon-search pull-right"></span>
-	            </div>
-	            <div class="panel-body">
-	                {{ if .Interview.Basic.Type }}
-	                    <span class="pull-left"><b>Type:</b></span>
-	                    <span class="pull-right">{{ .Interview.Basic.Type }}</span><br>
-	                {{ end }}
-	                {{ if .Interview.Basic.Sector }}
-	                    <span class="pull-left"><b>Sector:</b></span>
-	                    <span class="pull-right">{{ .Interview.Basic.Sector }}</span><br>
-	                {{ end }}
-	                {{ if .Interview.Basic.Industry }}
-	                    <span class="pull-left"><b>Industry:</b></span>
-	                    {{ range .Interview.Basic.Industry }}
-	                    <span class="pull-right">{{ .Value }}</span><br>
-	                    {{ end }}
-	                {{ end }}
-	                {{ if .Interview.Basic.Experience }}
-	                    <span class="pull-left"><b>Experience:</b></span>
-	                    <span class="pull-right">{{ .Interview.Basic.Experience }}</span><br>
-	                {{ end }}
-	                {{ if .Interview.Basic.Environment }}
-	                    <span class="pull-left"><b>Environment:</b></span>
-	                    {{ range .Interview.Basic.Environment }}
-	                    <span class="pull-right">{{ .Value }}</span><br>
-	                    {{ end }}
-	                {{ end }}
-	                {{ if .Interview.Basic.Salary }}
-	                    <span class="pull-left"><b>Salary:</b></span>
-	                    <span class="pull-right">{{ .Interview.Basic.Salary }}</span><br>
-	                {{ end }}
-	                {{ if .Interview.Basic.HoursPerWeek }}
-	                    <span class="pull-left"><b>Hours Per Week:</b></span>
-	                    <span class="pull-right">{{ .Interview.Basic.HoursPerWeek }}</span><br>
-	                {{ end }}
-	                {{ if .Interview.Basic.WeekendsWorked }}
-	                    <span class="pull-left"><b>Weekends Worked:</b></span>
-	                    <span class="pull-right">{{ .Interview.Basic.WeekendsWorked }}</span><br>
-	                {{ end }}
-	                {{ if .Interview.Basic.OvernightTravel }}
-	                    <span class="pull-left"><b>Overnight Travel:</b></span>
-	                    <span class="pull-right">{{ .Interview.Basic.OvernightTravel }}</span><br>
-	                {{ end }}
-	            </div>
-	        </div>
-
-	        <!--  Educational Background  -->
-	        <div class="panel panel-default">
-	            <div class="panel-heading">
-	                <h3 class="panel-title" style="display:inline;">Educational Background</h3>
-	                <span class="glyphicon glyphicon-book pull-right"></span>
-	            </div>
-	            <div class="panel-body">
-	            {{ range .Interview.Education }}
-                    <span class="pull-left"><b>{{ .Degree }}</b></span>
-                    <span class="pull-right">{{ .Year }}</span>
-                    <hr style="margin-bottom:5px;">
-                    <span class="pull-left"><b>Concentration:</b></span>
-                    <span class="pull-right">{{ .Concentration }}</span><br>
-                    <span class="pull-left"><b>University:</b></span>
-                    <span class="pull-right">{{ .University }}</span><br><br>
-                {{ end }}
-				</div>
-				<!--
-	            <div class="panel-footer clearfix" style="background-color: #428bca; color: #fff; border-color: #428bca;">
-	                <span class="pull-left">Did you find this information helpful?</span>
-	                <span class="pull-right">Yes&nbsp;&nbsp;|&nbsp;&nbsp;No</span>
-				</div>
-				-->
-	        </div>
-
-	        <!-- Job Requirements  -->
-	        <div class="panel panel-default">
-	            <div class="panel-heading">
-	                <h3 class="panel-title" style="display:inline;">Job Requirements</h3>
-					<span class="glyphicon glyphicon-list pull-right"></span>
-				</div>
-	            <div class="panel-body">
-                    <span class="pull-left"><b>Certifications:</b></span>
-                    {{ range .Interview.Requirements.Certifications }}
-                    <span class="pull-right">{{ .Value }}</span><br>
-                    {{ end }}
-                    
-                    <br>
-                    
-                    <span class="pull-left"><b>Skills:</b></span>
-                    {{ range .Interview.Requirements.Skills }}
-                    <span class="pull-right">{{ .Value }}</span><br>
-                    {{ end }}
-	            </div>
-	        </div>
-
-	        <!-- Skills and Tools  -->
-	        <div class="panel panel-default">
-	            <div class="panel-heading">
-	                <h3 class="panel-title" style="display:inline;">Skills and Tools</h3>
-					<span class="glyphicon glyphicon-wrench pull-right"></span>
-				</div>
-	            <div class="panel-body">
-                    <span class="pull-left"><b>Soft Skills:</b></span>
-                    {{ range .Interview.Tools.Skills }}
-                    <span class="pull-right">{{ .Value }}</span><br>
-                    {{ end }}
-                    
-                    <br>
-                    
-                    <span class="pull-left"><b>Tools:</b></span>
-                    {{ range .Interview.Tools.Tools }}
-                    <span class="pull-right">{{ .Value }}</span><br>
-                    {{ end }}
-	            </div>
-	        </div>
+			{{template "interviews/components/details" .}}
+			{{template "interviews/components/education" .}}
+			{{template "interviews/components/requirements" .}}
+			{{template "interviews/components/skills" .}}
 	    </div>
 
 		<!--    

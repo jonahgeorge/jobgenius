@@ -1,0 +1,26 @@
+{{define "interviews/components/education"}}
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title" style="display:inline;">Educational Background</h3>
+		<span class="glyphicon glyphicon-book pull-right"></span>
+	</div>
+	<div class="panel-body">
+		{{ range .Interview.Education }}
+		<span class="pull-left"><b>{{ .Degree }}</b></span>
+		<span class="pull-right">{{ .Year }}</span>
+		<hr style="margin-bottom:5px;">
+		<span class="pull-left"><b>Concentration:</b></span>
+		<span class="pull-right">{{ .Concentration }}</span><br>
+		<span class="pull-left"><b>University:</b></span>
+		<span class="pull-right">{{ .University }}</span><br><br>
+		{{ end }}
+	</div>
+	<!--
+	<div class="panel-footer clearfix" style="background-color: #428bca; color: #fff; border-color: #428bca;">
+		<span class="pull-left">Did you find this information helpful?</span>
+		<span class="pull-right">Yes&nbsp;&nbsp;|&nbsp;&nbsp;No</span>
+	</div>
+	-->
+</div>
+{{end}}
+

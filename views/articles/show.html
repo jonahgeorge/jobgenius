@@ -1,33 +1,36 @@
 {{ define "article/show" }}
-<!DOCTYPE html>
-<html>
-  <head>
-    {{ template "head" . }}
-  </head>
-  <body>
-    {{ template "header" . }}
-	  <div class="container">
-		  <div class="col-sm-8 col-sm-offset-2">
+{{ template "header" . }}
+<div class="container">
+	<div class="col-sm-10 col-sm-offset-1">
 
-		  <h2 class="title">{{ .Article.Title }}</h2>
-		  {{if .Article.Slug}}<h4 class="slug">{{ .Article.Slug }}</h4>{{end}}
-		  <h6>Written by <a href="#">{{.Article.User.DisplayName}}</a> on {{.Article.Date}}</h6>
- 
-		  <div class="body">{{ .Markdown }}</div>
-
-			<!--	
-			<div class="panel panel-default" style="background-color:#dff0d8; color:#3c763d; border-color:#d6e9c6;">
-			  <div class="panel-body">
-				<span><a href="/auth/signin">Login</a> to join the discussion</span>
-			  </div>
+		{{if .IsAuthor }}				
+		<div class="panel panel-warning">
+			<div class="panel-heading">
+				<h3 class="panel-title">Author Interface</h3>
 			</div>
-			-->
+			<div class="panel-body">
+				<!--
+				<button class="btn btn-default">Edit</button>
+				<button class="btn btn-default">Publish</button>
+				-->
+			</div>
 		</div>
-      </div>
-      {{ template "footer" . }}
-    <foot>
-      {{ template "foot" . }}
-    </foot>
-  </body>
-</html>
+		{{end}}
+
+		<h2 class="title">{{ .Article.Title }}</h2>
+		{{if .Article.Slug}}<h4 class="slug">{{ .Article.Slug }}</h4>{{end}}
+		<h6>Written by <a href="#">{{.Article.User.DisplayName}}</a> on {{.Article.Date}}</h6>
+
+		<div class="body">{{ .Markdown }}</div>
+
+		<!--	
+		<div class="panel panel-default" style="background-color:#dff0d8; color:#3c763d; border-color:#d6e9c6;">
+			<div class="panel-body">
+				<span><a href="/auth/signin">Login</a> to join the discussion</span>
+			</div>
+		</div>
+		-->
+	</div>
+</div>
+{{ template "footer" . }}
 {{ end }}
