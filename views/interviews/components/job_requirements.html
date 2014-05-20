@@ -10,7 +10,7 @@
 			<div class="left">Certifications</div>
 			<div class="right">
 			{{ range .Interview.Requirements.Certifications }}
-				{{ .Value }}<br/>
+				<a href="#">{{ .Value }}</a><br/>
 			{{ end }}
 			</div>
 		</li>
@@ -21,7 +21,7 @@
 			<div class="left">Skills</div>
 			<div class="right">
 			{{ range .Interview.Requirements.Skills }}
-				{{ .Value }}<br/>
+				<a href="#">{{ .Value }}</a><br/>
 			{{end}}
 		</div>
 		{{end}}

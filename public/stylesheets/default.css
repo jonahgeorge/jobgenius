@@ -1,3 +1,7 @@
+.panel-advertisement {
+	background-color:#fcf8e3;
+}
+
 .list-group-item > .left {
 	vertical-align: top; 
 	display: inline-block;

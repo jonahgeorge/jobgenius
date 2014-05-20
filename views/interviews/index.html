@@ -8,6 +8,15 @@
 	</div>
 
 	<div class="col-left col-sm-9">
+
+		<!--
+		<div class="panel panel-advertisement">
+			<div class="panel-body">
+				Advertisement
+			</div>
+		</div>
+		-->
+
 		{{ range .Interviews }}
 		<a href='/interviews/{{ .Id }}'>
 			<div class="panel panel-default">
@@ -23,7 +32,6 @@
 	</div>
 
 	<div class="col-right col-sm-3">
-
 
 		{{ if index .Session.Values "Id" }}
 		<a href="/interviews/new" 

@@ -9,7 +9,7 @@
 			<div class="left">Soft Skills</div>
 			<div class="right">
 			{{ range .Interview.Tools.Skills }}
-			{{ .Value }}<br/>
+				<a href="#">{{ .Value }}</a><br/>
 			{{ end }}
 			</div>
 		</li>
@@ -18,7 +18,7 @@
 			<div class="left">Tools</div>
 			<div class="right">
 			{{ range .Interview.Tools.Tools }}
-			{{ .Value }}<br/>
+				<a href="#">{{ .Value }}</a><br/>
 			{{ end }}
 			</div>
 		</li>
