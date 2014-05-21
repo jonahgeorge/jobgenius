@@ -1,102 +1,50 @@
 {{ define "interviews/show" }}
-<!DOCTYPE html>
-<html>
-  <head>{{ template "head" . }}</head>
-  <body data-interview-id={{ .Interview.Id }}>
-    {{ template "header" . }}
-	<div class="container">
+{{ template "header" . }}
+<div class="container">
 
-		{{if .IsAuthor}}				
-		<div class="panel panel-warning">
-			<div class="panel-heading">
-				<h3 class="panel-title">Author Interface</h3>
-			</div>
-			<div class="panel-body">
-				<!--
-				<button class="btn btn-default">Edit</button>
-				<button class="btn btn-default">Publish</button>
-				-->
-			</div>
+	{{if .IsAuthor}}				
+	<div class="panel panel-warning">
+		<div class="panel-heading">
+			<h3 class="panel-title">Author Interface</h3>
 		</div>
-		{{end}}
-
-        <div class="page-header">
-			<h1>{{ .Interview.Name }} <small>{{ .Interview.Position }}</small></h1>
-        </div>
-
-		<div class="col-sm-10 col-sm-offset-1" style="margin-bottom:25px;">
-			<video id="video" poster="http://jobgeniusvideos.s3.amazonaws.com/videos/thumbnails/4342/thumbnail-4342_0002.jpg" controls width="100%">
-			    <source src="http://jobgeniusvideos.s3.amazonaws.com/videos/converted/4342/What_I_do_mp4_1391670592.mp4" type="video/mp4">
-		    	<source src="http://jobgeniusvideos.s3.amazonaws.com/videos/converted/4342/What_I_do_webm_1391670593.webm" type="video/webm">
-		    </video>
+		<div class="panel-body">
+			<button class="btn btn-default">Edit</button>
+			<button class="btn btn-default">Publish</button>
 		</div>
-
-	    <div class="col-sm-6 left-col">
-
-	    	<!--  Daily Tasks By Hour  -->
-	    	<div class="panel panel-default">
-		        <div class="panel-heading">
-	                <h3 class="panel-title" style="display:inline;">Daily Tasks By Hour</h3>
-					<span class="glyphicon glyphicon-time pull-right"></span>
-	            </div>
-	            <div class="panel-body">
-	            	<div id="breakdown"></div>
-	            </div>
-	        </div>
-
-	        <!--  Motivation & Fulfillment  -->
-	    	<div class="panel panel-default">
-		        <div class="panel-heading">
-	                <h3 class="panel-title" style="display:inline;">Motivation & Fulfillment</h3>
-					<span class="glyphicon glyphicon-time pull-right"></span>
-	            </div>
-	            <div class="panel-body">
-	            	<div id="fulfillment"></div>
-	            </div>
-	        </div>
-
-	        <!--  Solo vs Group Work  -->
-	    	<div class="panel panel-default">
-		        <div class="panel-heading">
-	                <h3 class="panel-title" style="display:inline;">Solo vs Group Work</h3>
-					<span class="glyphicon glyphicon-time pull-right"></span>
-	            </div>
-	            <div class="panel-body">
-		            <div id="solovgroup"></div>
-	            </div>
-	        </div>
-	    </div>
-
-	    <div class="col-sm-6 right-col">
-			{{template "interviews/components/details" .}}
-			{{template "interviews/components/education" .}}
-			{{template "interviews/components/requirements" .}}
-			{{template "interviews/components/skills" .}}
-	    </div>
-
-		<!--    
-		<div class="col-sm-12">
-		    <div class="panel panel-default">
-		        <div class="panel-heading"><h4>Comments</h4></div>
-		        <div class="panel-body"></div>
-			</div>
-		</div>
-		-->
-		
 	</div>
-	
-	{{ template "footer" . }}
+	{{end}}
 
-    <foot>
-	    {{ template "foot" . }}
-	    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-	    <script type="text/javascript">google.load('visualization', '1.0', {'packages':['corechart', 'gauge']});</script>
-	    <script type="text/javascript" src="/public/javascript/charts/breakdown.js"></script>
-	    <script type="text/javascript" src="/public/javascript/charts/fulfillment.js"></script>
-	    <script type="text/javascript" src="/public/javascript/charts/groupwork.js"></script>
-    </foot>
+	<div class="page-header">
+		<h1>{{ .Interview.Name }} <small>{{ .Interview.Position }}</small></h1>
+	</div>
 
-  </body>
-</html>
+	<div class="col-sm-10 col-sm-offset-1" style="margin-bottom:25px;">
+		<video id="video" poster="http://jobgeniusvideos.s3.amazonaws.com/videos/thumbnails/4342/thumbnail-4342_0002.jpg" controls width="100%">
+		<source src="http://jobgeniusvideos.s3.amazonaws.com/videos/converted/4342/What_I_do_mp4_1391670592.mp4" type="video/mp4">
+		<source src="http://jobgeniusvideos.s3.amazonaws.com/videos/converted/4342/What_I_do_webm_1391670593.webm" type="video/webm">
+		</video>
+	</div>
 
+	<div class="col-sm-6 left-col">
+		{{template "interviews/components/breakdown" .}}
+		{{template "interviews/components/motivation" .}}
+		{{template "interviews/components/groupwork" .}}
+	</div>
+
+	<div class="col-sm-6 right-col">
+		{{template "interviews/components/details" .}}
+		{{template "interviews/components/education" .}}
+		{{template "interviews/components/requirements" .}}
+		{{template "interviews/components/skills" .}}
+	</div>
+
+	<div class="col-sm-12">
+		<div class="panel panel-warning">
+			<div class="panel-heading"><h4>Comments</h4></div>
+			<div class="panel-body"></div>
+		</div>
+	</div>
+
+</div>
+{{ template "footer" . }}
 {{ end }}

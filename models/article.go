@@ -1,9 +1,9 @@
 package models
 
 import (
-	"database/sql"
 	"log"
 	"strings"
+	"time"
 
 	_ "github.com/Go-SQL-Driver/MySQL"
 	"github.com/jonahgeorge/jobgenius.net/models/blocks"
@@ -12,7 +12,7 @@ import (
 type ArticleFactory struct {
 }
 
-func (a ArticleFactory) GetCategories(db *sql.DB) ([]blocks.Field, error) {
+func (a ArticleFactory) GetCategories() ([]blocks.Field, error) {
 
 	sql := `
 	SELECT *
@@ -37,7 +37,7 @@ func (a ArticleFactory) GetCategories(db *sql.DB) ([]blocks.Field, error) {
 	return fields, err
 }
 
-func (a ArticleFactory) GetRecent(db *sql.DB) []ArticleModel {
+func (a ArticleFactory) GetRecent() []ArticleModel {
 
 	sql := `
 	SELECT 
@@ -78,7 +78,7 @@ func (a ArticleFactory) GetRecent(db *sql.DB) []ArticleModel {
 }
 
 // Retrieve all articles
-func (a ArticleFactory) RetrieveAll(db *sql.DB) ([]ArticleModel, error) {
+func (a ArticleFactory) RetrieveAll() ([]ArticleModel, error) {
 	var articles []ArticleModel
 
 	sql := `
@@ -119,7 +119,7 @@ func (a ArticleFactory) RetrieveAll(db *sql.DB) ([]ArticleModel, error) {
 }
 
 // Retrieve one article by article id (primary key)
-func (a ArticleFactory) RetrieveById(db *sql.DB, id string) (ArticleModel, error) {
+func (a ArticleFactory) GetArticle(id string) ArticleModel {
 
 	sql := `
 	SELECT 
@@ -146,11 +146,15 @@ func (a ArticleFactory) RetrieveById(db *sql.DB, id string) (ArticleModel, error
 		&article.User.Id, &article.User.DisplayName, &article.Id,
 		&article.Title, &article.Slug, &article.Body, &article.Date)
 
-	return article, err
+	if err != nil {
+		log.Println(err)
+	}
+
+	return article
 }
 
 // Retrieve a slice of articles authored by the user id parameter
-func (a ArticleFactory) RetrieveByAuthor(db *sql.DB, id int) ([]ArticleModel, error) {
+func (a ArticleFactory) RetrieveByAuthor(id int) ([]ArticleModel, error) {
 	var articles []ArticleModel
 
 	sql := `
@@ -191,7 +195,7 @@ func (a ArticleFactory) RetrieveByAuthor(db *sql.DB, id int) ([]ArticleModel, er
 	return articles, err
 }
 
-func (a ArticleFactory) Filter(db *sql.DB, filters []string) ([]ArticleModel, error) {
+func (a ArticleFactory) Filter(filters []string) ([]ArticleModel, error) {
 	sql := `
 	SELECT 
 		Users.uid
@@ -236,7 +240,7 @@ func (a ArticleFactory) Filter(db *sql.DB, filters []string) ([]ArticleModel, er
 	return articles, err
 }
 
-func (a ArticleFactory) RetrieveByName(db *sql.DB, name string) []ArticleModel {
+func (a ArticleFactory) RetrieveByName(name string) []ArticleModel {
 	sql := `
 	SELECT 
 		Users.uid
@@ -278,36 +282,49 @@ func (a ArticleFactory) RetrieveByName(db *sql.DB, name string) []ArticleModel {
 }
 
 type ArticleModel struct {
-	Id    *int
+	Id    int
 	User  UserModel
-	Date  *string
+	Date  *time.Time
 	Title *string
 	Slug  *string
 	Body  *string
 }
 
 // Create an article
-func (a ArticleModel) Create(db *sql.DB, data map[string]interface{}) (int64, error) {
-
+func (a ArticleModel) Create(data map[string]interface{}) int64 {
 	sql := `
-	INSERT INTO 
-	Articles (title, slug, uid, body, published) 
-	VALUES (?, ?, ?, ?, 1)`
+	INSERT INTO Articles (title, slug, uid, body, published) 
+	VALUES (?, ?, ?, ?, 0)`
 
-	result, err := db.Exec(sql, data["title"], data["slug"], data["uid"], data["body"])
+	result, err := db.Exec(
+		sql, data["title"], data["slug"],
+		data["uid"], data["body"])
+
 	if err != nil {
-		log.Printf("%s", err)
+		log.Println(err)
 	}
-
 	id, err := result.LastInsertId()
-
-	return id, err
+	return id
 }
 
-func (a ArticleModel) Update(db *sql.DB) error {
+func (a ArticleModel) AddCategory(id int64, category string) error {
+	sql := `INSERT INTO Articles_Categories (id, value) VALUES (?, ?)`
+	_, err := db.Exec(sql, id, category)
+	return err
+}
+
+func (a ArticleModel) Update() error {
 	return nil
 }
 
-func (a ArticleModel) Delete(db *sql.DB) error {
-	return nil
+func (a ArticleModel) Publish() error {
+	sql := `UPDATE Articles SET published = 1 WHERE aid = ?`
+	_, err := db.Exec(sql, a.Id)
+	return err
+}
+
+func (a ArticleModel) Delete() error {
+	sql := `DELETE FROM Articles WHERE aid = ?`
+	_, err := db.Exec(sql, a.Id)
+	return err
 }

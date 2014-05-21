@@ -1,0 +1,80 @@
+{{define "interviews/components/motivation"}}
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title inline">Motivation & Fulfillment</h3>
+		<span class="glyphicon glyphicon-time pull-right"></span>
+	</div>
+	<div class="panel-body">
+		<div id="fulfillment"></div>
+		<script type="text/javascript">
+		$.ajax({
+			url: "/api/charts/fulfillment?i={{.Interview.Id}}",
+			type: "GET",
+			dataType: "json"
+		})
+		.done(function( msg ) {
+		arr  = [];
+
+		var obj = [];
+		obj.push("Label");
+		obj.push("{{.Interview.Name}}'s value");
+		obj.push("Industry average");
+		arr.push(obj);
+
+		var obj = [];
+		obj.push("Development");
+		obj.push(msg.Development);
+		obj.push(5); // Industry Average
+		arr.push(obj);
+
+		var obj = [];
+		obj.push("Independence");
+		obj.push(msg.Independence);
+		obj.push(5); // Industry Average
+		arr.push(obj);
+
+		var obj = [];
+		obj.push("Impact");
+		obj.push(msg.Impact);
+		obj.push(5); // Industry Average
+		arr.push(obj);
+
+		var obj = [];
+		obj.push("Personal Life");
+		obj.push(msg.Personal);
+		obj.push(5); // Industry Average
+		arr.push(obj);
+
+		google.setOnLoadCallback( drawBarChart(arr) );
+			});
+
+			function drawBarChart(arr) {
+				var data = google.visualization.arrayToDataTable(arr);
+
+				var options = {
+					legend: 'top',
+					vAxis : {
+						minValue : 0, 
+					   maxValue : 10 
+					},
+					isStacked: false
+				};
+
+				// Instantiate and draw our chart, passing in some options.
+				var chart = new google.visualization.ColumnChart(document.getElementById('fulfillment'));
+				chart.draw(data, options);
+
+				function resizeHandler () {
+					chart.draw(data, options);
+				}
+
+				if (window.addEventListener) {
+					window.addEventListener('resize', resizeHandler, false);
+				} else if (window.attachEvent) {
+					window.attachEvent('onresize', resizeHandler);
+				}
+			}
+			</script>
+			</div>
+		</div>
+{{end}}

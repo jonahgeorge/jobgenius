@@ -1,7 +1,6 @@
 package blocks
 
 import (
-	"database/sql"
 	"log"
 
 	_ "github.com/Go-SQL-Driver/MySQL"
@@ -17,18 +16,18 @@ type Field struct {
 	Value *string
 }
 
-func (r RequirementsBlock) Retrieve(db *sql.DB, id string) RequirementsBlock {
+func (r RequirementsBlock) Retrieve(id string) RequirementsBlock {
 
 	rb := RequirementsBlock{
-		Certifications: RequirementsBlock{}.RetrieveCertifications(db, id),
-		Skills:         RequirementsBlock{}.RetrieveSkills(db, id),
+		Certifications: RequirementsBlock{}.RetrieveCertifications(id),
+		Skills:         RequirementsBlock{}.RetrieveSkills(id),
 	}
 
 	return rb
 
 }
 
-func (r RequirementsBlock) RetrieveCertifications(db *sql.DB, id string) []Field {
+func (r RequirementsBlock) RetrieveCertifications(id string) []Field {
 
 	sql := `
 	SELECT
@@ -62,7 +61,7 @@ func (r RequirementsBlock) RetrieveCertifications(db *sql.DB, id string) []Field
 	return fields
 }
 
-func (r RequirementsBlock) RetrieveSkills(db *sql.DB, id string) []Field {
+func (r RequirementsBlock) RetrieveSkills(id string) []Field {
 
 	sql := `
 	SELECT

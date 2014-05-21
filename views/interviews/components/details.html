@@ -11,7 +11,7 @@
 		<li class="list-group-item">
 			<div class="left">Type</div>
 			<div class="right">
-				<a href="#">{{ .Interview.Basic.Type }}</a>
+				<a href="?type={{.Interview.Basic.Type.Key}}">{{ .Interview.Basic.Type.Value }}</a>
 			</div>
 		</li>
 		{{ end }}
@@ -20,7 +20,7 @@
 		<li class="list-group-item">
 			<div class="left">Sector</div>
 			<div class="right">
-				<a href="#">{{ .Interview.Basic.Sector }}</a>			
+				<a href="?sector={{.Interview.Basic.Sector.Key}}">{{ .Interview.Basic.Sector.Value }}</a>			
 			</div>
 		</li>
 		{{ end }}
@@ -30,7 +30,7 @@
 			<div class="left">Industry</div>
 			<div class="right">
 			{{ range .Interview.Basic.Industry }}
-			<a href="#">{{ .Value }}</a><br/>
+			<a href="?industry={{.Key}}">{{ .Value }}</a><br/>
 			{{ end }}
 			</div>
 		</li>
@@ -40,7 +40,7 @@
 		<li class="list-group-item">
 			<div class="left">Experience</div>
 			<div class="right">
-				<a href="#">{{ .Interview.Basic.Experience }}</a>
+				<a href="?experience={{.Interview.Basic.Experience.Key}}">{{ .Interview.Basic.Experience.Value }}</a>
 			</div>
 		</li>
 		{{ end }}
@@ -50,7 +50,7 @@
 			<div class="left">Environment</div>
 			<div class="right">
 			{{ range .Interview.Basic.Environment }}
-			<a href="#">{{ .Value }}</a><br/>
+			<a href="?environment={{.Key}}">{{ .Value }}</a><br/>
 			{{ end }}
 			</div>
 		</li>
@@ -60,7 +60,7 @@
 		<li class="list-group-item">
 			<div class="left">Salary</div>
 			<div class="right">
-				<a href="#">{{ .Interview.Basic.Salary }}</a>
+				<a href="?salary={{.Interview.Basic.Salary.Key}}">{{ .Interview.Basic.Salary.Value }}</a>
 			</div>
 		</li>
 		{{ end }}
@@ -69,7 +69,7 @@
 		<li class="list-group-item">
 			<div class="left">Hours Per Week</div>
 			<div class="right">
-				<a href="#">{{ .Interview.Basic.HoursPerWeek }}</a>
+				<a href="?hoursperweek={{.Interview.Basic.HoursPerWeek.Key}}">{{ .Interview.Basic.HoursPerWeek.Value }}</a>
 			</div>
 		</li>
 		{{ end }}
@@ -78,7 +78,7 @@
 		<li class="list-group-item">
 			<div class="left">Weekends Worked</div>
 			<div class="right">
-				<a href="#">{{ .Interview.Basic.WeekendsWorked }}</a>
+				<a href="?weekendsworked={{.Interview.Basic.WeekendsWorked.Key}}">{{ .Interview.Basic.WeekendsWorked.Value }}</a>
 			</div>
 		</li>
 		{{ end }}
@@ -87,7 +87,7 @@
 		<li class="list-group-item">
 			<div class="left">Overnight Travel</div>
 			<div class="right">
-				<a href="#">{{ .Interview.Basic.OvernightTravel }}</a>
+				<a href="?overnighttravel={{.Interview.Basic.OvernightTravel.Key}}">{{ .Interview.Basic.OvernightTravel.Value }}</a>
 			</div>
 		</li>
 		{{ end }}

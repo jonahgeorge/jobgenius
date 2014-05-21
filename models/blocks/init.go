@@ -1,8 +1,7 @@
-package models
+package blocks
 
 import (
 	"database/sql"
-	"encoding/gob"
 	"fmt"
 	"log"
 
@@ -15,8 +14,6 @@ var (
 )
 
 func init() {
-	gob.Register(UserModel{})
-
 	// Load config file
 	conf, err := yaml.Open("config.yml")
 	if err != nil {

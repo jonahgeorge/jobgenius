@@ -1,23 +1,21 @@
 package controllers
 
 import (
-	"database/sql"
 	"log"
 	"net/http"
 
 	_ "github.com/Go-SQL-Driver/MySQL"
-	"github.com/gorilla/sessions"
 	"github.com/jonahgeorge/jobgenius.net/models"
 )
 
 type MainController struct{}
 
-func (m MainController) Landing(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (m MainController) Landing() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		// Retrieve data
-		articles := models.ArticleFactory{}.GetRecent(db)
-		interviews := models.InterviewFactory{}.RetrieveAll(db)
+		articles := models.ArticleFactory{}.GetRecent()
+		interviews := models.InterviewFactory{}.RetrieveAll()
 		session, err := store.Get(r, "user")
 
 		// Catch retrieval errors and display error page
@@ -41,7 +39,7 @@ func (m MainController) Landing(db *sql.DB, store *sessions.CookieStore) http.Ha
 	}
 }
 
-func (m MainController) About(store *sessions.CookieStore) http.HandlerFunc {
+func (m MainController) About() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")
@@ -57,7 +55,7 @@ func (m MainController) About(store *sessions.CookieStore) http.HandlerFunc {
 	}
 }
 
-func (m MainController) Terms(store *sessions.CookieStore) http.HandlerFunc {
+func (m MainController) Terms() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")
@@ -73,7 +71,7 @@ func (m MainController) Terms(store *sessions.CookieStore) http.HandlerFunc {
 	}
 }
 
-func (m MainController) Privacy(store *sessions.CookieStore) http.HandlerFunc {
+func (m MainController) Privacy() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")

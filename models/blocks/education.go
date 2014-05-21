@@ -1,7 +1,6 @@
 package blocks
 
 import (
-	"database/sql"
 	"log"
 
 	_ "github.com/Go-SQL-Driver/MySQL"
@@ -9,14 +8,14 @@ import (
 
 type EducationBlock struct{}
 
-type Degree struct {
+type DegreeModel struct {
 	Degree        *string
 	Concentration *string
 	University    *string
 	Year          *int
 }
 
-func (e EducationBlock) RetrieveById(db *sql.DB, id string) []Degree {
+func (e EducationBlock) RetrieveById(id string) []DegreeModel {
 
 	sql := `
 	SELECT  
@@ -33,7 +32,7 @@ func (e EducationBlock) RetrieveById(db *sql.DB, id string) []Degree {
 	WHERE
 		Interviews_Education.iid = ?`
 
-	var degrees []Degree
+	var degrees []DegreeModel
 
 	rows, err := db.Query(sql, id)
 	if err != nil {
@@ -42,7 +41,7 @@ func (e EducationBlock) RetrieveById(db *sql.DB, id string) []Degree {
 	defer rows.Close()
 
 	for rows.Next() {
-		var degree Degree
+		var degree DegreeModel
 
 		err = rows.Scan(&degree.Degree, &degree.Concentration, &degree.University, &degree.Year)
 		if err != nil {

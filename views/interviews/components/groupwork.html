@@ -1,0 +1,51 @@
+{{define "interviews/components/groupwork"}}
+<div class="panel panel-default">
+	<div class="panel-heading">
+		<h3 class="panel-title inline">Solo vs Group Work</h3>
+		<span class="glyphicon glyphicon-time pull-right"></span>
+	</div>
+	<div class="panel-body">
+		<div id="solovgroup"></div>
+
+		<script type="text/javascript">
+		$.ajax({
+			url: "/api/charts/groupwork?i={{.Interview.Id}}",
+			type: "GET",
+			dataType: "json"
+		})
+		.done(function( msg ) {
+			var arr = [];
+
+			arr.push(["Label", "Value"]);
+			arr.push(["Solo", msg.Solo]);
+			arr.push(["Group", msg.Group]);
+
+			google.setOnLoadCallback( drawChart(arr) );
+		});
+
+		function drawChart(arr) {
+			var data = google.visualization.arrayToDataTable(arr);
+
+			var options = {
+				width: '100%',
+			   pieHole: 0.4
+			};
+
+			// Instantiate and draw our chart, passing in some options.
+			var chart = new google.visualization.PieChart(document.getElementById('solovgroup'));
+			chart.draw(data, options);
+
+			function resizeHandler () {
+				chart.draw(data, options);
+			}
+
+			if (window.addEventListener) {
+				window.addEventListener('resize', resizeHandler, false);
+			} else if (window.attachEvent) {
+				window.attachEvent('onresize', resizeHandler);
+			}
+		}
+		</script>
+	</div>
+</div>
+{{end}}

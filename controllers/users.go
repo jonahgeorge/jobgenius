@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"database/sql"
 	"log"
 	"net/http"
 
@@ -16,10 +15,10 @@ import (
 type UserController struct {
 }
 
-func (u UserController) Index(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (u UserController) Index() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		users := UserModel{}.RetrieveAll(db)
+		users := UserModel{}.RetrieveAll()
 		session, err := store.Get(r, "user")
 
 		if err != nil {
@@ -35,14 +34,14 @@ func (u UserController) Index(db *sql.DB, store *sessions.CookieStore) http.Hand
 	}
 }
 
-func (u UserController) Retrieve(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (u UserController) Retrieve() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		params := mux.Vars(r)
 
-		user := UserModel{}.RetrieveById(db, params["id"])
-		articles, err := ArticleFactory{}.RetrieveByAuthor(db, *user.Id)
-		interviews := InterviewFactory{}.RetrieveByAuthor(db, *user.Id)
+		user := UserModel{}.RetrieveById(params["id"])
+		articles, err := ArticleFactory{}.RetrieveByAuthor(*user.Id)
+		interviews := InterviewFactory{}.RetrieveByAuthor(*user.Id)
 		session, err := store.Get(r, "user")
 
 		if err != nil {
@@ -60,7 +59,7 @@ func (u UserController) Retrieve(db *sql.DB, store *sessions.CookieStore) http.H
 	}
 }
 
-func (u UserController) SignInForm(store *sessions.CookieStore) http.HandlerFunc {
+func (u UserController) SignInForm() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")
@@ -79,13 +78,13 @@ func (u UserController) SignInForm(store *sessions.CookieStore) http.HandlerFunc
 	}
 }
 
-func (u UserController) SignInApi(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (u UserController) SignInApi() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		email := r.FormValue("email")
 		password := r.FormValue("password")
 
-		user := UserModel{}.RetrieveByEmail(db, email)
+		user := UserModel{}.RetrieveByEmail(email)
 
 		err := bcrypt.CompareHashAndPassword([]byte(*user.Password), []byte(password))
 		if err != nil {
@@ -103,7 +102,7 @@ func (u UserController) SignInApi(db *sql.DB, store *sessions.CookieStore) http.
 	}
 }
 
-func (u UserController) SignUpForm(store *sessions.CookieStore) http.HandlerFunc {
+func (u UserController) SignUpForm() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")
@@ -122,7 +121,7 @@ func (u UserController) SignUpForm(store *sessions.CookieStore) http.HandlerFunc
 	}
 }
 
-func (u UserController) SignUpApi(db *sql.DB, store *sessions.CookieStore) http.HandlerFunc {
+func (u UserController) SignUpApi() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Assuming password 1 and password 2 match
 
@@ -138,7 +137,7 @@ func (u UserController) SignUpApi(db *sql.DB, store *sessions.CookieStore) http.
 
 		// Send email confirmation
 
-		account := UserModel{}.Create(db, email, string(hashedPass))
+		account := UserModel{}.Create(email, string(hashedPass))
 
 		session, _ := store.Get(r, "user")
 		session.Values["user"] = account
@@ -148,7 +147,7 @@ func (u UserController) SignUpApi(db *sql.DB, store *sessions.CookieStore) http.
 	}
 }
 
-func (u UserController) SignOut(store *sessions.CookieStore) http.HandlerFunc {
+func (u UserController) SignOut() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		session, _ := store.Get(r, "user")

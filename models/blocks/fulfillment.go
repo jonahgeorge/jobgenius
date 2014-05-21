@@ -1,7 +1,6 @@
 package blocks
 
 import (
-	"database/sql"
 	"log"
 
 	_ "github.com/Go-SQL-Driver/MySQL"
@@ -14,7 +13,7 @@ type FulfillmentChart struct {
 	Personal     *int
 }
 
-func (f FulfillmentChart) RetrieveById(db *sql.DB, id string) FulfillmentChart {
+func (f FulfillmentChart) RetrieveById(id string) FulfillmentChart {
 
 	sql := `
 	SELECT
@@ -40,7 +39,7 @@ func (f FulfillmentChart) RetrieveById(db *sql.DB, id string) FulfillmentChart {
 
 // Consult Edward on how to average people with multiple industries
 // Integral to how this function will correctly return values
-func (f FulfillmentChart) RetrieveIndustryAverage(db *sql.DB, id string) FulfillmentChart {
+func (f FulfillmentChart) RetrieveIndustryAverage(id string) FulfillmentChart {
 
 	// sql := `SELECT
 	// 			*

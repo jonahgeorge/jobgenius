@@ -1,34 +1,46 @@
 package blocks
 
 import (
-	"database/sql"
 	"log"
 
 	_ "github.com/Go-SQL-Driver/MySQL"
 )
 
 type BasicBlock struct {
-	Type            *string
-	Sector          *string
+	Type            Field
+	Sector          Field
 	Industry        []Field
-	Experience      *string
+	Experience      Field
 	Environment     []Field
-	Salary          *string
-	HoursPerWeek    *string
-	WeekendsWorked  *string
-	OvernightTravel *string
+	Salary          Field
+	HoursPerWeek    Field
+	WeekendsWorked  Field
+	OvernightTravel Field
 }
 
-func (b BasicBlock) RetrieveById(db *sql.DB, id string) BasicBlock {
+func (b BasicBlock) RetrieveById(id string) BasicBlock {
 
 	sql := `
 	SELECT
+		Interviews_Type_Lookup.id,
 		Interviews_Type_Lookup.value,
+
+		Interviews_Sector_Lookup.id,
 		Interviews_Sector_Lookup.value,
+
+		Interviews_Experience_Lookup.id,
 		Interviews_Experience_Lookup.value,
+
+		Interviews_Salary_Lookup.id,
 		Interviews_Salary_Lookup.value,
+
+		Interviews_Hours_Per_Week_Lookup.id,
 		Interviews_Hours_Per_Week_Lookup.value,
+
+		Interviews_Weekends_Worked_Lookup.id,
 		Interviews_Weekends_Worked_Lookup.value,
+
+		Interviews_Overnight_Travel_Lookup.id,
 		Interviews_Overnight_Travel_Lookup.value
 
 	FROM Interviews
@@ -41,6 +53,7 @@ func (b BasicBlock) RetrieveById(db *sql.DB, id string) BasicBlock {
 
 	LEFT JOIN Interviews_Experience ON Interviews_Experience.iid = Interviews.id
 	LEFT JOIN Interviews_Experience_Lookup ON Interviews_Experience_Lookup.id = Interviews_Experience.vid
+
 	LEFT JOIN Interviews_Salary ON Interviews_Salary.iid = Interviews.id
 	LEFT JOIN Interviews_Salary_Lookup ON Interviews_Salary_Lookup.id = Interviews_Salary.vid
 
@@ -58,18 +71,22 @@ func (b BasicBlock) RetrieveById(db *sql.DB, id string) BasicBlock {
 	var block BasicBlock
 
 	row := db.QueryRow(sql, id)
-	err := row.Scan(&block.Type, &block.Sector, &block.Experience, &block.Salary, &block.HoursPerWeek, &block.WeekendsWorked, &block.OvernightTravel)
+	err := row.Scan(
+		&block.Type.Key, &block.Type.Value, &block.Sector.Key, &block.Sector.Value,
+		&block.Experience.Key, &block.Experience.Value, &block.Salary.Key, &block.Salary.Value,
+		&block.HoursPerWeek.Key, &block.HoursPerWeek.Value, &block.WeekendsWorked.Key, &block.WeekendsWorked.Value,
+		&block.OvernightTravel.Key, &block.OvernightTravel.Value)
 	if err != nil {
-		log.Printf("%s", err)
+		log.Println(err)
 	}
 
-	block.Industry = BasicBlock{}.RetrieveIndustry(db, id)
-	block.Environment = BasicBlock{}.RetrieveEnvironment(db, id)
+	block.Industry = BasicBlock{}.RetrieveIndustry(id)
+	block.Environment = BasicBlock{}.RetrieveEnvironment(id)
 
 	return block
 }
 
-func (b BasicBlock) RetrieveIndustry(db *sql.DB, id string) []Field {
+func (b BasicBlock) RetrieveIndustry(id string) []Field {
 
 	sql := `
 	SELECT
@@ -103,7 +120,7 @@ func (b BasicBlock) RetrieveIndustry(db *sql.DB, id string) []Field {
 	return fields
 }
 
-func (b BasicBlock) RetrieveEnvironment(db *sql.DB, id string) []Field {
+func (b BasicBlock) RetrieveEnvironment(id string) []Field {
 
 	sql := `
 	SELECT

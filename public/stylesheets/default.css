@@ -1,3 +1,11 @@
+.commentbox {
+	margin-bottom:10px;
+}
+
+.panel-comments {
+	margin-top:50px;
+}
+
 .panel-advertisement {
 	background-color:#fcf8e3;
 }

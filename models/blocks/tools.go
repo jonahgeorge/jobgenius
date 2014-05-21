@@ -1,7 +1,6 @@
 package blocks
 
 import (
-	"database/sql"
 	"log"
 
 	_ "github.com/Go-SQL-Driver/MySQL"
@@ -12,17 +11,17 @@ type ToolsBlock struct {
 	Tools  []Field
 }
 
-func (t ToolsBlock) Retrieve(db *sql.DB, id string) ToolsBlock {
+func (t ToolsBlock) Retrieve(id string) ToolsBlock {
 
 	tb := ToolsBlock{
-		Skills: ToolsBlock{}.RetrieveSkills(db, id),
-		Tools:  ToolsBlock{}.RetrieveTools(db, id),
+		Skills: ToolsBlock{}.RetrieveSkills(id),
+		Tools:  ToolsBlock{}.RetrieveTools(id),
 	}
 
 	return tb
 }
 
-func (t ToolsBlock) RetrieveTools(db *sql.DB, id string) []Field {
+func (t ToolsBlock) RetrieveTools(id string) []Field {
 
 	sql := `
 	SELECT
@@ -54,7 +53,7 @@ func (t ToolsBlock) RetrieveTools(db *sql.DB, id string) []Field {
 	return fields
 }
 
-func (t ToolsBlock) RetrieveSkills(db *sql.DB, id string) []Field {
+func (t ToolsBlock) RetrieveSkills(id string) []Field {
 
 	sql := `
 	SELECT

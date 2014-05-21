@@ -41,17 +41,16 @@
 		</form>
 
 		<div class="panel panel-default">
-			<div class="panel-heading">Categories<span class="glyphicon glyphicon-search pull-right"></span></div>
+			<div class="panel-heading">
+				Categories
+				<span class="glyphicon glyphicon-search pull-right"></span>
+			</div>
 			<div class="panel-body">
 				<div class="filter">
 					<form action="/articles" method="get">		
-						{{ range .Filters }}
+						{{ range .Categories }}
 						<div class="checkbox">
-							<label>
-								<input type="checkbox" 
-								name="filter" 
-								value="{{ .Value }}" />{{ .Value }}
-							</label>
+							<label><input type="checkbox" name="filter" value="{{ .Value }}" />{{ .Value }}</label>
 						</div>
 						{{ end }}
 

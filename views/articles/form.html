@@ -1,51 +1,39 @@
 {{ define "article/form" }}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    {{ template "head" . }}
-  </head>
-  <body>
-    {{ template "header" . }}
-    <div class="container">
-      <div class="page-header">
-        <a href="/articles" class="left-arrow"><i class="fa fa-chevron-left"></i></a>
-        <h1 class="inline">{{ .Title }}</h1>
-      </div>
+{{ template "header" . }}
+<div class="container">
+	<div class="page-header">
+		<h1>{{ .Title }}</h1>
+	</div>
 
-      <form action="/articles" method="post">
-        <h5>Title</h5>
-        <input class="form-control" type="text" name="title">
+	<form action="/articles" method="post">
+		<h5>Title</h5>
+		<input class="form-control" type="text" name="title">
 
-        <h5>Subtitle</h5>
-        <input class="form-control" type="text" name="slug">
+		<h5>Subtitle</h5>
+		<input class="form-control" type="text" name="slug">
 
-        <h5>Category</h5>
-		{{range .Filters}}
+		<h5>Category</h5>
+		{{range .Categories}}
 		<div class="checkbox">
 			<label>
-				<input type="checkbox" 
-						name="filter" 
-						value="{{ .Value }}" />{{ .Value }}
+				<input type="checkbox" name="category" value="{{.Key}}" />{{.Value}}
 			</label>
 		</div>
 		{{end}}
 
-        <h5>Body</h5>
-        <textarea class="form-control" name="body" style="height:200px;"></textarea>
+		<h5>Body</h5>
+		<textarea class="form-control" name="body" style="height:200px;"></textarea>
 
-        <br>
-        <a href="http://daringfireball.net/projects/markdown/syntax" target="_blank" class="breadcrumb pull-right">Formatting help</a>
-        <div class="clearfix"></div>
+		<br>
+		<a href="http://daringfireball.net/projects/markdown/syntax" target="_blank" class="breadcrumb pull-right">Formatting help</a>
+		<div class="clearfix"></div>
 
-        <hr>
-        <button class="btn btn-primary" type="submit">Submit</button>
-        <button class="btn btn-danger" type="clear">Clear</button>
-        <a href="/" class="pull-right">Cancel</a>
-      </form>
+		<hr>
+		<button class="btn btn-primary" type="submit">Submit</button>
+		<button class="btn btn-danger" type="clear">Clear</button>
+		<a href="/" class="pull-right">Cancel</a>
+	</form>
 
-    </div>
-    {{ template "footer" . }}
-    <foot>{{ template "foot" . }}</foot>
-  </body>
-</html>
+</div>
+{{ template "footer" . }}
 {{ end }}

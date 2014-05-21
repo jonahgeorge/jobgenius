@@ -1,7 +1,6 @@
 package models
 
 import (
-	"database/sql"
 	"log"
 
 	_ "github.com/Go-SQL-Driver/MySQL"
@@ -11,7 +10,7 @@ import (
 type InterviewFactory struct {
 }
 
-func (i InterviewFactory) RetrieveAll(db *sql.DB) []InterviewModel {
+func (i InterviewFactory) RetrieveAll() []InterviewModel {
 
 	var interviews []InterviewModel
 
@@ -52,7 +51,7 @@ func (i InterviewFactory) RetrieveAll(db *sql.DB) []InterviewModel {
 	return interviews
 }
 
-func (i InterviewFactory) RetrieveByAuthor(db *sql.DB, id int) []InterviewModel {
+func (i InterviewFactory) RetrieveByAuthor(id int) []InterviewModel {
 	var interviews []InterviewModel
 
 	sql := `
@@ -73,7 +72,7 @@ func (i InterviewFactory) RetrieveByAuthor(db *sql.DB, id int) []InterviewModel 
 
 	rows, err := db.Query(sql, id)
 	if err != nil {
-		log.Printf("%s", err)
+		log.Println(err)
 	}
 	defer rows.Close()
 
@@ -81,7 +80,7 @@ func (i InterviewFactory) RetrieveByAuthor(db *sql.DB, id int) []InterviewModel 
 		var interview InterviewModel
 		err = rows.Scan(&interview.Id, &interview.Name, &interview.Position, &interview.User.Id, &interview.User.DisplayName)
 		if err != nil {
-			log.Printf("%s", err)
+			log.Println(err)
 		}
 		interviews = append(interviews, interview)
 	}
@@ -89,7 +88,7 @@ func (i InterviewFactory) RetrieveByAuthor(db *sql.DB, id int) []InterviewModel 
 	return interviews
 }
 
-func (i InterviewFactory) RetrieveById(db *sql.DB, id string) InterviewModel {
+func (i InterviewFactory) RetrieveById(id string) InterviewModel {
 
 	sql := `
 	SELECT
@@ -110,17 +109,63 @@ func (i InterviewFactory) RetrieveById(db *sql.DB, id string) InterviewModel {
 	var interview InterviewModel
 
 	row := db.QueryRow(sql, id)
-	err := row.Scan(&interview.Id, &interview.Name, &interview.Position, &interview.User.Id, &interview.User.DisplayName)
+	err := row.Scan(
+		&interview.Id, &interview.Name, &interview.Position,
+		&interview.User.Id, &interview.User.DisplayName)
 	if err != nil {
-		log.Printf("%s", err)
+		log.Println(err)
 	}
 
-	interview.Basic = BasicBlock{}.RetrieveById(db, id)
-	interview.Education = EducationBlock{}.RetrieveById(db, id)
-	interview.Requirements = RequirementsBlock{}.Retrieve(db, id)
-	interview.Tools = ToolsBlock{}.Retrieve(db, id)
+	interview.Basic = BasicBlock{}.RetrieveById(id)
+	interview.Education = EducationBlock{}.RetrieveById(id)
+	interview.Requirements = RequirementsBlock{}.Retrieve(id)
+	interview.Tools = ToolsBlock{}.Retrieve(id)
 
 	return interview
+}
+
+func (i InterviewFactory) Filter(title string) []InterviewModel {
+	var interviews []InterviewModel
+
+	sql := `
+	SELECT
+		Interviews.id
+	,	Interviews.name
+	,	Interviews.position
+	,	Users.uid
+	,	Users.display_name
+	FROM 
+		Interviews
+	LEFT JOIN 
+		Users ON Interviews.uid = Users.uid
+	WHERE 
+		Interviews.published = 1
+	AND
+		Interviews.name LIKE ?
+	OR 
+		Interviews.position LIKE ?`
+
+	rows, err := db.Query(sql, "%"+title+"%", "%"+title+"%")
+	if err != nil {
+		log.Println(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var interview InterviewModel
+
+		err = rows.Scan(
+			&interview.Id, &interview.Name, &interview.Position,
+			&interview.User.Id, &interview.User.DisplayName)
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		interviews = append(interviews, interview)
+	}
+
+	return interviews
 }
 
 type InterviewModel struct {
@@ -130,19 +175,24 @@ type InterviewModel struct {
 	User         UserModel
 	Picture      *string
 	Basic        BasicBlock
-	Education    []Degree
+	Education    []DegreeModel
 	Requirements RequirementsBlock
 	Tools        ToolsBlock
+	Comments     []CommentModel
 }
 
-func (i InterviewModel) Create(db *sql.DB) error {
+func (i InterviewModel) Create() error {
 	return nil
 }
 
-func (i InterviewModel) Update(db *sql.DB) error {
+func (i InterviewModel) Update() error {
 	return nil
 }
 
-func (i InterviewModel) Delete(db *sql.DB) error {
+func (i InterviewModel) Delete() error {
+	return nil
+}
+
+func (i InterviewModel) AddComment() error {
 	return nil
 }

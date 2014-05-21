@@ -15,7 +15,7 @@ type Value struct {
 	Value sql.NullInt64
 }
 
-func (b BreakdownChart) RetrieveById(db *sql.DB, id string) []Value {
+func (b BreakdownChart) RetrieveById(id string) []Value {
 
 	sql := `
 	SELECT 

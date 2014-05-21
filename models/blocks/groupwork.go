@@ -1,7 +1,6 @@
 package blocks
 
 import (
-	"database/sql"
 	"log"
 
 	_ "github.com/Go-SQL-Driver/MySQL"
@@ -12,7 +11,7 @@ type GroupworkChart struct {
 	Group *int
 }
 
-func (g GroupworkChart) RetrieveById(db *sql.DB, id string) GroupworkChart {
+func (g GroupworkChart) RetrieveById(id string) GroupworkChart {
 
 	sql := `
 	SELECT 
